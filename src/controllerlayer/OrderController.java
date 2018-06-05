@@ -139,4 +139,8 @@ public class OrderController
         }
         orderContainer.deleteOrder(order);
     }
+
+	public Person getPerson(String phone) {
+		return personController.getPerson(phone);
+	}
 }
