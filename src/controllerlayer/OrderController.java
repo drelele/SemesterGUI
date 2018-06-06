@@ -24,9 +24,9 @@ public class OrderController
         this.personController = new PersonController();
         this.productController = new ProductController();
 
-        // // HashMap<String, Integer> barcodes = new HashMap<>();
-        // // barcodes.put("1", 5);
-        // createOrder("1", "2", barcodes);
+        HashMap<String, Integer> barcodes = new HashMap<>();
+        barcodes.put("1", 5);
+        createOrder("1", "2", barcodes);
     }
 
     /**
@@ -142,5 +142,9 @@ public class OrderController
 
 	public Person getPerson(String phone) {
 		return personController.getPerson(phone);
+	}
+	
+	public Product getProduct(String barcode) {
+		return productController.getProduct(barcode);
 	}
 }

@@ -20,12 +20,12 @@ public class ProductController
     {
         this.productContainer = productContainer.getInstance();
         
-        // Product product = new Product("Product 1", "Desc1", 50);
-        // product.addItem(5);
-        // Product product2 = new Product("Product 2", "Desc2", 150);
-        // product2.addItem(5);
-        // productContainer.addProduct(product);
-        // productContainer.addProduct(product2);
+        Product product = new Product("Product 1", "Desc1", 50);
+        product.addItem(5);
+        Product product2 = new Product("Product 2", "Desc2", 150);
+        product2.addItem(5);
+        productContainer.addProduct(product);
+        productContainer.addProduct(product2);
     }
 
     public Product createProduct(String title, String description, double price)

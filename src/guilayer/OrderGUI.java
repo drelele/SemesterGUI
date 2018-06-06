@@ -27,31 +27,33 @@ import controllerlayer.OrderController;
 import modellayer.*;
 
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 
 public class OrderGUI extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField txtKim;
-	private JTextField txtLemvigvej;
-	private JTextField txtAalborg;
-	private JTextField textField_3;
-	private JTextField txtLars;
-	private JTextField txtLemvigvej_1;
-	private JTextField txtAalborg_1;
-	private JTextField textField_7;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_9;
-	private JTextField textField_10;
-	private JTextField textField_12;
-	private JTable table;
+	private JTextField createEmployeeName;
+	private JTextField createEmployeeAddress;
+	private JTextField createEmployeeCity;
+	private JTextField createEmployeeZip;
+	private JTextField createCustomerName;
+	private JTextField createCustomerAddress;
+	private JTextField createCustomerCity;
+	private JTextField createCustomerZip;
+	private JTextField updateEmployeeName;
+	private JTextField updateEmployeeAddress;
+	private JTextField updateEmployeeCity;
+	private JTextField updateEmployeeZip;
+	private JTextField updateCustomerName;
+	private JTextField updateCustomerAddress;
+	private JTextField updateCustomerCity;
+	private JTextField updateCustomerZip;
+	private JTextField orderSearchInputField;
+	private JTable createProductTable;
 	private static DefaultTableModel tab;
-	private JTable table_1;
+	private JTable updateProductTable;
 	private JTextField personSeachInputField;
 	private JTextField personEmployeeName;
 	private JTextField personEmployeeAddress;
@@ -65,15 +67,32 @@ public class OrderGUI extends JFrame {
 	private JTextField personReturnAddress;
 	private JTextField personReturnCity;
 	private JTextField personReturnZip;
-	private JTextField textField_24;
-	private JTable table_2;
-	private JTextField textField_25;
-	private JTextField txtProdukt;
-	private JTextField txtProduktEr;
+	private JTextField productSearchInputField;
+	private JTable productProductTable;
+	private JTextField productReturnBarcode;
+	private JTextField productReturnTitle;
+	private JTextField productReturnDesc;
+	
+	private OrderController orderController = new OrderController();
 	
 	private Person personReturn;
 	private Person employee;
 	private Person customer;
+	
+	private Product productReturn;
+	private JTextField productReturnPrice;
+	private JTextField productReturnAmount;
+	
+	HashMap<String, Integer> barcodes = new HashMap<>();
+	HashMap<String, Integer> tmp = new HashMap<>();
+	
+	private JTextField createEmployeePhone;
+	private JTextField createCustomerPhone;
+	private JTextField updateEmployeePhone;
+	private JTextField updateCustomerPhone;
+	private JTextField personReturnPhone;
+	private JTextField personEmployeePhone;
+	private JTextField personCustomerPhone;
 	
 
 	/**
@@ -96,11 +115,23 @@ public class OrderGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public OrderGUI() {
-		tab = new DefaultTableModel();
+		
         String[] columNames = {"Produkt Navn","Antal","Stk. Pris","Samlet Pris"};
+		DefaultTableModel createProductTab = new DefaultTableModel();
         for (String string: columNames) {
-            tab.addColumn(string);
+        	createProductTab.addColumn(string);
         }
+        
+        DefaultTableModel updateProductTab = new DefaultTableModel();
+        for (String string: columNames) {
+        	updateProductTab.addColumn(string);
+        }
+        
+        DefaultTableModel productProductTab = new DefaultTableModel();
+        for (String string: columNames) {
+        	productProductTab.addColumn(string);
+        }
+        
 		setResizable(false);
 		setTitle("Salg - Vestbjerg Byggecenter");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -131,6 +162,11 @@ public class OrderGUI extends JFrame {
 		createPanel.add(createBackBtn);
 		
 		JButton createConfirmBtn = new JButton("Bekr\u00E6ft");
+		createConfirmBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				orderController.createOrder(createEmployeePhone.getText(), createCustomerPhone.getText(), barcodes);
+			}
+		});
 		createConfirmBtn.setBounds(580, 278, 89, 23);
 		createPanel.add(createConfirmBtn);
 		
@@ -144,9 +180,9 @@ public class OrderGUI extends JFrame {
 		createPanel.add(createEmployeePanel);
 		GridBagLayout gbl_createEmployeePanel = new GridBagLayout();
 		gbl_createEmployeePanel.columnWidths = new int[]{0, 0, 0};
-		gbl_createEmployeePanel.rowHeights = new int[]{0, 0, 0, 0, 0};
+		gbl_createEmployeePanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
 		gbl_createEmployeePanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_createEmployeePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_createEmployeePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		createEmployeePanel.setLayout(gbl_createEmployeePanel);
 		
 		JLabel lblNewLabel = new JLabel("Navn");
@@ -157,16 +193,15 @@ public class OrderGUI extends JFrame {
 		gbc_lblNewLabel.gridy = 0;
 		createEmployeePanel.add(lblNewLabel, gbc_lblNewLabel);
 		
-		txtKim = new JTextField();
-		txtKim.setText("Kim");
-		txtKim.setEditable(false);
-		GridBagConstraints gbc_txtKim = new GridBagConstraints();
-		gbc_txtKim.insets = new Insets(0, 0, 5, 0);
-		gbc_txtKim.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtKim.gridx = 1;
-		gbc_txtKim.gridy = 0;
-		createEmployeePanel.add(txtKim, gbc_txtKim);
-		txtKim.setColumns(10);
+		createEmployeeName = new JTextField();
+		createEmployeeName.setEditable(false);
+		GridBagConstraints gbc_createEmployeeName = new GridBagConstraints();
+		gbc_createEmployeeName.insets = new Insets(0, 0, 5, 0);
+		gbc_createEmployeeName.fill = GridBagConstraints.HORIZONTAL;
+		gbc_createEmployeeName.gridx = 1;
+		gbc_createEmployeeName.gridy = 0;
+		createEmployeePanel.add(createEmployeeName, gbc_createEmployeeName);
+		createEmployeeName.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("Adresse");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
@@ -176,16 +211,15 @@ public class OrderGUI extends JFrame {
 		gbc_lblNewLabel_1.gridy = 1;
 		createEmployeePanel.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		
-		txtLemvigvej = new JTextField();
-		txtLemvigvej.setText("Lemvigvej 4");
-		txtLemvigvej.setEditable(false);
-		GridBagConstraints gbc_txtLemvigvej = new GridBagConstraints();
-		gbc_txtLemvigvej.insets = new Insets(0, 0, 5, 0);
-		gbc_txtLemvigvej.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtLemvigvej.gridx = 1;
-		gbc_txtLemvigvej.gridy = 1;
-		createEmployeePanel.add(txtLemvigvej, gbc_txtLemvigvej);
-		txtLemvigvej.setColumns(10);
+		createEmployeeAddress = new JTextField();
+		createEmployeeAddress.setEditable(false);
+		GridBagConstraints gbc_createEmployeeAddress = new GridBagConstraints();
+		gbc_createEmployeeAddress.insets = new Insets(0, 0, 5, 0);
+		gbc_createEmployeeAddress.fill = GridBagConstraints.HORIZONTAL;
+		gbc_createEmployeeAddress.gridx = 1;
+		gbc_createEmployeeAddress.gridy = 1;
+		createEmployeePanel.add(createEmployeeAddress, gbc_createEmployeeAddress);
+		createEmployeeAddress.setColumns(10);
 		
 		JLabel lblNewLabel_2 = new JLabel("By");
 		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
@@ -195,34 +229,50 @@ public class OrderGUI extends JFrame {
 		gbc_lblNewLabel_2.gridy = 2;
 		createEmployeePanel.add(lblNewLabel_2, gbc_lblNewLabel_2);
 		
-		txtAalborg = new JTextField();
-		txtAalborg.setText("Aalborg");
-		txtAalborg.setEditable(false);
-		GridBagConstraints gbc_txtAalborg = new GridBagConstraints();
-		gbc_txtAalborg.insets = new Insets(0, 0, 5, 0);
-		gbc_txtAalborg.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtAalborg.gridx = 1;
-		gbc_txtAalborg.gridy = 2;
-		createEmployeePanel.add(txtAalborg, gbc_txtAalborg);
-		txtAalborg.setColumns(10);
+		createEmployeeCity = new JTextField();
+		createEmployeeCity.setEditable(false);
+		GridBagConstraints gbc_createEmployeeCity = new GridBagConstraints();
+		gbc_createEmployeeCity.insets = new Insets(0, 0, 5, 0);
+		gbc_createEmployeeCity.fill = GridBagConstraints.HORIZONTAL;
+		gbc_createEmployeeCity.gridx = 1;
+		gbc_createEmployeeCity.gridy = 2;
+		createEmployeePanel.add(createEmployeeCity, gbc_createEmployeeCity);
+		createEmployeeCity.setColumns(10);
 		
 		JLabel lblNewLabel_3 = new JLabel("Postnr.");
 		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
 		gbc_lblNewLabel_3.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel_3.insets = new Insets(0, 0, 0, 5);
+		gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_3.gridx = 0;
 		gbc_lblNewLabel_3.gridy = 3;
 		createEmployeePanel.add(lblNewLabel_3, gbc_lblNewLabel_3);
 		
-		textField_3 = new JTextField();
-		textField_3.setText("9000");
-		textField_3.setEditable(false);
-		GridBagConstraints gbc_textField_3 = new GridBagConstraints();
-		gbc_textField_3.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_3.gridx = 1;
-		gbc_textField_3.gridy = 3;
-		createEmployeePanel.add(textField_3, gbc_textField_3);
-		textField_3.setColumns(10);
+		createEmployeeZip = new JTextField();
+		createEmployeeZip.setEditable(false);
+		GridBagConstraints gbc_createEmployeeZip = new GridBagConstraints();
+		gbc_createEmployeeZip.insets = new Insets(0, 0, 5, 0);
+		gbc_createEmployeeZip.fill = GridBagConstraints.HORIZONTAL;
+		gbc_createEmployeeZip.gridx = 1;
+		gbc_createEmployeeZip.gridy = 3;
+		createEmployeePanel.add(createEmployeeZip, gbc_createEmployeeZip);
+		createEmployeeZip.setColumns(10);
+		
+		JLabel lblTelefon = new JLabel("Telefon");
+		GridBagConstraints gbc_lblTelefon = new GridBagConstraints();
+		gbc_lblTelefon.anchor = GridBagConstraints.WEST;
+		gbc_lblTelefon.insets = new Insets(0, 0, 0, 5);
+		gbc_lblTelefon.gridx = 0;
+		gbc_lblTelefon.gridy = 4;
+		createEmployeePanel.add(lblTelefon, gbc_lblTelefon);
+		
+		createEmployeePhone = new JTextField();
+		createEmployeePhone.setEditable(false);
+		GridBagConstraints gbc_createEmployeePhone = new GridBagConstraints();
+		gbc_createEmployeePhone.fill = GridBagConstraints.HORIZONTAL;
+		gbc_createEmployeePhone.gridx = 1;
+		gbc_createEmployeePhone.gridy = 4;
+		createEmployeePanel.add(createEmployeePhone, gbc_createEmployeePhone);
+		createEmployeePhone.setColumns(10);
 		
 		JPanel createPersonPanel = new JPanel();
 		createPersonPanel.setBorder(new TitledBorder(null, "Kunde", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -230,9 +280,9 @@ public class OrderGUI extends JFrame {
 		createPanel.add(createPersonPanel);
 		GridBagLayout gbl_createPersonPanel = new GridBagLayout();
 		gbl_createPersonPanel.columnWidths = new int[]{0, 0, 0};
-		gbl_createPersonPanel.rowHeights = new int[]{0, 0, 0, 0, 0};
+		gbl_createPersonPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
 		gbl_createPersonPanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_createPersonPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_createPersonPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		createPersonPanel.setLayout(gbl_createPersonPanel);
 		
 		JLabel lblNewLabel_4 = new JLabel("Navn");
@@ -243,16 +293,15 @@ public class OrderGUI extends JFrame {
 		gbc_lblNewLabel_4.gridy = 0;
 		createPersonPanel.add(lblNewLabel_4, gbc_lblNewLabel_4);
 		
-		txtLars = new JTextField();
-		txtLars.setText("Lars");
-		txtLars.setEditable(false);
-		GridBagConstraints gbc_txtLars = new GridBagConstraints();
-		gbc_txtLars.insets = new Insets(0, 0, 5, 0);
-		gbc_txtLars.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtLars.gridx = 1;
-		gbc_txtLars.gridy = 0;
-		createPersonPanel.add(txtLars, gbc_txtLars);
-		txtLars.setColumns(10);
+		createCustomerName = new JTextField();
+		createCustomerName.setEditable(false);
+		GridBagConstraints gbc_createCustomerName = new GridBagConstraints();
+		gbc_createCustomerName.insets = new Insets(0, 0, 5, 0);
+		gbc_createCustomerName.fill = GridBagConstraints.HORIZONTAL;
+		gbc_createCustomerName.gridx = 1;
+		gbc_createCustomerName.gridy = 0;
+		createPersonPanel.add(createCustomerName, gbc_createCustomerName);
+		createCustomerName.setColumns(10);
 		
 		JLabel lblNewLabel_5 = new JLabel("Adresse");
 		GridBagConstraints gbc_lblNewLabel_5 = new GridBagConstraints();
@@ -262,16 +311,15 @@ public class OrderGUI extends JFrame {
 		gbc_lblNewLabel_5.gridy = 1;
 		createPersonPanel.add(lblNewLabel_5, gbc_lblNewLabel_5);
 		
-		txtLemvigvej_1 = new JTextField();
-		txtLemvigvej_1.setText("Lemvigvej 5");
-		txtLemvigvej_1.setEditable(false);
-		GridBagConstraints gbc_txtLemvigvej_1 = new GridBagConstraints();
-		gbc_txtLemvigvej_1.insets = new Insets(0, 0, 5, 0);
-		gbc_txtLemvigvej_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtLemvigvej_1.gridx = 1;
-		gbc_txtLemvigvej_1.gridy = 1;
-		createPersonPanel.add(txtLemvigvej_1, gbc_txtLemvigvej_1);
-		txtLemvigvej_1.setColumns(10);
+		createCustomerAddress = new JTextField();
+		createCustomerAddress.setEditable(false);
+		GridBagConstraints gbc_createCustomerAddress = new GridBagConstraints();
+		gbc_createCustomerAddress.insets = new Insets(0, 0, 5, 0);
+		gbc_createCustomerAddress.fill = GridBagConstraints.HORIZONTAL;
+		gbc_createCustomerAddress.gridx = 1;
+		gbc_createCustomerAddress.gridy = 1;
+		createPersonPanel.add(createCustomerAddress, gbc_createCustomerAddress);
+		createCustomerAddress.setColumns(10);
 		
 		JLabel lblNewLabel_6 = new JLabel("By");
 		GridBagConstraints gbc_lblNewLabel_6 = new GridBagConstraints();
@@ -281,34 +329,50 @@ public class OrderGUI extends JFrame {
 		gbc_lblNewLabel_6.gridy = 2;
 		createPersonPanel.add(lblNewLabel_6, gbc_lblNewLabel_6);
 		
-		txtAalborg_1 = new JTextField();
-		txtAalborg_1.setText("Aalborg");
-		txtAalborg_1.setEditable(false);
-		GridBagConstraints gbc_txtAalborg_1 = new GridBagConstraints();
-		gbc_txtAalborg_1.insets = new Insets(0, 0, 5, 0);
-		gbc_txtAalborg_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtAalborg_1.gridx = 1;
-		gbc_txtAalborg_1.gridy = 2;
-		createPersonPanel.add(txtAalborg_1, gbc_txtAalborg_1);
-		txtAalborg_1.setColumns(10);
+		createCustomerCity = new JTextField();
+		createCustomerCity.setEditable(false);
+		GridBagConstraints gbc_createCustomerCity = new GridBagConstraints();
+		gbc_createCustomerCity.insets = new Insets(0, 0, 5, 0);
+		gbc_createCustomerCity.fill = GridBagConstraints.HORIZONTAL;
+		gbc_createCustomerCity.gridx = 1;
+		gbc_createCustomerCity.gridy = 2;
+		createPersonPanel.add(createCustomerCity, gbc_createCustomerCity);
+		createCustomerCity.setColumns(10);
 		
 		JLabel lblNewLabel_7 = new JLabel("Postnr.");
 		GridBagConstraints gbc_lblNewLabel_7 = new GridBagConstraints();
 		gbc_lblNewLabel_7.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel_7.insets = new Insets(0, 0, 0, 5);
+		gbc_lblNewLabel_7.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_7.gridx = 0;
 		gbc_lblNewLabel_7.gridy = 3;
 		createPersonPanel.add(lblNewLabel_7, gbc_lblNewLabel_7);
 		
-		textField_7 = new JTextField();
-		textField_7.setText("9000");
-		textField_7.setEditable(false);
-		GridBagConstraints gbc_textField_7 = new GridBagConstraints();
-		gbc_textField_7.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_7.gridx = 1;
-		gbc_textField_7.gridy = 3;
-		createPersonPanel.add(textField_7, gbc_textField_7);
-		textField_7.setColumns(10);
+		createCustomerZip = new JTextField();
+		createCustomerZip.setEditable(false);
+		GridBagConstraints gbc_createCustomerZip = new GridBagConstraints();
+		gbc_createCustomerZip.insets = new Insets(0, 0, 5, 0);
+		gbc_createCustomerZip.fill = GridBagConstraints.HORIZONTAL;
+		gbc_createCustomerZip.gridx = 1;
+		gbc_createCustomerZip.gridy = 3;
+		createPersonPanel.add(createCustomerZip, gbc_createCustomerZip);
+		createCustomerZip.setColumns(10);
+		
+		JLabel label_20 = new JLabel("Telefon");
+		GridBagConstraints gbc_label_20 = new GridBagConstraints();
+		gbc_label_20.anchor = GridBagConstraints.WEST;
+		gbc_label_20.insets = new Insets(0, 0, 0, 5);
+		gbc_label_20.gridx = 0;
+		gbc_label_20.gridy = 4;
+		createPersonPanel.add(label_20, gbc_label_20);
+		
+		createCustomerPhone = new JTextField();
+		createCustomerPhone.setEditable(false);
+		createCustomerPhone.setColumns(10);
+		GridBagConstraints gbc_createCustomerPhone = new GridBagConstraints();
+		gbc_createCustomerPhone.fill = GridBagConstraints.HORIZONTAL;
+		gbc_createCustomerPhone.gridx = 1;
+		gbc_createCustomerPhone.gridy = 4;
+		createPersonPanel.add(createCustomerPhone, gbc_createCustomerPhone);
 		
 		JPanel createProductPanel = new JPanel();
 		createProductPanel.setBorder(new TitledBorder(null, "Produkter", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -319,9 +383,9 @@ public class OrderGUI extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		createProductPanel.add(scrollPane, BorderLayout.CENTER);
 		
-		table = new JTable();
-		scrollPane.setViewportView(table);
-		table.setModel(tab);
+		createProductTable = new JTable();
+		scrollPane.setViewportView(createProductTable);
+		createProductTable.setModel(createProductTab);
 		
 		JPanel updatePanel = new JPanel();
 		tabbedPane.addTab("Find Salg", null, updatePanel, null);
@@ -336,6 +400,11 @@ public class OrderGUI extends JFrame {
 		updatePanel.add(updateCancelBtn);
 		
 		JButton updateConfirmBtn = new JButton("Bekr\u00E6ft");
+		updateConfirmBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		updateConfirmBtn.setBounds(580, 278, 89, 23);
 		updatePanel.add(updateConfirmBtn);
 		
@@ -345,9 +414,9 @@ public class OrderGUI extends JFrame {
 		updatePanel.add(updateEmployeePanel);
 		GridBagLayout gbl_updateEmployeePanel = new GridBagLayout();
 		gbl_updateEmployeePanel.columnWidths = new int[]{0, 0, 0};
-		gbl_updateEmployeePanel.rowHeights = new int[]{0, 0, 0, 0, 0};
+		gbl_updateEmployeePanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
 		gbl_updateEmployeePanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_updateEmployeePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_updateEmployeePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		updateEmployeePanel.setLayout(gbl_updateEmployeePanel);
 		
 		JLabel label = new JLabel("Navn");
@@ -358,16 +427,15 @@ public class OrderGUI extends JFrame {
 		gbc_label.gridy = 0;
 		updateEmployeePanel.add(label, gbc_label);
 		
-		textField = new JTextField();
-		textField.setText("Kim");
-		textField.setEditable(false);
-		textField.setColumns(10);
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.insets = new Insets(0, 0, 5, 0);
-		gbc_textField.gridx = 1;
-		gbc_textField.gridy = 0;
-		updateEmployeePanel.add(textField, gbc_textField);
+		updateEmployeeName = new JTextField();
+		updateEmployeeName.setEditable(false);
+		updateEmployeeName.setColumns(10);
+		GridBagConstraints gbc_updateEmployeeName = new GridBagConstraints();
+		gbc_updateEmployeeName.fill = GridBagConstraints.HORIZONTAL;
+		gbc_updateEmployeeName.insets = new Insets(0, 0, 5, 0);
+		gbc_updateEmployeeName.gridx = 1;
+		gbc_updateEmployeeName.gridy = 0;
+		updateEmployeePanel.add(updateEmployeeName, gbc_updateEmployeeName);
 		
 		JLabel label_1 = new JLabel("Adresse");
 		GridBagConstraints gbc_label_1 = new GridBagConstraints();
@@ -377,16 +445,15 @@ public class OrderGUI extends JFrame {
 		gbc_label_1.gridy = 1;
 		updateEmployeePanel.add(label_1, gbc_label_1);
 		
-		textField_1 = new JTextField();
-		textField_1.setText("Lemvigvej 4");
-		textField_1.setEditable(false);
-		textField_1.setColumns(10);
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_1.gridx = 1;
-		gbc_textField_1.gridy = 1;
-		updateEmployeePanel.add(textField_1, gbc_textField_1);
+		updateEmployeeAddress = new JTextField();
+		updateEmployeeAddress.setEditable(false);
+		updateEmployeeAddress.setColumns(10);
+		GridBagConstraints gbc_updateEmployeeAddress = new GridBagConstraints();
+		gbc_updateEmployeeAddress.fill = GridBagConstraints.HORIZONTAL;
+		gbc_updateEmployeeAddress.insets = new Insets(0, 0, 5, 0);
+		gbc_updateEmployeeAddress.gridx = 1;
+		gbc_updateEmployeeAddress.gridy = 1;
+		updateEmployeePanel.add(updateEmployeeAddress, gbc_updateEmployeeAddress);
 		
 		JLabel label_2 = new JLabel("By");
 		GridBagConstraints gbc_label_2 = new GridBagConstraints();
@@ -396,34 +463,49 @@ public class OrderGUI extends JFrame {
 		gbc_label_2.gridy = 2;
 		updateEmployeePanel.add(label_2, gbc_label_2);
 		
-		textField_2 = new JTextField();
-		textField_2.setText("Aalborg");
-		textField_2.setEditable(false);
-		textField_2.setColumns(10);
-		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
-		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_2.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_2.gridx = 1;
-		gbc_textField_2.gridy = 2;
-		updateEmployeePanel.add(textField_2, gbc_textField_2);
+		updateEmployeeCity = new JTextField();
+		updateEmployeeCity.setEditable(false);
+		updateEmployeeCity.setColumns(10);
+		GridBagConstraints gbc_updateEmployeeCity = new GridBagConstraints();
+		gbc_updateEmployeeCity.fill = GridBagConstraints.HORIZONTAL;
+		gbc_updateEmployeeCity.insets = new Insets(0, 0, 5, 0);
+		gbc_updateEmployeeCity.gridx = 1;
+		gbc_updateEmployeeCity.gridy = 2;
+		updateEmployeePanel.add(updateEmployeeCity, gbc_updateEmployeeCity);
 		
 		JLabel label_3 = new JLabel("Postnr.");
 		GridBagConstraints gbc_label_3 = new GridBagConstraints();
 		gbc_label_3.anchor = GridBagConstraints.WEST;
-		gbc_label_3.insets = new Insets(0, 0, 0, 5);
+		gbc_label_3.insets = new Insets(0, 0, 5, 5);
 		gbc_label_3.gridx = 0;
 		gbc_label_3.gridy = 3;
 		updateEmployeePanel.add(label_3, gbc_label_3);
 		
-		textField_4 = new JTextField();
-		textField_4.setText("9000");
-		textField_4.setEditable(false);
-		textField_4.setColumns(10);
-		GridBagConstraints gbc_textField_4 = new GridBagConstraints();
-		gbc_textField_4.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_4.gridx = 1;
-		gbc_textField_4.gridy = 3;
-		updateEmployeePanel.add(textField_4, gbc_textField_4);
+		updateEmployeeZip = new JTextField();
+		updateEmployeeZip.setEditable(false);
+		updateEmployeeZip.setColumns(10);
+		GridBagConstraints gbc_updateEmployeeZip = new GridBagConstraints();
+		gbc_updateEmployeeZip.insets = new Insets(0, 0, 5, 0);
+		gbc_updateEmployeeZip.fill = GridBagConstraints.HORIZONTAL;
+		gbc_updateEmployeeZip.gridx = 1;
+		gbc_updateEmployeeZip.gridy = 3;
+		updateEmployeePanel.add(updateEmployeeZip, gbc_updateEmployeeZip);
+		
+		JLabel label_21 = new JLabel("Telefon");
+		GridBagConstraints gbc_label_21 = new GridBagConstraints();
+		gbc_label_21.anchor = GridBagConstraints.WEST;
+		gbc_label_21.insets = new Insets(0, 0, 0, 5);
+		gbc_label_21.gridx = 0;
+		gbc_label_21.gridy = 4;
+		updateEmployeePanel.add(label_21, gbc_label_21);
+		
+		updateEmployeePhone = new JTextField();
+		updateEmployeePhone.setColumns(10);
+		GridBagConstraints gbc_updateEmployeePhone = new GridBagConstraints();
+		gbc_updateEmployeePhone.fill = GridBagConstraints.HORIZONTAL;
+		gbc_updateEmployeePhone.gridx = 1;
+		gbc_updateEmployeePhone.gridy = 4;
+		updateEmployeePanel.add(updateEmployeePhone, gbc_updateEmployeePhone);
 		
 		JPanel updateCustomerPanel = new JPanel();
 		updateCustomerPanel.setBorder(new TitledBorder(null, "Kunde", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -431,9 +513,9 @@ public class OrderGUI extends JFrame {
 		updatePanel.add(updateCustomerPanel);
 		GridBagLayout gbl_updateCustomerPanel = new GridBagLayout();
 		gbl_updateCustomerPanel.columnWidths = new int[]{0, 0, 0};
-		gbl_updateCustomerPanel.rowHeights = new int[]{0, 0, 0, 0, 0};
+		gbl_updateCustomerPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
 		gbl_updateCustomerPanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_updateCustomerPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_updateCustomerPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		updateCustomerPanel.setLayout(gbl_updateCustomerPanel);
 		
 		JLabel label_4 = new JLabel("Navn");
@@ -444,16 +526,15 @@ public class OrderGUI extends JFrame {
 		gbc_label_4.gridy = 0;
 		updateCustomerPanel.add(label_4, gbc_label_4);
 		
-		textField_5 = new JTextField();
-		textField_5.setText("Lars");
-		textField_5.setEditable(false);
-		textField_5.setColumns(10);
-		GridBagConstraints gbc_textField_5 = new GridBagConstraints();
-		gbc_textField_5.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_5.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_5.gridx = 1;
-		gbc_textField_5.gridy = 0;
-		updateCustomerPanel.add(textField_5, gbc_textField_5);
+		updateCustomerName = new JTextField();
+		updateCustomerName.setEditable(false);
+		updateCustomerName.setColumns(10);
+		GridBagConstraints gbc_updateCustomerName = new GridBagConstraints();
+		gbc_updateCustomerName.fill = GridBagConstraints.HORIZONTAL;
+		gbc_updateCustomerName.insets = new Insets(0, 0, 5, 0);
+		gbc_updateCustomerName.gridx = 1;
+		gbc_updateCustomerName.gridy = 0;
+		updateCustomerPanel.add(updateCustomerName, gbc_updateCustomerName);
 		
 		JLabel label_5 = new JLabel("Adresse");
 		GridBagConstraints gbc_label_5 = new GridBagConstraints();
@@ -463,16 +544,15 @@ public class OrderGUI extends JFrame {
 		gbc_label_5.gridy = 1;
 		updateCustomerPanel.add(label_5, gbc_label_5);
 		
-		textField_6 = new JTextField();
-		textField_6.setText("Lemvigvej 5");
-		textField_6.setEditable(false);
-		textField_6.setColumns(10);
-		GridBagConstraints gbc_textField_6 = new GridBagConstraints();
-		gbc_textField_6.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_6.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_6.gridx = 1;
-		gbc_textField_6.gridy = 1;
-		updateCustomerPanel.add(textField_6, gbc_textField_6);
+		updateCustomerAddress = new JTextField();
+		updateCustomerAddress.setEditable(false);
+		updateCustomerAddress.setColumns(10);
+		GridBagConstraints gbc_updateCustomerAddress = new GridBagConstraints();
+		gbc_updateCustomerAddress.fill = GridBagConstraints.HORIZONTAL;
+		gbc_updateCustomerAddress.insets = new Insets(0, 0, 5, 0);
+		gbc_updateCustomerAddress.gridx = 1;
+		gbc_updateCustomerAddress.gridy = 1;
+		updateCustomerPanel.add(updateCustomerAddress, gbc_updateCustomerAddress);
 		
 		JLabel label_6 = new JLabel("By");
 		GridBagConstraints gbc_label_6 = new GridBagConstraints();
@@ -482,34 +562,49 @@ public class OrderGUI extends JFrame {
 		gbc_label_6.gridy = 2;
 		updateCustomerPanel.add(label_6, gbc_label_6);
 		
-		textField_9 = new JTextField();
-		textField_9.setText("Aalborg");
-		textField_9.setEditable(false);
-		textField_9.setColumns(10);
-		GridBagConstraints gbc_textField_9 = new GridBagConstraints();
-		gbc_textField_9.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_9.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_9.gridx = 1;
-		gbc_textField_9.gridy = 2;
-		updateCustomerPanel.add(textField_9, gbc_textField_9);
+		updateCustomerCity = new JTextField();
+		updateCustomerCity.setEditable(false);
+		updateCustomerCity.setColumns(10);
+		GridBagConstraints gbc_updateCustomerCity = new GridBagConstraints();
+		gbc_updateCustomerCity.fill = GridBagConstraints.HORIZONTAL;
+		gbc_updateCustomerCity.insets = new Insets(0, 0, 5, 0);
+		gbc_updateCustomerCity.gridx = 1;
+		gbc_updateCustomerCity.gridy = 2;
+		updateCustomerPanel.add(updateCustomerCity, gbc_updateCustomerCity);
 		
 		JLabel label_7 = new JLabel("Postnr.");
 		GridBagConstraints gbc_label_7 = new GridBagConstraints();
 		gbc_label_7.anchor = GridBagConstraints.WEST;
-		gbc_label_7.insets = new Insets(0, 0, 0, 5);
+		gbc_label_7.insets = new Insets(0, 0, 5, 5);
 		gbc_label_7.gridx = 0;
 		gbc_label_7.gridy = 3;
 		updateCustomerPanel.add(label_7, gbc_label_7);
 		
-		textField_10 = new JTextField();
-		textField_10.setText("9000");
-		textField_10.setEditable(false);
-		textField_10.setColumns(10);
-		GridBagConstraints gbc_textField_10 = new GridBagConstraints();
-		gbc_textField_10.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_10.gridx = 1;
-		gbc_textField_10.gridy = 3;
-		updateCustomerPanel.add(textField_10, gbc_textField_10);
+		updateCustomerZip = new JTextField();
+		updateCustomerZip.setEditable(false);
+		updateCustomerZip.setColumns(10);
+		GridBagConstraints gbc_updateCustomerZip = new GridBagConstraints();
+		gbc_updateCustomerZip.insets = new Insets(0, 0, 5, 0);
+		gbc_updateCustomerZip.fill = GridBagConstraints.HORIZONTAL;
+		gbc_updateCustomerZip.gridx = 1;
+		gbc_updateCustomerZip.gridy = 3;
+		updateCustomerPanel.add(updateCustomerZip, gbc_updateCustomerZip);
+		
+		JLabel label_22 = new JLabel("Telefon");
+		GridBagConstraints gbc_label_22 = new GridBagConstraints();
+		gbc_label_22.anchor = GridBagConstraints.WEST;
+		gbc_label_22.insets = new Insets(0, 0, 0, 5);
+		gbc_label_22.gridx = 0;
+		gbc_label_22.gridy = 4;
+		updateCustomerPanel.add(label_22, gbc_label_22);
+		
+		updateCustomerPhone = new JTextField();
+		updateCustomerPhone.setColumns(10);
+		GridBagConstraints gbc_updateCustomerPhone = new GridBagConstraints();
+		gbc_updateCustomerPhone.fill = GridBagConstraints.HORIZONTAL;
+		gbc_updateCustomerPhone.gridx = 1;
+		gbc_updateCustomerPhone.gridy = 4;
+		updateCustomerPanel.add(updateCustomerPhone, gbc_updateCustomerPhone);
 		
 		JPanel updateProductPanel = new JPanel();
 		updateProductPanel.setBorder(new TitledBorder(null, "Produkter", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -520,9 +615,9 @@ public class OrderGUI extends JFrame {
 		JScrollPane scrollPane_1 = new JScrollPane();
 		updateProductPanel.add(scrollPane_1, BorderLayout.CENTER);
 		
-		table_1 = new JTable();
-		scrollPane_1.setViewportView(table_1);
-		table_1.setModel(tab);
+		updateProductTable = new JTable();
+		scrollPane_1.setViewportView(updateProductTable);
+		updateProductTable.setModel(updateProductTab);
 		
 		JPanel updateSearchPanel = new JPanel();
 		updateSearchPanel.setBackground(Color.DARK_GRAY);
@@ -550,20 +645,74 @@ public class OrderGUI extends JFrame {
 		gbc_lblIndtastOrdernr.gridy = 0;
 		panel_11.add(lblIndtastOrdernr, gbc_lblIndtastOrdernr);
 		
-		textField_12 = new JTextField();
-		GridBagConstraints gbc_textField_12 = new GridBagConstraints();
-		gbc_textField_12.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_12.insets = new Insets(0, 0, 0, 5);
-		gbc_textField_12.gridx = 1;
-		gbc_textField_12.gridy = 0;
-		panel_11.add(textField_12, gbc_textField_12);
-		textField_12.setColumns(10);
+		orderSearchInputField = new JTextField();
+		GridBagConstraints gbc_orderSearchInputField = new GridBagConstraints();
+		gbc_orderSearchInputField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_orderSearchInputField.insets = new Insets(0, 0, 0, 5);
+		gbc_orderSearchInputField.gridx = 1;
+		gbc_orderSearchInputField.gridy = 0;
+		panel_11.add(orderSearchInputField, gbc_orderSearchInputField);
+		orderSearchInputField.setColumns(10);
 		
-		JButton btnNewButton_3 = new JButton("Find");
-		GridBagConstraints gbc_btnNewButton_3 = new GridBagConstraints();
-		gbc_btnNewButton_3.gridx = 2;
-		gbc_btnNewButton_3.gridy = 0;
-		panel_11.add(btnNewButton_3, gbc_btnNewButton_3);
+		JButton orderSearchBtn = new JButton("Find");
+		orderSearchBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Order order = orderController.getOrder(Integer.parseInt(orderSearchInputField.getText()));
+				
+				updateEmployeeName.setText(order.getEmployee().getName());
+				updateEmployeeAddress.setText(order.getEmployee().getAddress());
+				updateEmployeeCity.setText(order.getEmployee().getCity());
+				updateEmployeeZip.setText(order.getEmployee().getPostalCode());
+				updateEmployeePhone.setText(order.getEmployee().getPhone());
+				
+				updateCustomerName.setText(order.getCustomer().getName());
+				updateCustomerAddress.setText(order.getCustomer().getAddress());
+				updateCustomerCity.setText(order.getCustomer().getCity());
+				updateCustomerZip.setText(order.getCustomer().getPostalCode());
+				updateCustomerPhone.setText(order.getCustomer().getPhone());
+				
+				personEmployeeName.setText(order.getEmployee().getName());
+				personEmployeeAddress.setText(order.getEmployee().getAddress());
+				personEmployeeCity.setText(order.getEmployee().getCity());
+				personEmployeeZip.setText(order.getEmployee().getPostalCode());
+				personEmployeePhone.setText(order.getEmployee().getPhone());
+				
+				personCustomerName.setText(order.getCustomer().getName());
+				personCustomerAddress.setText(order.getCustomer().getAddress());
+				personCustomerCity.setText(order.getCustomer().getCity());
+				personCustomerZip.setText(order.getCustomer().getPostalCode());
+				personCustomerPhone.setText(order.getCustomer().getPhone());
+				
+				int s = updateProductTab.getRowCount();
+				
+				for(int i = 0; i < s; i++) {
+					updateProductTab.removeRow(i);
+				}
+				
+				for(PartOrder partOrder : order.getPartOrders()) {
+					String lineTotal = String.valueOf(partOrder.getAmount() * partOrder.getProduct().getPrice());
+					updateProductTab.addRow(new Object[]{partOrder.getProduct().getTitle(), partOrder.getAmount(), partOrder.getProduct().getPrice(), lineTotal});
+				}
+				
+				int k = productProductTab.getRowCount();
+				
+				for(int i = 0; i < k; i++) {
+					productProductTab.removeRow(i);
+				}
+				
+				int c = updateProductTab.getRowCount();
+				
+				for(int i = 0; i < c; i++) {
+					productProductTab.addRow(new Object[]{updateProductTab.getValueAt(i, 0), updateProductTab.getValueAt(i, 1), updateProductTab.getValueAt(i, 2), updateProductTab.getValueAt(i, 3)});
+				}
+				
+				//productProductTab.setDataVector(updateProductTab.getDataVector(), updateProductTab.columnIdentifiers);
+			}
+		});
+		GridBagConstraints gbc_orderSearchBtn = new GridBagConstraints();
+		gbc_orderSearchBtn.gridx = 2;
+		gbc_orderSearchBtn.gridy = 0;
+		panel_11.add(orderSearchBtn, gbc_orderSearchBtn);
 		
 		JPanel personPanel = new JPanel();
 		tabbedPane.addTab("Tilf\u00F8j Personer", null, personPanel, null);
@@ -606,7 +755,7 @@ public class OrderGUI extends JFrame {
 		
 		JButton personSeachBtn = new JButton("Find");
 		personSeachBtn.addActionListener(new ActionListener() {
-			private OrderController orderController = new OrderController();
+			
 
 			public void actionPerformed(ActionEvent e) {
 				personReturn = getPerson(personSeachInputField.getText());
@@ -614,6 +763,7 @@ public class OrderGUI extends JFrame {
 				personReturnAddress.setText(personReturn.getAddress());
 				personReturnCity.setText(personReturn.getCity());
 				personReturnZip.setText(personReturn.getPostalCode());
+				personReturnPhone.setText(personReturn.getPhone());
 			}
 
 			private Person getPerson(String phone) {
@@ -634,6 +784,61 @@ public class OrderGUI extends JFrame {
 		personPanel.add(personCancelBtn);
 		
 		JButton personConfirmBtn = new JButton("Bekr\u00E6ft");
+		personConfirmBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				/*createEmployeeName.setText(employee.getName());
+				createEmployeeAddress.setText(employee.getAddress());
+				createEmployeeCity.setText(employee.getCity());
+				createEmployeeZip.setText(employee.getPostalCode());
+				createEmployeePhone.setText(employee.getPhone());
+				
+				createCustomerName.setText(customer.getName());
+				createCustomerAddress.setText(customer.getAddress());
+				createCustomerCity.setText(customer.getCity());
+				createCustomerZip.setText(customer.getPostalCode());
+				createCustomerPhone.setText(customer.getPhone());
+				
+				updateEmployeeName.setText(employee.getName());
+				updateEmployeeAddress.setText(employee.getAddress());
+				updateEmployeeCity.setText(employee.getCity());
+				updateEmployeeZip.setText(employee.getPostalCode());
+				updateEmployeePhone.setText(employee.getPhone());
+				
+				updateCustomerName.setText(customer.getName());
+				updateCustomerAddress.setText(customer.getAddress());
+				updateCustomerCity.setText(customer.getCity());
+				updateCustomerZip.setText(customer.getPostalCode());
+				updateCustomerPhone.setText(customer.getPhone());*/
+				
+				
+				
+				createEmployeeName.setText(personEmployeeName.getText());
+				createEmployeeAddress.setText(personEmployeeAddress.getText());
+				createEmployeeCity.setText(personEmployeeCity.getText());
+				createEmployeeZip.setText(personEmployeeZip.getText());
+				createEmployeePhone.setText(personEmployeePhone.getText());
+				
+				createCustomerName.setText(personCustomerName.getText());
+				createCustomerAddress.setText(personCustomerAddress.getText());
+				createCustomerCity.setText(personEmployeeCity.getText());
+				createCustomerZip.setText(personEmployeeZip.getText());
+				createCustomerPhone.setText(personEmployeePhone.getText());
+				
+				createEmployeeName.setText(personEmployeeName.getText());
+				createEmployeeAddress.setText(personEmployeeAddress.getText());
+				createEmployeeCity.setText(personEmployeeCity.getText());
+				createEmployeeZip.setText(personEmployeeZip.getText());
+				createEmployeePhone.setText(personEmployeePhone.getText());
+				
+				createCustomerName.setText(personCustomerName.getText());
+				createCustomerAddress.setText(personCustomerAddress.getText());
+				createCustomerCity.setText(personEmployeeCity.getText());
+				createCustomerZip.setText(personEmployeeZip.getText());
+				createCustomerPhone.setText(personEmployeePhone.getText());
+				
+			}
+		});
 		personConfirmBtn.setBounds(580, 278, 89, 23);
 		personPanel.add(personConfirmBtn);
 		
@@ -643,9 +848,9 @@ public class OrderGUI extends JFrame {
 		personPanel.add(personEmployeePanel);
 		GridBagLayout gbl_personEmployeePanel = new GridBagLayout();
 		gbl_personEmployeePanel.columnWidths = new int[]{0, 0, 0};
-		gbl_personEmployeePanel.rowHeights = new int[]{0, 0, 0, 0, 0};
+		gbl_personEmployeePanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
 		gbl_personEmployeePanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_personEmployeePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_personEmployeePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		personEmployeePanel.setLayout(gbl_personEmployeePanel);
 		
 		JLabel label_8 = new JLabel("Navn");
@@ -705,7 +910,7 @@ public class OrderGUI extends JFrame {
 		JLabel label_11 = new JLabel("Postnr.");
 		GridBagConstraints gbc_label_11 = new GridBagConstraints();
 		gbc_label_11.anchor = GridBagConstraints.WEST;
-		gbc_label_11.insets = new Insets(0, 0, 0, 5);
+		gbc_label_11.insets = new Insets(0, 0, 5, 5);
 		gbc_label_11.gridx = 0;
 		gbc_label_11.gridy = 3;
 		personEmployeePanel.add(label_11, gbc_label_11);
@@ -714,10 +919,28 @@ public class OrderGUI extends JFrame {
 		personEmployeeZip.setEditable(false);
 		personEmployeeZip.setColumns(10);
 		GridBagConstraints gbc_personEmployeeZip = new GridBagConstraints();
+		gbc_personEmployeeZip.insets = new Insets(0, 0, 5, 0);
 		gbc_personEmployeeZip.fill = GridBagConstraints.HORIZONTAL;
 		gbc_personEmployeeZip.gridx = 1;
 		gbc_personEmployeeZip.gridy = 3;
 		personEmployeePanel.add(personEmployeeZip, gbc_personEmployeeZip);
+		
+		JLabel label_23 = new JLabel("Telefon");
+		GridBagConstraints gbc_label_23 = new GridBagConstraints();
+		gbc_label_23.anchor = GridBagConstraints.WEST;
+		gbc_label_23.insets = new Insets(0, 0, 0, 5);
+		gbc_label_23.gridx = 0;
+		gbc_label_23.gridy = 4;
+		personEmployeePanel.add(label_23, gbc_label_23);
+		
+		personEmployeePhone = new JTextField();
+		personEmployeePhone.setEditable(false);
+		personEmployeePhone.setColumns(10);
+		GridBagConstraints gbc_personEmployeePhone = new GridBagConstraints();
+		gbc_personEmployeePhone.fill = GridBagConstraints.HORIZONTAL;
+		gbc_personEmployeePhone.gridx = 1;
+		gbc_personEmployeePhone.gridy = 4;
+		personEmployeePanel.add(personEmployeePhone, gbc_personEmployeePhone);
 		
 		JPanel personCustomerPanel = new JPanel();
 		personCustomerPanel.setBorder(new TitledBorder(null, "Kunde", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -725,9 +948,9 @@ public class OrderGUI extends JFrame {
 		personPanel.add(personCustomerPanel);
 		GridBagLayout gbl_personCustomerPanel = new GridBagLayout();
 		gbl_personCustomerPanel.columnWidths = new int[]{0, 0, 0};
-		gbl_personCustomerPanel.rowHeights = new int[]{0, 0, 0, 0, 0};
+		gbl_personCustomerPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
 		gbl_personCustomerPanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_personCustomerPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_personCustomerPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		personCustomerPanel.setLayout(gbl_personCustomerPanel);
 		
 		JLabel label_12 = new JLabel("Navn");
@@ -787,7 +1010,7 @@ public class OrderGUI extends JFrame {
 		JLabel label_15 = new JLabel("Postnr.");
 		GridBagConstraints gbc_label_15 = new GridBagConstraints();
 		gbc_label_15.anchor = GridBagConstraints.WEST;
-		gbc_label_15.insets = new Insets(0, 0, 0, 5);
+		gbc_label_15.insets = new Insets(0, 0, 5, 5);
 		gbc_label_15.gridx = 0;
 		gbc_label_15.gridy = 3;
 		personCustomerPanel.add(label_15, gbc_label_15);
@@ -796,10 +1019,28 @@ public class OrderGUI extends JFrame {
 		personCustomerZip.setEditable(false);
 		personCustomerZip.setColumns(10);
 		GridBagConstraints gbc_personCustomerZip = new GridBagConstraints();
+		gbc_personCustomerZip.insets = new Insets(0, 0, 5, 0);
 		gbc_personCustomerZip.fill = GridBagConstraints.HORIZONTAL;
 		gbc_personCustomerZip.gridx = 1;
 		gbc_personCustomerZip.gridy = 3;
 		personCustomerPanel.add(personCustomerZip, gbc_personCustomerZip);
+		
+		JLabel label_24 = new JLabel("Telefon");
+		GridBagConstraints gbc_label_24 = new GridBagConstraints();
+		gbc_label_24.anchor = GridBagConstraints.WEST;
+		gbc_label_24.insets = new Insets(0, 0, 0, 5);
+		gbc_label_24.gridx = 0;
+		gbc_label_24.gridy = 4;
+		personCustomerPanel.add(label_24, gbc_label_24);
+		
+		personCustomerPhone = new JTextField();
+		personCustomerPhone.setEditable(false);
+		personCustomerPhone.setColumns(10);
+		GridBagConstraints gbc_personCustomerPhone = new GridBagConstraints();
+		gbc_personCustomerPhone.fill = GridBagConstraints.HORIZONTAL;
+		gbc_personCustomerPhone.gridx = 1;
+		gbc_personCustomerPhone.gridy = 4;
+		personCustomerPanel.add(personCustomerPhone, gbc_personCustomerPhone);
 		
 		JPanel personReturnPanel = new JPanel();
 		personReturnPanel.setBorder(new TitledBorder(null, "Person Fundet", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -892,8 +1133,27 @@ public class OrderGUI extends JFrame {
 				personEmployeeAddress.setText(employee.getAddress());
 				personEmployeeCity.setText(employee.getCity());
 				personEmployeeZip.setText(employee.getPostalCode());
+				personEmployeePhone.setText(employee.getPhone());
 			}
 		});
+		
+		JLabel lblTelefon_1 = new JLabel("Telefon");
+		GridBagConstraints gbc_lblTelefon_1 = new GridBagConstraints();
+		gbc_lblTelefon_1.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTelefon_1.anchor = GridBagConstraints.WEST;
+		gbc_lblTelefon_1.gridx = 0;
+		gbc_lblTelefon_1.gridy = 4;
+		personReturnPanel.add(lblTelefon_1, gbc_lblTelefon_1);
+		
+		personReturnPhone = new JTextField();
+		personReturnPhone.setEditable(false);
+		personReturnPhone.setColumns(10);
+		GridBagConstraints gbc_personReturnPhone = new GridBagConstraints();
+		gbc_personReturnPhone.insets = new Insets(0, 0, 5, 0);
+		gbc_personReturnPhone.fill = GridBagConstraints.HORIZONTAL;
+		gbc_personReturnPhone.gridx = 1;
+		gbc_personReturnPhone.gridy = 4;
+		personReturnPanel.add(personReturnPhone, gbc_personReturnPhone);
 		GridBagConstraints gbc_personAddEmployee = new GridBagConstraints();
 		gbc_personAddEmployee.fill = GridBagConstraints.HORIZONTAL;
 		gbc_personAddEmployee.insets = new Insets(0, 0, 0, 5);
@@ -909,6 +1169,7 @@ public class OrderGUI extends JFrame {
 				personCustomerAddress.setText(customer.getAddress());
 				personCustomerCity.setText(customer.getCity());
 				personCustomerZip.setText(customer.getPostalCode());
+				personCustomerPhone.setText(customer.getPhone());
 			}
 		});
 		GridBagConstraints gbc_personAddCustomer = new GridBagConstraints();
@@ -947,20 +1208,36 @@ public class OrderGUI extends JFrame {
 		gbc_lblIndtastStregkode.gridy = 0;
 		panel_18.add(lblIndtastStregkode, gbc_lblIndtastStregkode);
 		
-		textField_24 = new JTextField();
-		textField_24.setColumns(10);
-		GridBagConstraints gbc_textField_24 = new GridBagConstraints();
-		gbc_textField_24.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_24.insets = new Insets(0, 0, 0, 5);
-		gbc_textField_24.gridx = 1;
-		gbc_textField_24.gridy = 0;
-		panel_18.add(textField_24, gbc_textField_24);
+		productSearchInputField = new JTextField();
+		productSearchInputField.setColumns(10);
+		GridBagConstraints gbc_productSearchInputField = new GridBagConstraints();
+		gbc_productSearchInputField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_productSearchInputField.insets = new Insets(0, 0, 0, 5);
+		gbc_productSearchInputField.gridx = 1;
+		gbc_productSearchInputField.gridy = 0;
+		panel_18.add(productSearchInputField, gbc_productSearchInputField);
 		
-		JButton button_7 = new JButton("Find");
-		GridBagConstraints gbc_button_7 = new GridBagConstraints();
-		gbc_button_7.gridx = 2;
-		gbc_button_7.gridy = 0;
-		panel_18.add(button_7, gbc_button_7);
+		JButton productSearchBtn = new JButton("Find");
+		productSearchBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				productReturn = getProduct(productSearchInputField.getText());
+				
+				productReturnBarcode.setText(productReturn.getBarcode());
+				productReturnTitle.setText(productReturn.getTitle());
+				productReturnDesc.setText(productReturn.getDescription());
+				productReturnPrice.setText(String.valueOf(productReturn.getPrice()));
+				
+			}
+
+			private Product getProduct(String barcode) {
+				return orderController.getProduct(barcode);
+			}
+		});
+		GridBagConstraints gbc_productSearchBtn = new GridBagConstraints();
+		gbc_productSearchBtn.gridx = 2;
+		gbc_productSearchBtn.gridy = 0;
+		panel_18.add(productSearchBtn, gbc_productSearchBtn);
 		
 		JButton productBackBtn = new JButton("Tilbage");
 		productBackBtn.setBounds(10, 278, 89, 23);
@@ -971,6 +1248,39 @@ public class OrderGUI extends JFrame {
 		productPanel.add(productCancelBtn);
 		
 		JButton productConfirmBtn = new JButton("Bekr\u00E6ft");
+		productConfirmBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				barcodes = tmp;
+				
+				int p = createProductTab.getRowCount();
+				
+				for(int i = 0; i < p; i++) {
+					createProductTab.removeRow(i);
+				}
+				
+				int y = updateProductTab.getRowCount();
+				
+				for(int i = 0; i < y; i++) {
+					updateProductTab.removeRow(i);
+				}
+				
+				
+				int c = productProductTab.getRowCount();
+				
+				for(int i = 0; i < c; i++) {
+					createProductTab.addRow(new Object[]{productProductTab.getValueAt(i, 0), productProductTab.getValueAt(i, 1), productProductTab.getValueAt(i, 2), productProductTab.getValueAt(i, 3)});
+				}
+				
+				for(int i = 0; i < c; i++) {
+					updateProductTab.addRow(new Object[]{productProductTab.getValueAt(i, 0), productProductTab.getValueAt(i, 1), productProductTab.getValueAt(i, 2), productProductTab.getValueAt(i, 3)});
+				}
+				
+				//createProductTab.setDataVector(productProductTab.getDataVector(), productProductTab.columnIdentifiers);
+				//updateProductTab.setDataVector(productProductTab.getDataVector(), productProductTab.columnIdentifiers);
+				
+			}
+		});
 		productConfirmBtn.setBounds(580, 278, 89, 23);
 		productPanel.add(productConfirmBtn);
 		
@@ -993,15 +1303,15 @@ public class OrderGUI extends JFrame {
 		gbc_lblStregkode.gridy = 0;
 		productReturnPanel.add(lblStregkode, gbc_lblStregkode);
 		
-		textField_25 = new JTextField();
-		textField_25.setText("1");
-		GridBagConstraints gbc_textField_25 = new GridBagConstraints();
-		gbc_textField_25.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_25.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_25.gridx = 1;
-		gbc_textField_25.gridy = 0;
-		productReturnPanel.add(textField_25, gbc_textField_25);
-		textField_25.setColumns(10);
+		productReturnBarcode = new JTextField();
+		productReturnBarcode.setEditable(false);
+		GridBagConstraints gbc_productReturnBarcode = new GridBagConstraints();
+		gbc_productReturnBarcode.insets = new Insets(0, 0, 5, 0);
+		gbc_productReturnBarcode.fill = GridBagConstraints.HORIZONTAL;
+		gbc_productReturnBarcode.gridx = 1;
+		gbc_productReturnBarcode.gridy = 0;
+		productReturnPanel.add(productReturnBarcode, gbc_productReturnBarcode);
+		productReturnBarcode.setColumns(10);
 		
 		JLabel lblTitel = new JLabel("Titel");
 		GridBagConstraints gbc_lblTitel = new GridBagConstraints();
@@ -1011,15 +1321,15 @@ public class OrderGUI extends JFrame {
 		gbc_lblTitel.gridy = 1;
 		productReturnPanel.add(lblTitel, gbc_lblTitel);
 		
-		txtProdukt = new JTextField();
-		txtProdukt.setText("Produkt 1");
-		GridBagConstraints gbc_txtProdukt = new GridBagConstraints();
-		gbc_txtProdukt.insets = new Insets(0, 0, 5, 0);
-		gbc_txtProdukt.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtProdukt.gridx = 1;
-		gbc_txtProdukt.gridy = 1;
-		productReturnPanel.add(txtProdukt, gbc_txtProdukt);
-		txtProdukt.setColumns(10);
+		productReturnTitle = new JTextField();
+		productReturnTitle.setEditable(false);
+		GridBagConstraints gbc_productReturnTitle = new GridBagConstraints();
+		gbc_productReturnTitle.insets = new Insets(0, 0, 5, 0);
+		gbc_productReturnTitle.fill = GridBagConstraints.HORIZONTAL;
+		gbc_productReturnTitle.gridx = 1;
+		gbc_productReturnTitle.gridy = 1;
+		productReturnPanel.add(productReturnTitle, gbc_productReturnTitle);
+		productReturnTitle.setColumns(10);
 		
 		JLabel lblBeskrivelse = new JLabel("Beskrivelse");
 		GridBagConstraints gbc_lblBeskrivelse = new GridBagConstraints();
@@ -1029,17 +1339,63 @@ public class OrderGUI extends JFrame {
 		gbc_lblBeskrivelse.gridy = 2;
 		productReturnPanel.add(lblBeskrivelse, gbc_lblBeskrivelse);
 		
-		txtProduktEr = new JTextField();
-		txtProduktEr.setText("Produkt 1 er produkt 1");
-		GridBagConstraints gbc_txtProduktEr = new GridBagConstraints();
-		gbc_txtProduktEr.insets = new Insets(0, 0, 5, 0);
-		gbc_txtProduktEr.fill = GridBagConstraints.BOTH;
-		gbc_txtProduktEr.gridx = 1;
-		gbc_txtProduktEr.gridy = 2;
-		productReturnPanel.add(txtProduktEr, gbc_txtProduktEr);
-		txtProduktEr.setColumns(10);
+		productReturnDesc = new JTextField();
+		productReturnDesc.setEditable(false);
+		GridBagConstraints gbc_productReturnDesc = new GridBagConstraints();
+		gbc_productReturnDesc.insets = new Insets(0, 0, 5, 0);
+		gbc_productReturnDesc.fill = GridBagConstraints.BOTH;
+		gbc_productReturnDesc.gridx = 1;
+		gbc_productReturnDesc.gridy = 2;
+		productReturnPanel.add(productReturnDesc, gbc_productReturnDesc);
+		productReturnDesc.setColumns(10);
 		
 		JButton btnTilfjProdukt = new JButton("Tilf\u00F8j");
+		btnTilfjProdukt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String lineTotal = String.valueOf(productReturn.getPrice() * Integer.parseInt(productReturnAmount.getText()));
+				productProductTab.addRow(new Object[]{productReturnTitle.getText(), productReturnAmount.getText(), productReturnPrice.getText(), lineTotal});
+				
+				
+				
+				tmp.put(productReturn.getBarcode(), Integer.parseInt(productReturnAmount.getText()));
+			}
+		});
+		
+		JLabel lblPris = new JLabel("Pris");
+		GridBagConstraints gbc_lblPris = new GridBagConstraints();
+		gbc_lblPris.anchor = GridBagConstraints.WEST;
+		gbc_lblPris.insets = new Insets(0, 0, 5, 5);
+		gbc_lblPris.gridx = 0;
+		gbc_lblPris.gridy = 3;
+		productReturnPanel.add(lblPris, gbc_lblPris);
+		
+		productReturnPrice = new JTextField();
+		productReturnPrice.setEditable(false);
+		GridBagConstraints gbc_productReturnPrice = new GridBagConstraints();
+		gbc_productReturnPrice.insets = new Insets(0, 0, 5, 0);
+		gbc_productReturnPrice.fill = GridBagConstraints.HORIZONTAL;
+		gbc_productReturnPrice.gridx = 1;
+		gbc_productReturnPrice.gridy = 3;
+		productReturnPanel.add(productReturnPrice, gbc_productReturnPrice);
+		productReturnPrice.setColumns(10);
+		
+		JLabel lblAntal = new JLabel("Antal");
+		GridBagConstraints gbc_lblAntal = new GridBagConstraints();
+		gbc_lblAntal.anchor = GridBagConstraints.WEST;
+		gbc_lblAntal.insets = new Insets(0, 0, 5, 5);
+		gbc_lblAntal.gridx = 0;
+		gbc_lblAntal.gridy = 4;
+		productReturnPanel.add(lblAntal, gbc_lblAntal);
+		
+		productReturnAmount = new JTextField();
+		productReturnAmount.setText("1");
+		GridBagConstraints gbc_productReturnAmount = new GridBagConstraints();
+		gbc_productReturnAmount.insets = new Insets(0, 0, 5, 0);
+		gbc_productReturnAmount.fill = GridBagConstraints.HORIZONTAL;
+		gbc_productReturnAmount.gridx = 1;
+		gbc_productReturnAmount.gridy = 4;
+		productReturnPanel.add(productReturnAmount, gbc_productReturnAmount);
+		productReturnAmount.setColumns(10);
 		GridBagConstraints gbc_btnTilfjProdukt = new GridBagConstraints();
 		gbc_btnTilfjProdukt.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnTilfjProdukt.gridwidth = 2;
@@ -1056,8 +1412,8 @@ public class OrderGUI extends JFrame {
 		JScrollPane scrollPane_2 = new JScrollPane();
 		productProductPanel.add(scrollPane_2, BorderLayout.CENTER);
 		
-		table_2 = new JTable();
-		scrollPane_2.setViewportView(table_2);
-		table_2.setModel(tab);
+		productProductTable = new JTable();
+		scrollPane_2.setViewportView(productProductTable);
+		productProductTable.setModel(productProductTab);
 	}
 }
