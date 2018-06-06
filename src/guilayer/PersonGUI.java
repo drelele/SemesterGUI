@@ -22,6 +22,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
+import java.awt.Color;
+import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
 public class PersonGUI extends JFrame {
 
@@ -36,6 +42,7 @@ public class PersonGUI extends JFrame {
 	private JTextField textField_3;
 	private JTextField textField_4;
 	private JTextField textField_7;
+	private JTextField textField_5;
 
 	/**
 	 * Launch the application.
@@ -71,11 +78,12 @@ setBounds(100, 100, 700, 400);
 		mnFile.add(mntmQuit);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		contentPane.setLayout(null);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		contentPane.add(tabbedPane, BorderLayout.CENTER);
+		tabbedPane.setBounds(5, 5, 674, 330);
+		contentPane.add(tabbedPane);
 		
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Opret person", null, panel, null);
@@ -291,8 +299,46 @@ setBounds(100, 100, 700, 400);
 		confirmPerson.setBounds(233, 219, 81, 23);
 		panel_1.add(confirmPerson);
 		
-		JTabbedPane updatePerson = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addTab("Rediger person", null, updatePerson, null);
+		JPanel panel_3 = new JPanel();
+		panel_3.setBackground(Color.DARK_GRAY);
+		tabbedPane.addTab("Rediger person", null, panel_3, null);
+		tabbedPane.setEnabledAt(1, false);
+		panel_3.setLayout(null);
+		
+		JPanel panel_6 = new JPanel();
+		panel_6.setBounds(174, 11, 331, 49);
+		panel_6.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Find Person", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 255, 255)));
+		panel_6.setBackground(Color.DARK_GRAY);
+		panel_3.add(panel_6);
+		GridBagLayout gbl_panel_6 = new GridBagLayout();
+		gbl_panel_6.columnWidths = new int[]{0, 0, 0, 0};
+		gbl_panel_6.rowHeights = new int[]{0, 0};
+		gbl_panel_6.columnWeights = new double[]{0.0, 1.0, 1.0, Double.MIN_VALUE};
+		gbl_panel_6.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panel_6.setLayout(gbl_panel_6);
+		
+		JLabel label_5 = new JLabel("Indtast telefonnr.");
+		label_5.setForeground(Color.WHITE);
+		GridBagConstraints gbc_label_5 = new GridBagConstraints();
+		gbc_label_5.insets = new Insets(0, 0, 0, 5);
+		gbc_label_5.gridx = 0;
+		gbc_label_5.gridy = 0;
+		panel_6.add(label_5, gbc_label_5);
+		
+		textField_5 = new JTextField();
+		textField_5.setColumns(10);
+		GridBagConstraints gbc_textField_5 = new GridBagConstraints();
+		gbc_textField_5.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField_5.insets = new Insets(0, 0, 0, 5);
+		gbc_textField_5.gridx = 1;
+		gbc_textField_5.gridy = 0;
+		panel_6.add(textField_5, gbc_textField_5);
+		
+		JButton button = new JButton("Find");
+		GridBagConstraints gbc_button = new GridBagConstraints();
+		gbc_button.gridx = 2;
+		gbc_button.gridy = 0;
+		panel_6.add(button, gbc_button);
 		
 		
 		
