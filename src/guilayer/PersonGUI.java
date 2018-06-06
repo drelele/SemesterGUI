@@ -235,7 +235,7 @@ setBounds(100, 100, 700, 471);
 		 */
 		
 		JButton btnConfirmPerson = new JButton("Bek\u00E6ft");
-		btnConfirmPerson.setEnabled(isEnabled());
+		btnConfirmPerson.isEnabled();
 		btnConfirmPerson.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
