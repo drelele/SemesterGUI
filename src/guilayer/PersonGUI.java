@@ -1,10 +1,18 @@
 package guilayer;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -18,30 +26,14 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
-import java.awt.Color;
-import javax.swing.border.TitledBorder;
+import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import java.awt.FlowLayout;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 
 import controllerlayer.PersonController;
-import modellayer.*;
-import javax.swing.border.LineBorder;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JTextPane;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import modellayer.Person;
 
 public class PersonGUI extends JFrame {
 
@@ -54,6 +46,7 @@ public class PersonGUI extends JFrame {
 	private JTextField textFieldCity;
 	private JTextField textFieldPostalCode;
 	private JTextField textFieldPhone;
+	private JTextField textFieldAddress;
 	private JTextField textFieldName;
 	private JTextField textField;
 	private JTextField textField_1;
@@ -73,11 +66,14 @@ public class PersonGUI extends JFrame {
 	private JTextField textFieldConfirmPostalCode;
 	private JTextField textField_16;
 
+	
+
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					PersonGUI frame = new PersonGUI();
@@ -110,19 +106,22 @@ setBounds(100, 100, 700, 471);
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 		tabbedPane.setBounds(5, 5, 674, 395);
 		contentPane.add(tabbedPane);
 		
-		JPanel panel = new JPanel();
-		tabbedPane.addTab("Opret person", null, panel, null);
-		panel.setLayout(null);
+		JPanel panelCreatePerson = new JPanel();
+		tabbedPane.addTab("Opret person", null, panelCreatePerson, null);
+		panelCreatePerson.setLayout(null);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(0, 11, 324, 304);
-		panel.add(panel_1);
+		panelCreatePerson.add(panel_1);
 		panel_1.setLayout(null);
 		
+		/*
+		 * Text fields createTab editable 
+		 */
 		JLabel lblName = new JLabel("Navn");
 		lblName.setBounds(10, 3, 48, 14);
 		panel_1.add(lblName);
@@ -135,29 +134,13 @@ setBounds(100, 100, 700, 471);
 		lblAddress.setBounds(10, 53, 48, 14);
 		panel_1.add(lblAddress);
 		
-		JTextField textFieldAddress = new JTextField();
-		textFieldAddress.setBounds(93, 50, 221, 20);
-		textFieldAddress.setColumns(10);
-		panel_1.add(textFieldAddress);
-		
 		JLabel lblBy = new JLabel("By");
 		lblBy.setBounds(10, 78, 48, 14);
 		panel_1.add(lblBy);
 		
-		textFieldCity = new JTextField();
-		textFieldCity.setBounds(93, 75, 221, 20);
-		textFieldCity.setColumns(10);
-		panel_1.add(textFieldCity);
-		
 		JLabel lblPostNr = new JLabel("Post nr.");
 		lblPostNr.setBounds(10, 103, 48, 14);
 		panel_1.add(lblPostNr);
-		
-		textFieldPostalCode = new JTextField();
-		textFieldPostalCode.setBounds(93, 100, 221, 20);
-		textFieldPostalCode.setColumns(10);
-		panel_1.add(textFieldPostalCode);
-		
 		
 		JRadioButton rdbtnKunde = new JRadioButton("Kunde");
 		rdbtnKunde.setBounds(93, 127, 70, 23);
@@ -171,21 +154,14 @@ setBounds(100, 100, 700, 471);
 		group.add(rdbtnKunde);	
 		group.add(rdbtnMedarbejder);	
 		
-		textFieldPhone = new JTextField();
-		textFieldPhone.setColumns(10);
-		textFieldPhone.setBounds(93, 25, 221, 20);
-		panel_1.add(textFieldPhone);
-		
-		textFieldName = new JTextField();
-		textFieldName.setColumns(10);
-		textFieldName.setBounds(93, 0, 221, 20);
-		panel_1.add(textFieldName);
-		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(334, 11, 335, 304);
-		panel.add(panel_2);
+		panelCreatePerson.add(panel_2);
 		panel_2.setLayout(null);
 		
+		/*
+		 * Text fields createTab none editable 
+		 */
 		textField = new JTextField();
 		textField.setEditable(false);
 		textField.setColumns(10);
@@ -254,12 +230,15 @@ setBounds(100, 100, 700, 471);
 		chckbxKundenummer.setBounds(83, 127, 85, 14);
 		panel_2.add(chckbxKundenummer);
 		
+		/*
+		 * Button confirmPerson
+		 */
 		
-		
-		JButton confirmPerson = new JButton("Bek\u00E6ft");
-		confirmPerson.addActionListener(new ActionListener() {
+		JButton btnConfirmPerson = new JButton("Bek\u00E6ft");
+		btnConfirmPerson.setEnabled(isEnabled());
+		btnConfirmPerson.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
-
 				confirmPersonInput();
 			}
 			private void confirmPersonInput() {
@@ -269,69 +248,105 @@ setBounds(100, 100, 700, 471);
 				textField_3.setText(textFieldCity.getText());
 				textField_4.setText(textFieldPostalCode.getText());
 				
-				try {
-					if (rdbtnMedarbejder.isSelected() == true) {
-						chckbxMedarbejderNummer.setSelected(true);
-					} else {
-						chckbxMedarbejderNummer.setSelected(false);
-					} if (rdbtnKunde.isSelected() == true) {
-						chckbxKundenummer.setSelected(true);
-					} else {
-						chckbxKundenummer.setSelected(false);
-					}
-					
-					    
-					
-				} catch (Exception e) {
-					
-					
-				}
-				
-				
 			}
-			
-			
 		});
+		btnConfirmPerson.setBounds(225, 270, 89, 23);
+		panel_1.add(btnConfirmPerson);
 		
-		if(textFieldName.getText().trim().isEmpty()) {
-			confirmPerson.setEnabled(false);
-		} else {
-			confirmPerson.setEnabled(true);
-		}
+		/*
+		 * Check if Fields is empty
+		 */
+		textFieldName = new JTextField();
+		textFieldName.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				btnConfirmPerson.setEnabled(true);
+			}
+		});
+		textFieldName.setColumns(10);
+		textFieldName.setBounds(93, 0, 221, 20);
+		panel_1.add(textFieldName);
 		
-		confirmPerson.setBounds(233, 270, 81, 23);
-		panel_1.add(confirmPerson);
+		textFieldPhone = new JTextField();
+		textFieldPhone.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				btnConfirmPerson.setEnabled(true);
+			}
+		});
+		textFieldPhone.setColumns(10);
+		textFieldPhone.setBounds(93, 25, 221, 20);
+		panel_1.add(textFieldPhone);
 		
-		JButton button_5 = new JButton("Annuller");
-		button_5.setBounds(471, 333, 89, 23);
-		panel.add(button_5);
+		textFieldAddress = new JTextField();
+		textFieldAddress.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				btnConfirmPerson.setEnabled(true);
+			}
+		});
+		textFieldAddress.setBounds(93, 50, 221, 20);
+		textFieldAddress.setColumns(10);
+		panel_1.add(textFieldAddress);
+		
+		textFieldCity = new JTextField();
+		textFieldCity.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				btnConfirmPerson.setEnabled(true);
+			}
+		});
+		textFieldCity.setBounds(93, 75, 221, 20);
+		textFieldCity.setColumns(10);
+		panel_1.add(textFieldCity);
+		
+		textFieldPostalCode = new JTextField();
+		textFieldPostalCode.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				btnConfirmPerson.setEnabled(true);
+			}
+		});
+		textFieldPostalCode.setBounds(93, 100, 221, 20);
+		textFieldPostalCode.setColumns(10);
+		panel_1.add(textFieldPostalCode);
 		
 		JButton button_7 = new JButton("Tilbage");
 		button_7.setBounds(0, 333, 89, 23);
-		panel.add(button_7);
+		panelCreatePerson.add(button_7);
 		
-		JButton btnNewButton_2 = new JButton("Bek\u00E6ft");
-		btnNewButton_2.setBounds(570, 333, 89, 23);
-		panel.add(btnNewButton_2);
-		btnNewButton_2.setEnabled(false);
-		btnNewButton_2.addActionListener(new ActionListener() {
+		/*
+		 * Create & Cancel buttons
+		 */
+		
+		JButton button_5 = new JButton("Annuller");
+		button_5.setBounds(471, 333, 89, 23);
+		panelCreatePerson.add(button_5);
+		
+		JButton btnCreate = new JButton("Bek\u00E6ft");
+		btnCreate.setBounds(570, 333, 89, 23);
+		panelCreatePerson.add(btnCreate);
+		
+		btnCreate.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
 			}
 		});
 		
-		JPanel panel_7 = new JPanel();
-		panel_7.setBorder(null);
-		tabbedPane.addTab("\u00C6ndre person", null, panel_7, null);
-		panel_7.setLayout(null);
+		/*
+		 * Edit Person Tab
+		 */
 		
-		
-		
+		JPanel panelEditPerson = new JPanel();
+		panelEditPerson.setBorder(null);
+		tabbedPane.addTab("\u00C6ndre person", null, panelEditPerson, null);
+		panelEditPerson.setLayout(null);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(Color.DARK_GRAY);
 		panel_3.setBounds(0, 0, 669, 71);
-		panel_7.add(panel_3);
+		panelEditPerson.add(panel_3);
 		
 		JPanel panel_10 = new JPanel();
 		panel_10.setBackground(Color.DARK_GRAY);
@@ -349,6 +364,9 @@ setBounds(100, 100, 700, 471);
 		gbl_panel_11.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel_11.setLayout(gbl_panel_11);
 		
+		/*
+		 * Search panel 
+		 */
 		JLabel label_16 = new JLabel("Indtast telefonnr.");
 		label_16.setForeground(Color.WHITE);
 		GridBagConstraints gbc_label_16 = new GridBagConstraints();
@@ -367,16 +385,19 @@ setBounds(100, 100, 700, 471);
 		panel_11.add(textFieldfindPerson, gbc_textFieldfindPerson);
 		
 
-		
+		/*
+		 * Buttons confirmAll & cancel
+		 */
 		JButton button_1 = new JButton("Annuller");
 		button_1.setBounds(471, 333, 89, 23);
-		panel_7.add(button_1);
+		panelEditPerson.add(button_1);
 		
 		JButton button_ConfirmAll = new JButton("Bekr\u00E6ft");
 		button_ConfirmAll.setEnabled(false);
 		button_ConfirmAll.addActionListener(new ActionListener() {
 			
 			PersonController personCtrl = new PersonController();
+			@Override
 			public void actionPerformed(ActionEvent e) { 
 				
 				String newName = textFieldConfirmName.getText();
@@ -388,7 +409,7 @@ setBounds(100, 100, 700, 471);
 				
 				JPanel personUpdated = new JPanel();
 				personUpdated.setBounds(237, 140, 205, 115);
-				panel_7.add(personUpdated);
+				panelEditPerson.add(personUpdated);
 				personUpdated.setBackground(Color.DARK_GRAY);
 				personUpdated.setForeground(Color.DARK_GRAY);
 				personUpdated.setLayout(null);
@@ -438,7 +459,7 @@ setBounds(100, 100, 700, 471);
 		panel_8.setBorder(null);
 		panel_8.setLayout(null);
 		panel_8.setBounds(0, 76, 324, 253);
-		panel_7.add(panel_8);
+		panelEditPerson.add(panel_8);
 		
 		JLabel label_5 = new JLabel("Navn");
 		label_5.setBounds(10, 3, 48, 14);
@@ -479,16 +500,16 @@ setBounds(100, 100, 700, 471);
 		button_ConfirmChanges.setBounds(225, 219, 89, 23);
 		panel_8.add(button_ConfirmChanges);
 		button_ConfirmAll.setBounds(570, 333, 89, 23);
-		panel_7.add(button_ConfirmAll);
+		panelEditPerson.add(button_ConfirmAll);
 		
 		JButton button_4 = new JButton("Tilbage");
 		button_4.setBounds(0, 333, 89, 23);
-		panel_7.add(button_4);
+		panelEditPerson.add(button_4);
 		
 		JPanel panel_9 = new JPanel();
 		panel_9.setLayout(null);
 		panel_9.setBounds(334, 76, 335, 253);
-		panel_7.add(panel_9);
+		panelEditPerson.add(panel_9);
 		
 		textFieldReturnName = new JTextField();
 		textFieldReturnName.addKeyListener(new KeyAdapter() {
@@ -612,6 +633,7 @@ setBounds(100, 100, 700, 471);
 		button_3.addActionListener(new ActionListener() {
 			
 			PersonController personCtrl = new PersonController();
+			@Override
 			public void actionPerformed(ActionEvent e) {				
 				try {	
 				returnPerson = getPerson(textFieldfindPerson.getText());
@@ -643,7 +665,7 @@ setBounds(100, 100, 700, 471);
 				
 				JPanel errorPanel = new JPanel();
 				errorPanel.setBounds(237, 140, 205, 115);
-				panel_7.add(errorPanel);
+				panelEditPerson.add(errorPanel);
 				errorPanel.setBackground(Color.DARK_GRAY);
 				errorPanel.setForeground(Color.DARK_GRAY);
 				errorPanel.setLayout(null);

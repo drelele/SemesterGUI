@@ -1,7 +1,5 @@
 package controllerlayer;
 import modellayer.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Lav en beskrivelse af klassen ProductController her.
@@ -18,7 +16,7 @@ public class ProductController
      */
     public ProductController()
     {
-        this.productContainer = productContainer.getInstance();
+        this.productContainer = ProductContainer.getInstance();
         
         Product product = new Product("Product 1", "Desc1", 50);
         product.addItem(5);

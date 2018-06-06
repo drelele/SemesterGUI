@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
@@ -81,6 +82,7 @@ public class OrderGUI4 extends JFrame {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					OrderGUI4 frame = new OrderGUI4();
@@ -119,7 +121,7 @@ public class OrderGUI4 extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 		
 		JPanel createPanel = new JPanel();
@@ -608,6 +610,7 @@ public class OrderGUI4 extends JFrame {
 		personSeachBtn.addActionListener(new ActionListener() {
 			private OrderController orderController = new OrderController();
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				personReturn = getPerson(personSeachInputField.getText());
 				personReturnName.setText(personReturn.getName());
@@ -886,6 +889,7 @@ public class OrderGUI4 extends JFrame {
 		
 		JButton personAddEmployee = new JButton("Tilf\u00F8j Medarbejder");
 		personAddEmployee.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				employee = personReturn;
 				personEmployeeName.setText(employee.getName());
@@ -903,6 +907,7 @@ public class OrderGUI4 extends JFrame {
 		
 		JButton personAddCustomer = new JButton("Tilf\u00F8j Kunde");
 		personAddCustomer.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				customer = personReturn;
 				personCustomerName.setText(customer.getName());

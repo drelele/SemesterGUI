@@ -1,6 +1,5 @@
 package modellayer;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Lav en beskrivelse af klassen OrderContainer her.
