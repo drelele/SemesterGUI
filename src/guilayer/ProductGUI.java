@@ -89,7 +89,7 @@ public class ProductGUI extends JFrame {
 	 */
 	public ProductGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 700, 400);
+		setBounds(100, 100, 700, 463);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -213,7 +213,7 @@ public class ProductGUI extends JFrame {
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel.createSequentialGroup()
+						.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
 							.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
 							.addComponent(pnlCtrProduct, GroupLayout.PREFERRED_SIZE, 312, GroupLayout.PREFERRED_SIZE))
@@ -226,9 +226,9 @@ public class ProductGUI extends JFrame {
 					.addContainerGap()
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addComponent(pnlCtrProduct, GroupLayout.PREFERRED_SIZE, 273, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 188, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
+						.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+							.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 197, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
 							.addComponent(btnBack)))
 					.addContainerGap())
 		);
@@ -1044,9 +1044,7 @@ public class ProductGUI extends JFrame {
 				.addGroup(gl_panel_9.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(btnBack4)
-					.addContainerGap(582, Short.MAX_VALUE))
-				.addGroup(gl_panel_9.createSequentialGroup()
-					.addGap(164)
+					.addGap(87)
 					.addComponent(panel_12, GroupLayout.PREFERRED_SIZE, 331, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(164, Short.MAX_VALUE))
 		);
@@ -1054,11 +1052,15 @@ public class ProductGUI extends JFrame {
 			gl_panel_9.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_9.createSequentialGroup()
 					.addComponent(panel_11, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(panel_12, GroupLayout.PREFERRED_SIZE, 285, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
-					.addComponent(btnBack4)
-					.addContainerGap())
+					.addGroup(gl_panel_9.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_9.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED, 297, Short.MAX_VALUE)
+							.addComponent(btnBack4)
+							.addContainerGap())
+						.addGroup(gl_panel_9.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(panel_12, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())))
 		);
 		panel_9.setLayout(gl_panel_9);
 		
@@ -1141,10 +1143,9 @@ public class ProductGUI extends JFrame {
 		GroupLayout gl_panel_15 = new GroupLayout(panel_15);
 		gl_panel_15.setHorizontalGroup(
 			gl_panel_15.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 331, Short.MAX_VALUE)
 				.addGroup(gl_panel_15.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_15.createParallelGroup(Alignment.TRAILING)
+					.addGroup(gl_panel_15.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_15.createSequentialGroup()
 							.addGroup(gl_panel_15.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblShowBarcode4)
@@ -1169,13 +1170,12 @@ public class ProductGUI extends JFrame {
 								.addGroup(gl_panel_15.createSequentialGroup()
 									.addComponent(txtShowPrice4, GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
 									.addGap(10))))
-						.addGroup(gl_panel_15.createSequentialGroup()
+						.addGroup(Alignment.TRAILING, gl_panel_15.createSequentialGroup()
 							.addComponent(btnDelete)
 							.addContainerGap())))
 		);
 		gl_panel_15.setVerticalGroup(
 			gl_panel_15.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 285, Short.MAX_VALUE)
 				.addGroup(gl_panel_15.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel_15.createParallelGroup(Alignment.BASELINE)
@@ -1201,7 +1201,7 @@ public class ProductGUI extends JFrame {
 					.addGroup(gl_panel_15.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblShowStock4)
 						.addComponent(txtShowStock4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
 					.addComponent(btnDelete)
 					.addContainerGap())
 		);
@@ -1217,22 +1217,20 @@ public class ProductGUI extends JFrame {
 			gl_panel_13.createParallelGroup(Alignment.LEADING)
 				.addComponent(panel_14, GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE)
 				.addGroup(gl_panel_13.createSequentialGroup()
-					.addGap(164)
-					.addComponent(panel_15, GroupLayout.PREFERRED_SIZE, 331, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(164, Short.MAX_VALUE))
-				.addGroup(gl_panel_13.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(btnBack5)
-					.addContainerGap(564, Short.MAX_VALUE))
+					.addGap(87)
+					.addComponent(panel_15, GroupLayout.PREFERRED_SIZE, 331, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(164, Short.MAX_VALUE))
 		);
 		gl_panel_13.setVerticalGroup(
 			gl_panel_13.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_13.createSequentialGroup()
 					.addComponent(panel_14, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(panel_15, GroupLayout.PREFERRED_SIZE, 285, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-					.addComponent(btnBack5)
+					.addGroup(gl_panel_13.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnBack5, Alignment.TRAILING)
+						.addComponent(panel_15, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		panel_13.setLayout(gl_panel_13);
