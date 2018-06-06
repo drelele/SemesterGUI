@@ -42,7 +42,7 @@ public class OrderGUI extends JFrame {
 	public OrderGUI() {
 		setTitle("Salg");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 530, 362);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);

@@ -96,7 +96,7 @@ public class OrderGUI4 extends JFrame {
 		setResizable(false);
 		setTitle("Salg - Vestbjerg Byggecenter");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 700, 400);
+		setBounds(100, 100, 705, 399);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -518,7 +518,7 @@ public class OrderGUI4 extends JFrame {
 		
 		JPanel panel_10 = new JPanel();
 		panel_10.setBackground(Color.DARK_GRAY);
-		panel_10.setBounds(0, 0, 679, 71);
+		panel_10.setBounds(0, 0, 669, 71);
 		panel_1.add(panel_10);
 		panel_10.setLayout(null);
 		
