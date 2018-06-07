@@ -31,6 +31,7 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
+import javax.swing.JSlider;
 
 public class OrderGUI extends JFrame {
 
@@ -97,6 +98,7 @@ public class OrderGUI extends JFrame {
 	private JTextField personEmployeePhone;
 	private JTextField personCustomerPhone;
 	private JTextField productReturnStock;
+	private JSlider productReturnSlider;
 	
 
 	/**
@@ -419,7 +421,16 @@ public class OrderGUI extends JFrame {
 		updateConfirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				int c = updateProductTab.getRowCount();
+				
 				orderController.updateOrder(orderReturn, updateEmployeePhone.getText(), updateCustomerPhone.getText(), barcodes);
+				
+				for(int i = 0; i < c; i++) {
+					Integer amount = Integer.valueOf(updateProductTab.getValueAt(i, 1).toString());
+					orderController.updatePartOrder(orderReturn, i, amount);
+				}				
+				
 			}
 		});
 		updateConfirmBtn.setBounds(580, 278, 89, 23);
@@ -1070,7 +1081,7 @@ public class OrderGUI extends JFrame {
 		
 		JLabel label_16 = new JLabel("Navn");
 		GridBagConstraints gbc_label_16 = new GridBagConstraints();
-		gbc_label_16.fill = GridBagConstraints.HORIZONTAL;
+		gbc_label_16.anchor = GridBagConstraints.WEST;
 		gbc_label_16.insets = new Insets(0, 0, 5, 5);
 		gbc_label_16.gridx = 0;
 		gbc_label_16.gridy = 0;
@@ -1245,8 +1256,8 @@ public class OrderGUI extends JFrame {
 				productReturnTitle.setText(productReturn.getTitle());
 				productReturnDesc.setText(productReturn.getDescription());
 				productReturnPrice.setText(String.valueOf(productReturn.getPrice()));
-				productReturnStock.setText(String.valueOf(productReturn.getStock()));
-				
+				productReturnStock.setText(String.valueOf(productReturn.getAmount()));
+				productReturnSlider.setMaximum(productReturn.getAmount());
 			}
 
 			private Product getProduct(String barcode) {
@@ -1301,7 +1312,7 @@ public class OrderGUI extends JFrame {
 		GridBagLayout gbl_productReturnPanel = new GridBagLayout();
 		gbl_productReturnPanel.columnWidths = new int[]{0, 0, 0};
 		gbl_productReturnPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gbl_productReturnPanel.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
+		gbl_productReturnPanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
 		gbl_productReturnPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		productReturnPanel.setLayout(gbl_productReturnPanel);
 		
@@ -1364,7 +1375,7 @@ public class OrderGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String lineTotal = String.valueOf(productReturn.getPrice() * Integer.parseInt(productReturnAmount.getText()));
-				productProductTab.addRow(new Object[]{productReturnTitle.getText(), productReturnAmount.getText(), productReturnPrice.getText(), lineTotal});
+				productProductTab.addRow(new Object[]{productReturnTitle.getText(), productReturnSlider.getValue(), productReturnPrice.getText(), lineTotal});
 				
 				tmp.put(productReturn.getBarcode(), Integer.parseInt(productReturnAmount.getText()));
 				
@@ -1407,20 +1418,19 @@ public class OrderGUI extends JFrame {
 		productReturnPanel.add(productReturnStock, gbc_productReturnStock);
 		productReturnStock.setColumns(10);
 		GridBagConstraints gbc_btnTilfjProdukt = new GridBagConstraints();
+		gbc_btnTilfjProdukt.anchor = GridBagConstraints.WEST;
 		gbc_btnTilfjProdukt.insets = new Insets(0, 0, 0, 5);
-		gbc_btnTilfjProdukt.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnTilfjProdukt.gridx = 0;
 		gbc_btnTilfjProdukt.gridy = 5;
 		productReturnPanel.add(btnTilfjProdukt, gbc_btnTilfjProdukt);
 		
-		productReturnAmount = new JTextField();
-		productReturnAmount.setText("1");
-		GridBagConstraints gbc_productReturnAmount = new GridBagConstraints();
-		gbc_productReturnAmount.fill = GridBagConstraints.HORIZONTAL;
-		gbc_productReturnAmount.gridx = 1;
-		gbc_productReturnAmount.gridy = 5;
-		productReturnPanel.add(productReturnAmount, gbc_productReturnAmount);
-		productReturnAmount.setColumns(10);
+		productReturnSlider = new JSlider();
+		productReturnSlider.setSnapToTicks(true);
+		GridBagConstraints gbc_productReturnSlider = new GridBagConstraints();
+		gbc_productReturnSlider.fill = GridBagConstraints.HORIZONTAL;
+		gbc_productReturnSlider.gridx = 1;
+		gbc_productReturnSlider.gridy = 5;
+		productReturnPanel.add(productReturnSlider, gbc_productReturnSlider);
 		
 		JPanel productProductPanel = new JPanel();
 		productProductPanel.setBorder(new TitledBorder(null, "Produkter", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -1434,6 +1444,13 @@ public class OrderGUI extends JFrame {
 		productProductTable = new JTable();
 		scrollPane_2.setViewportView(productProductTable);
 		productProductTable.setModel(productProductTab);
+		
+		productReturnAmount = new JTextField();
+		productReturnAmount.setEnabled(false);
+		productReturnAmount.setBounds(135, 279, 127, 20);
+		productPanel.add(productReturnAmount);
+		productReturnAmount.setText("1");
+		productReturnAmount.setColumns(10);
 	}
 	
 	//Empty/reset table
