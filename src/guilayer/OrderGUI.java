@@ -83,7 +83,6 @@ public class OrderGUI extends JFrame {
 	
 	private Product productReturn;
 	private JTextField productReturnPrice;
-	private JTextField productReturnAmount;
 	
 	private Order orderReturn;
 	
@@ -425,6 +424,8 @@ public class OrderGUI extends JFrame {
 				int c = updateProductTab.getRowCount();
 				
 				orderController.updateOrder(orderReturn, updateEmployeePhone.getText(), updateCustomerPhone.getText(), barcodes);
+				
+				barcodes = new HashMap<>();
 				
 				for(int i = 0; i < c; i++) {
 					Integer amount = Integer.valueOf(updateProductTab.getValueAt(i, 1).toString());
@@ -1374,10 +1375,10 @@ public class OrderGUI extends JFrame {
 		btnTilfjProdukt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String lineTotal = String.valueOf(productReturn.getPrice() * Integer.parseInt(productReturnAmount.getText()));
+				String lineTotal = String.valueOf(productReturn.getPrice() * (productReturnSlider.getValue()));
 				productProductTab.addRow(new Object[]{productReturnTitle.getText(), productReturnSlider.getValue(), productReturnPrice.getText(), lineTotal});
 				
-				tmp.put(productReturn.getBarcode(), Integer.parseInt(productReturnAmount.getText()));
+				tmp.put(productReturn.getBarcode(), (productReturnSlider.getValue()));
 				
 			}
 		});
@@ -1444,13 +1445,6 @@ public class OrderGUI extends JFrame {
 		productProductTable = new JTable();
 		scrollPane_2.setViewportView(productProductTable);
 		productProductTable.setModel(productProductTab);
-		
-		productReturnAmount = new JTextField();
-		productReturnAmount.setEnabled(false);
-		productReturnAmount.setBounds(135, 279, 127, 20);
-		productPanel.add(productReturnAmount);
-		productReturnAmount.setText("1");
-		productReturnAmount.setColumns(10);
 	}
 	
 	//Empty/reset table
