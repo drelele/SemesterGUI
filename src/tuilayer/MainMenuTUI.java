@@ -1,8 +1,5 @@
 package tuilayer;
 import java.util.Scanner;
-import java.util.ArrayList;
-
-import modellayer.*;
 
 /**
  * MainMenuTUI indeholder metoder for det overordnede Text User Interface.

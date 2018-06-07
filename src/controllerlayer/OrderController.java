@@ -20,7 +20,7 @@ public class OrderController
      */
     public OrderController()
     {
-        this.orderContainer = orderContainer.getInstance();
+        this.orderContainer = OrderContainer.getInstance();
         this.personController = new PersonController();
         this.productController = new ProductController();
 

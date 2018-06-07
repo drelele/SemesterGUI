@@ -1,6 +1,5 @@
 package tuilayer;
 import java.util.Scanner;
-import java.util.ArrayList;
 import controllerlayer.PersonController;
 import modellayer.*; 
 

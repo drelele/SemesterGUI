@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import controllerlayer.ProductController;
 import modellayer.Product;
 import modellayer.Item;
-import java.util.InputMismatchException;
 /**
  * Write a description of class ProductTUI here.
  *

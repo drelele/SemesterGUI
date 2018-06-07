@@ -1,7 +1,5 @@
 package controllerlayer;
 import modellayer.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Lav en beskrivelse af klassen CustomerController her.
@@ -18,7 +16,7 @@ public class PersonController
      */
     public PersonController()
     {
-        this.personContainer = personContainer.getInstance();
+        this.personContainer = PersonContainer.getInstance();
 
          personContainer.addPerson(new Employee("John", "1", "1", "1", "1"));
          personContainer.addPerson(new Customer("Lukas", "2", "1", "1", "1"));

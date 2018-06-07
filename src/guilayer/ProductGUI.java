@@ -1,6 +1,5 @@
 package guilayer;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -12,13 +11,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
-import javax.swing.UIManager;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -67,12 +66,18 @@ public class ProductGUI extends JFrame {
 	private JTextField txtShowAmount4;
 	private JTextField txtShowStock4;
 	private JTextField txtShowPrice4;
-
+	
+	private String name;
+	private String description;
+	private double price;
+	private JTextArea txtAreaDescription;
+	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					ProductGUI frame = new ProductGUI();
@@ -94,7 +99,7 @@ public class ProductGUI extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -250,6 +255,14 @@ public class ProductGUI extends JFrame {
 		JButton btnCtrCancel = new JButton("Cancel");
 		
 		JButton btnCtrCreate = new JButton("Opret");
+		btnCtrCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				name = txtCtrName.getText();
+				//description = txtAreaDescription.
+				
+				//createProduct();
+			}
+		});
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
 		gl_panel_1.setHorizontalGroup(
 			gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -294,7 +307,7 @@ public class ProductGUI extends JFrame {
 					.addContainerGap())
 		);
 		
-		JTextArea txtAreaDescription = new JTextArea();
+		txtAreaDescription = new JTextArea();
 		scrCtrDescription.setViewportView(txtAreaDescription);
 		panel_1.setLayout(gl_panel_1);
 		panel.setLayout(gl_panel);
@@ -962,6 +975,7 @@ public class ProductGUI extends JFrame {
 		
 		JButton btnEdit = new JButton("\u00C6ndre");
 		btnEdit.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
@@ -1235,5 +1249,9 @@ public class ProductGUI extends JFrame {
 		);
 		panel_13.setLayout(gl_panel_13);
 		contentPane.setLayout(gl_contentPane);
+	}
+	private void createProduct(String name, String description, double price) 
+	{
+		
 	}
 }

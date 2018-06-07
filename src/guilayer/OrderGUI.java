@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
@@ -28,7 +29,6 @@ import modellayer.*;
 
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-import java.util.Vector;
 import java.awt.event.ActionEvent;
 
 public class OrderGUI extends JFrame {
@@ -101,6 +101,7 @@ public class OrderGUI extends JFrame {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					OrderGUI frame = new OrderGUI();
@@ -151,7 +152,7 @@ public class OrderGUI extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 		
 		JPanel createPanel = new JPanel();
@@ -164,6 +165,7 @@ public class OrderGUI extends JFrame {
 		
 		JButton createConfirmBtn = new JButton("Bekr\u00E6ft");
 		createConfirmBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				orderController.createOrder(createEmployeePhone.getText(), createCustomerPhone.getText(), barcodes);
@@ -406,6 +408,7 @@ public class OrderGUI extends JFrame {
 		
 		JButton updateConfirmBtn = new JButton("Bekr\u00E6ft");
 		updateConfirmBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 			}
@@ -661,6 +664,7 @@ public class OrderGUI extends JFrame {
 		
 		JButton orderSearchBtn = new JButton("Find");
 		orderSearchBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				Order order = orderController.getOrder(Integer.parseInt(orderSearchInputField.getText()));
 				
@@ -762,6 +766,7 @@ public class OrderGUI extends JFrame {
 		personSeachBtn.addActionListener(new ActionListener() {
 			
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				personReturn = getPerson(personSeachInputField.getText());
 				personReturnName.setText(personReturn.getName());
@@ -790,6 +795,7 @@ public class OrderGUI extends JFrame {
 		
 		JButton personConfirmBtn = new JButton("Bekr\u00E6ft");
 		personConfirmBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
 				/*createEmployeeName.setText(employee.getName());
@@ -1132,6 +1138,7 @@ public class OrderGUI extends JFrame {
 		
 		JButton personAddEmployee = new JButton("Tilf\u00F8j Medarbejder");
 		personAddEmployee.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				employee = personReturn;
 				personEmployeeName.setText(employee.getName());
@@ -1168,6 +1175,7 @@ public class OrderGUI extends JFrame {
 		
 		JButton personAddCustomer = new JButton("Tilf\u00F8j Kunde");
 		personAddCustomer.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				customer = personReturn;
 				personCustomerName.setText(customer.getName());
@@ -1224,6 +1232,7 @@ public class OrderGUI extends JFrame {
 		
 		JButton productSearchBtn = new JButton("Find");
 		productSearchBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				productReturn = getProduct(productSearchInputField.getText());
@@ -1254,6 +1263,7 @@ public class OrderGUI extends JFrame {
 		
 		JButton productConfirmBtn = new JButton("Bekr\u00E6ft");
 		productConfirmBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				barcodes = tmp;
@@ -1358,6 +1368,7 @@ public class OrderGUI extends JFrame {
 		
 		JButton btnTilfjProdukt = new JButton("Tilf\u00F8j");
 		btnTilfjProdukt.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String lineTotal = String.valueOf(productReturn.getPrice() * Integer.parseInt(productReturnAmount.getText()));
 				productProductTab.addRow(new Object[]{productReturnTitle.getText(), productReturnAmount.getText(), productReturnPrice.getText(), lineTotal});
