@@ -25,7 +25,7 @@ public class OrderController
         this.productController = new ProductController();
 
         HashMap<String, Integer> barcodes = new HashMap<>();
-        barcodes.put("1", 5);
+        barcodes.put("1", 1);
         createOrder("1", "2", barcodes);
     }
 
