@@ -66,7 +66,12 @@ public class ProductGUI extends JFrame {
 	private JTextField txtShowAmount4;
 	private JTextField txtShowStock4;
 	private JTextField txtShowPrice4;
-
+	
+	private String name;
+	private String description;
+	private double price;
+	private JTextArea txtAreaDescription;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -250,6 +255,14 @@ public class ProductGUI extends JFrame {
 		JButton btnCtrCancel = new JButton("Cancel");
 		
 		JButton btnCtrCreate = new JButton("Opret");
+		btnCtrCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				name = txtCtrName.getText();
+				//description = txtAreaDescription.
+				
+				//createProduct();
+			}
+		});
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
 		gl_panel_1.setHorizontalGroup(
 			gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -294,7 +307,7 @@ public class ProductGUI extends JFrame {
 					.addContainerGap())
 		);
 		
-		JTextArea txtAreaDescription = new JTextArea();
+		txtAreaDescription = new JTextArea();
 		scrCtrDescription.setViewportView(txtAreaDescription);
 		panel_1.setLayout(gl_panel_1);
 		panel.setLayout(gl_panel);
@@ -1236,5 +1249,9 @@ public class ProductGUI extends JFrame {
 		);
 		panel_13.setLayout(gl_panel_13);
 		contentPane.setLayout(gl_contentPane);
+	}
+	private void createProduct(String name, String description, double price) 
+	{
+		
 	}
 }
