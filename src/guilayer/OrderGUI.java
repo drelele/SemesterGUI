@@ -83,6 +83,8 @@ public class OrderGUI extends JFrame {
 	private JTextField productReturnPrice;
 	private JTextField productReturnAmount;
 	
+	private Order orderReturn;
+	
 	HashMap<String, Integer> barcodes = new HashMap<>();
 	HashMap<String, Integer> tmp = new HashMap<>();
 	
@@ -410,7 +412,7 @@ public class OrderGUI extends JFrame {
 		updateConfirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				orderController.updateOrder(orderReturn, updateEmployeePhone.getText(), updateCustomerPhone.getText(), barcodes);
 			}
 		});
 		updateConfirmBtn.setBounds(580, 278, 89, 23);
@@ -666,31 +668,32 @@ public class OrderGUI extends JFrame {
 		orderSearchBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Order order = orderController.getOrder(Integer.parseInt(orderSearchInputField.getText()));
 				
-				updateEmployeeName.setText(order.getEmployee().getName());
-				updateEmployeeAddress.setText(order.getEmployee().getAddress());
-				updateEmployeeCity.setText(order.getEmployee().getCity());
-				updateEmployeeZip.setText(order.getEmployee().getPostalCode());
-				updateEmployeePhone.setText(order.getEmployee().getPhone());
+				orderReturn = orderController.getOrder(Integer.parseInt(orderSearchInputField.getText()));
 				
-				updateCustomerName.setText(order.getCustomer().getName());
-				updateCustomerAddress.setText(order.getCustomer().getAddress());
-				updateCustomerCity.setText(order.getCustomer().getCity());
-				updateCustomerZip.setText(order.getCustomer().getPostalCode());
-				updateCustomerPhone.setText(order.getCustomer().getPhone());
+				updateEmployeeName.setText(orderReturn.getEmployee().getName());
+				updateEmployeeAddress.setText(orderReturn.getEmployee().getAddress());
+				updateEmployeeCity.setText(orderReturn.getEmployee().getCity());
+				updateEmployeeZip.setText(orderReturn.getEmployee().getPostalCode());
+				updateEmployeePhone.setText(orderReturn.getEmployee().getPhone());
 				
-				personEmployeeName.setText(order.getEmployee().getName());
-				personEmployeeAddress.setText(order.getEmployee().getAddress());
-				personEmployeeCity.setText(order.getEmployee().getCity());
-				personEmployeeZip.setText(order.getEmployee().getPostalCode()); 
-				personEmployeePhone.setText(order.getEmployee().getPhone());
+				updateCustomerName.setText(orderReturn.getCustomer().getName());
+				updateCustomerAddress.setText(orderReturn.getCustomer().getAddress());
+				updateCustomerCity.setText(orderReturn.getCustomer().getCity());
+				updateCustomerZip.setText(orderReturn.getCustomer().getPostalCode());
+				updateCustomerPhone.setText(orderReturn.getCustomer().getPhone());
 				
-				personCustomerName.setText(order.getCustomer().getName());
-				personCustomerAddress.setText(order.getCustomer().getAddress());
-				personCustomerCity.setText(order.getCustomer().getCity());
-				personCustomerZip.setText(order.getCustomer().getPostalCode());
-				personCustomerPhone.setText(order.getCustomer().getPhone());
+				personEmployeeName.setText(orderReturn.getEmployee().getName());
+				personEmployeeAddress.setText(orderReturn.getEmployee().getAddress());
+				personEmployeeCity.setText(orderReturn.getEmployee().getCity());
+				personEmployeeZip.setText(orderReturn.getEmployee().getPostalCode()); 
+				personEmployeePhone.setText(orderReturn.getEmployee().getPhone());
+				
+				personCustomerName.setText(orderReturn.getCustomer().getName());
+				personCustomerAddress.setText(orderReturn.getCustomer().getAddress());
+				personCustomerCity.setText(orderReturn.getCustomer().getCity());
+				personCustomerZip.setText(orderReturn.getCustomer().getPostalCode());
+				personCustomerPhone.setText(orderReturn.getCustomer().getPhone());
 				
 				int s = updateProductTab.getRowCount();
 				
@@ -698,7 +701,7 @@ public class OrderGUI extends JFrame {
 					updateProductTab.removeRow(i);
 				}
 				
-				for(PartOrder partOrder : order.getPartOrders()) {
+				for(PartOrder partOrder : orderReturn.getPartOrders()) {
 					String lineTotal = String.valueOf(partOrder.getAmount() * partOrder.getProduct().getPrice());
 					updateProductTab.addRow(new Object[]{partOrder.getProduct().getTitle(), partOrder.getAmount(), partOrder.getProduct().getPrice(), lineTotal});
 				}
