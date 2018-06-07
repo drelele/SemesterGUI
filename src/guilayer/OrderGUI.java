@@ -93,6 +93,7 @@ public class OrderGUI extends JFrame {
 	private JTextField personReturnPhone;
 	private JTextField personEmployeePhone;
 	private JTextField personCustomerPhone;
+	private JTextField productReturnStock;
 	
 
 	/**
@@ -164,7 +165,11 @@ public class OrderGUI extends JFrame {
 		JButton createConfirmBtn = new JButton("Bekr\u00E6ft");
 		createConfirmBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				orderController.createOrder(createEmployeePhone.getText(), createCustomerPhone.getText(), barcodes);
+				
+				barcodes = new HashMap<String, Integer>();
+				
 			}
 		});
 		createConfirmBtn.setBounds(580, 278, 89, 23);
@@ -674,7 +679,7 @@ public class OrderGUI extends JFrame {
 				personEmployeeName.setText(order.getEmployee().getName());
 				personEmployeeAddress.setText(order.getEmployee().getAddress());
 				personEmployeeCity.setText(order.getEmployee().getCity());
-				personEmployeeZip.setText(order.getEmployee().getPostalCode());
+				personEmployeeZip.setText(order.getEmployee().getPostalCode()); 
 				personEmployeePhone.setText(order.getEmployee().getPhone());
 				
 				personCustomerName.setText(order.getCustomer().getName());
@@ -1253,6 +1258,8 @@ public class OrderGUI extends JFrame {
 				
 				barcodes = tmp;
 				
+				tmp = new HashMap<String, Integer>();
+				
 				int p = createProductTab.getRowCount();
 				
 				for(int i = 0; i < p; i++) {
@@ -1355,9 +1362,8 @@ public class OrderGUI extends JFrame {
 				String lineTotal = String.valueOf(productReturn.getPrice() * Integer.parseInt(productReturnAmount.getText()));
 				productProductTab.addRow(new Object[]{productReturnTitle.getText(), productReturnAmount.getText(), productReturnPrice.getText(), lineTotal});
 				
-				
-				
 				tmp.put(productReturn.getBarcode(), Integer.parseInt(productReturnAmount.getText()));
+				
 			}
 		});
 		
@@ -1379,29 +1385,37 @@ public class OrderGUI extends JFrame {
 		productReturnPanel.add(productReturnPrice, gbc_productReturnPrice);
 		productReturnPrice.setColumns(10);
 		
-		JLabel lblAntal = new JLabel("Antal");
+		JLabel lblAntal = new JLabel("Lagerbeholdning");
 		GridBagConstraints gbc_lblAntal = new GridBagConstraints();
 		gbc_lblAntal.anchor = GridBagConstraints.WEST;
 		gbc_lblAntal.insets = new Insets(0, 0, 5, 5);
 		gbc_lblAntal.gridx = 0;
 		gbc_lblAntal.gridy = 4;
-		productReturnPanel.add(lblAntal, gbc_lblAntal);
+		productReturnPanel.add(lblAntal, gbc_lblAntal);		
+		
+		productReturnStock = new JTextField();
+		GridBagConstraints gbc_productReturnStock = new GridBagConstraints();
+		gbc_productReturnStock.insets = new Insets(0, 0, 5, 0);
+		gbc_productReturnStock.fill = GridBagConstraints.HORIZONTAL;
+		gbc_productReturnStock.gridx = 1;
+		gbc_productReturnStock.gridy = 4;
+		productReturnPanel.add(productReturnStock, gbc_productReturnStock);
+		productReturnStock.setColumns(10);
+		GridBagConstraints gbc_btnTilfjProdukt = new GridBagConstraints();
+		gbc_btnTilfjProdukt.insets = new Insets(0, 0, 0, 5);
+		gbc_btnTilfjProdukt.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnTilfjProdukt.gridx = 0;
+		gbc_btnTilfjProdukt.gridy = 5;
+		productReturnPanel.add(btnTilfjProdukt, gbc_btnTilfjProdukt);
 		
 		productReturnAmount = new JTextField();
 		productReturnAmount.setText("1");
 		GridBagConstraints gbc_productReturnAmount = new GridBagConstraints();
-		gbc_productReturnAmount.insets = new Insets(0, 0, 5, 0);
 		gbc_productReturnAmount.fill = GridBagConstraints.HORIZONTAL;
 		gbc_productReturnAmount.gridx = 1;
-		gbc_productReturnAmount.gridy = 4;
+		gbc_productReturnAmount.gridy = 5;
 		productReturnPanel.add(productReturnAmount, gbc_productReturnAmount);
 		productReturnAmount.setColumns(10);
-		GridBagConstraints gbc_btnTilfjProdukt = new GridBagConstraints();
-		gbc_btnTilfjProdukt.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnTilfjProdukt.gridwidth = 2;
-		gbc_btnTilfjProdukt.gridx = 0;
-		gbc_btnTilfjProdukt.gridy = 5;
-		productReturnPanel.add(btnTilfjProdukt, gbc_btnTilfjProdukt);
 		
 		JPanel productProductPanel = new JPanel();
 		productProductPanel.setBorder(new TitledBorder(null, "Produkter", TitledBorder.LEADING, TitledBorder.TOP, null, null));
