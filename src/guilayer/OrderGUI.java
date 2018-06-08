@@ -29,7 +29,9 @@ import modellayer.*;
 
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
+import javax.swing.JSlider;
 
 public class OrderGUI extends JFrame {
 
@@ -81,7 +83,8 @@ public class OrderGUI extends JFrame {
 	
 	private Product productReturn;
 	private JTextField productReturnPrice;
-	private JTextField productReturnAmount;
+	
+	private Order orderReturn;
 	
 	HashMap<String, Integer> barcodes = new HashMap<>();
 	HashMap<String, Integer> tmp = new HashMap<>();
@@ -93,6 +96,8 @@ public class OrderGUI extends JFrame {
 	private JTextField personReturnPhone;
 	private JTextField personEmployeePhone;
 	private JTextField personCustomerPhone;
+	private JTextField productReturnStock;
+	private JSlider productReturnSlider;
 	
 
 	/**
@@ -117,7 +122,7 @@ public class OrderGUI extends JFrame {
 	 */
 	public OrderGUI() {
 		
-        String[] columNames = {"Produkt Navn","Antal","Stk. Pris","Samlet Pris"};
+        String[] columNames = {"Titel", "Antal", "Pris/Stk.", "Pris"};
 		DefaultTableModel createProductTab = new DefaultTableModel();
         for (String string: columNames) {
         	createProductTab.addColumn(string);
@@ -132,6 +137,12 @@ public class OrderGUI extends JFrame {
         for (String string: columNames) {
         	productProductTab.addColumn(string);
         }
+        
+		Vector<String> columnIdentifiers = new Vector<String>();
+		columnIdentifiers.add("Titel");
+		columnIdentifiers.add("Antal");
+		columnIdentifiers.add("Pris/Stk.");
+		columnIdentifiers.add("Pris");
         
 		setResizable(false);
 		setTitle("Salg - Vestbjerg Byggecenter");
@@ -162,17 +173,21 @@ public class OrderGUI extends JFrame {
 		createBackBtn.setBounds(10, 278, 89, 23);
 		createPanel.add(createBackBtn);
 		
-		JButton createConfirmBtn = new JButton("Bekr\u00E6ft");
+		JButton createConfirmBtn = new JButton("Opret Salg");
 		createConfirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				orderController.createOrder(createEmployeePhone.getText(), createCustomerPhone.getText(), barcodes);
+				
+				barcodes = new HashMap<String, Integer>();
+				
 			}
 		});
 		createConfirmBtn.setBounds(580, 278, 89, 23);
 		createPanel.add(createConfirmBtn);
 		
-		JButton createCancelBtn = new JButton("Annuller");
+		JButton createCancelBtn = new JButton("Ryd");
 		createCancelBtn.setBounds(481, 278, 89, 23);
 		createPanel.add(createCancelBtn);
 		
@@ -397,14 +412,25 @@ public class OrderGUI extends JFrame {
 		updateBackBtn.setBounds(10, 278, 89, 23);
 		updatePanel.add(updateBackBtn);
 		
-		JButton updateCancelBtn = new JButton("Annuller");
+		JButton updateCancelBtn = new JButton("Ryd");
 		updateCancelBtn.setBounds(481, 278, 89, 23);
 		updatePanel.add(updateCancelBtn);
 		
-		JButton updateConfirmBtn = new JButton("Bekr\u00E6ft");
+		JButton updateConfirmBtn = new JButton("\u00C6ndre Salg");
 		updateConfirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				int c = updateProductTab.getRowCount();
+				
+				orderController.updateOrder(orderReturn, updateEmployeePhone.getText(), updateCustomerPhone.getText(), barcodes);
+				
+				barcodes = new HashMap<>();
+				
+				for(int i = 0; i < c; i++) {
+					Integer amount = Integer.valueOf(updateProductTab.getValueAt(i, 1).toString());
+					orderController.updatePartOrder(orderReturn, i, amount);
+				}				
 				
 			}
 		});
@@ -661,56 +687,51 @@ public class OrderGUI extends JFrame {
 		orderSearchBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Order order = orderController.getOrder(Integer.parseInt(orderSearchInputField.getText()));
 				
-				updateEmployeeName.setText(order.getEmployee().getName());
-				updateEmployeeAddress.setText(order.getEmployee().getAddress());
-				updateEmployeeCity.setText(order.getEmployee().getCity());
-				updateEmployeeZip.setText(order.getEmployee().getPostalCode());
-				updateEmployeePhone.setText(order.getEmployee().getPhone());
+				orderReturn = orderController.getOrder(Integer.parseInt(orderSearchInputField.getText()));
 				
-				updateCustomerName.setText(order.getCustomer().getName());
-				updateCustomerAddress.setText(order.getCustomer().getAddress());
-				updateCustomerCity.setText(order.getCustomer().getCity());
-				updateCustomerZip.setText(order.getCustomer().getPostalCode());
-				updateCustomerPhone.setText(order.getCustomer().getPhone());
+				updateEmployeeName.setText(orderReturn.getEmployee().getName());
+				updateEmployeeAddress.setText(orderReturn.getEmployee().getAddress());
+				updateEmployeeCity.setText(orderReturn.getEmployee().getCity());
+				updateEmployeeZip.setText(orderReturn.getEmployee().getPostalCode());
+				updateEmployeePhone.setText(orderReturn.getEmployee().getPhone());
 				
-				personEmployeeName.setText(order.getEmployee().getName());
-				personEmployeeAddress.setText(order.getEmployee().getAddress());
-				personEmployeeCity.setText(order.getEmployee().getCity());
-				personEmployeeZip.setText(order.getEmployee().getPostalCode());
-				personEmployeePhone.setText(order.getEmployee().getPhone());
+				updateCustomerName.setText(orderReturn.getCustomer().getName());
+				updateCustomerAddress.setText(orderReturn.getCustomer().getAddress());
+				updateCustomerCity.setText(orderReturn.getCustomer().getCity());
+				updateCustomerZip.setText(orderReturn.getCustomer().getPostalCode());
+				updateCustomerPhone.setText(orderReturn.getCustomer().getPhone());
 				
-				personCustomerName.setText(order.getCustomer().getName());
-				personCustomerAddress.setText(order.getCustomer().getAddress());
-				personCustomerCity.setText(order.getCustomer().getCity());
-				personCustomerZip.setText(order.getCustomer().getPostalCode());
-				personCustomerPhone.setText(order.getCustomer().getPhone());
+				personEmployeeName.setText(orderReturn.getEmployee().getName());
+				personEmployeeAddress.setText(orderReturn.getEmployee().getAddress());
+				personEmployeeCity.setText(orderReturn.getEmployee().getCity());
+				personEmployeeZip.setText(orderReturn.getEmployee().getPostalCode()); 
+				personEmployeePhone.setText(orderReturn.getEmployee().getPhone());
 				
-				int s = updateProductTab.getRowCount();
+				personCustomerName.setText(orderReturn.getCustomer().getName());
+				personCustomerAddress.setText(orderReturn.getCustomer().getAddress());
+				personCustomerCity.setText(orderReturn.getCustomer().getCity());
+				personCustomerZip.setText(orderReturn.getCustomer().getPostalCode());
+				personCustomerPhone.setText(orderReturn.getCustomer().getPhone());
 				
-				for(int i = 0; i < s; i++) {
-					updateProductTab.removeRow(i);
-				}
+				emptyTable(updateProductTab);
 				
-				for(PartOrder partOrder : order.getPartOrders()) {
+				//Get partOrders and add to update product tab
+				for(PartOrder partOrder : orderReturn.getPartOrders()) {
 					String lineTotal = String.valueOf(partOrder.getAmount() * partOrder.getProduct().getPrice());
 					updateProductTab.addRow(new Object[]{partOrder.getProduct().getTitle(), partOrder.getAmount(), partOrder.getProduct().getPrice(), lineTotal});
 				}
 				
-				int k = productProductTab.getRowCount();
+//				emptyTable(productProductTab);
+//				
+//				//Add from update tab to product tab
+//				int c = updateProductTab.getRowCount();
+//				
+//				for(int i = 0; i < c; i++) {
+//					productProductTab.addRow(new Object[]{updateProductTab.getValueAt(i, 0), updateProductTab.getValueAt(i, 1), updateProductTab.getValueAt(i, 2), updateProductTab.getValueAt(i, 3)});
+//				}
 				
-				for(int i = 0; i < k; i++) {
-					productProductTab.removeRow(i);
-				}
-				
-				int c = updateProductTab.getRowCount();
-				
-				for(int i = 0; i < c; i++) {
-					productProductTab.addRow(new Object[]{updateProductTab.getValueAt(i, 0), updateProductTab.getValueAt(i, 1), updateProductTab.getValueAt(i, 2), updateProductTab.getValueAt(i, 3)});
-				}
-				
-				//productProductTab.setDataVector(updateProductTab.getDataVector(), updateProductTab.columnIdentifiers);
+				productProductTab.setDataVector(updateProductTab.getDataVector(), columnIdentifiers);
 			}
 		});
 		GridBagConstraints gbc_orderSearchBtn = new GridBagConstraints();
@@ -784,11 +805,11 @@ public class OrderGUI extends JFrame {
 		personBackBtn.setBounds(10, 278, 89, 23);
 		personPanel.add(personBackBtn);
 		
-		JButton personCancelBtn = new JButton("Annuller");
+		JButton personCancelBtn = new JButton("Ryd");
 		personCancelBtn.setBounds(481, 278, 89, 23);
 		personPanel.add(personCancelBtn);
 		
-		JButton personConfirmBtn = new JButton("Bekr\u00E6ft");
+		JButton personConfirmBtn = new JButton("Tilf\u00F8j til Salg");
 		personConfirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -827,21 +848,21 @@ public class OrderGUI extends JFrame {
 				
 				createCustomerName.setText(personCustomerName.getText());
 				createCustomerAddress.setText(personCustomerAddress.getText());
-				createCustomerCity.setText(personEmployeeCity.getText());
-				createCustomerZip.setText(personEmployeeZip.getText());
-				createCustomerPhone.setText(personEmployeePhone.getText());
+				createCustomerCity.setText(personCustomerCity.getText());
+				createCustomerZip.setText(personCustomerZip.getText());
+				createCustomerPhone.setText(personCustomerPhone.getText());
 				
-				createEmployeeName.setText(personEmployeeName.getText());
-				createEmployeeAddress.setText(personEmployeeAddress.getText());
-				createEmployeeCity.setText(personEmployeeCity.getText());
-				createEmployeeZip.setText(personEmployeeZip.getText());
-				createEmployeePhone.setText(personEmployeePhone.getText());
+				updateEmployeeName.setText(personEmployeeName.getText());
+				updateEmployeeAddress.setText(personEmployeeAddress.getText());
+				updateEmployeeCity.setText(personEmployeeCity.getText());
+				updateEmployeeZip.setText(personEmployeeZip.getText());
+				updateEmployeePhone.setText(personEmployeePhone.getText());
 				
-				createCustomerName.setText(personCustomerName.getText());
-				createCustomerAddress.setText(personCustomerAddress.getText());
-				createCustomerCity.setText(personEmployeeCity.getText());
-				createCustomerZip.setText(personEmployeeZip.getText());
-				createCustomerPhone.setText(personEmployeePhone.getText());
+				updateCustomerName.setText(personCustomerName.getText());
+				updateCustomerAddress.setText(personCustomerAddress.getText());
+				updateCustomerCity.setText(personCustomerCity.getText());
+				updateCustomerZip.setText(personCustomerZip.getText());
+				updateCustomerPhone.setText(personCustomerPhone.getText());
 				
 			}
 		});
@@ -1061,7 +1082,7 @@ public class OrderGUI extends JFrame {
 		
 		JLabel label_16 = new JLabel("Navn");
 		GridBagConstraints gbc_label_16 = new GridBagConstraints();
-		gbc_label_16.fill = GridBagConstraints.HORIZONTAL;
+		gbc_label_16.anchor = GridBagConstraints.WEST;
 		gbc_label_16.insets = new Insets(0, 0, 5, 5);
 		gbc_label_16.gridx = 0;
 		gbc_label_16.gridy = 0;
@@ -1236,7 +1257,8 @@ public class OrderGUI extends JFrame {
 				productReturnTitle.setText(productReturn.getTitle());
 				productReturnDesc.setText(productReturn.getDescription());
 				productReturnPrice.setText(String.valueOf(productReturn.getPrice()));
-				
+				productReturnStock.setText(String.valueOf(productReturn.getAmount()));
+				productReturnSlider.setMaximum(productReturn.getAmount());
 			}
 
 			private Product getProduct(String barcode) {
@@ -1252,42 +1274,32 @@ public class OrderGUI extends JFrame {
 		productBackBtn.setBounds(10, 278, 89, 23);
 		productPanel.add(productBackBtn);
 		
-		JButton productCancelBtn = new JButton("Annuller");
+		JButton productCancelBtn = new JButton("Ryd");
 		productCancelBtn.setBounds(481, 278, 89, 23);
 		productPanel.add(productCancelBtn);
 		
-		JButton productConfirmBtn = new JButton("Bekr\u00E6ft");
+		JButton productConfirmBtn = new JButton("Tilf\u00F8j til Salg");
 		productConfirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				barcodes = tmp;
 				
-				int p = createProductTab.getRowCount();
+				tmp = new HashMap<String, Integer>();
 				
-				for(int i = 0; i < p; i++) {
-					createProductTab.removeRow(i);
-				}
+//				emptyTable(createProductTab);
+//				
+//				emptyTable(updateProductTab);
+//				
+//				int c = productProductTab.getRowCount();
+//				
+//				for(int i = 0; i < c; i++) {
+//					createProductTab.addRow(new Object[]{productProductTab.getValueAt(i, 0), productProductTab.getValueAt(i, 1), productProductTab.getValueAt(i, 2), productProductTab.getValueAt(i, 3)});
+//					updateProductTab.addRow(new Object[]{productProductTab.getValueAt(i, 0), productProductTab.getValueAt(i, 1), productProductTab.getValueAt(i, 2), productProductTab.getValueAt(i, 3)});
+//				}				
 				
-				int y = updateProductTab.getRowCount();
-				
-				for(int i = 0; i < y; i++) {
-					updateProductTab.removeRow(i);
-				}
-				
-				
-				int c = productProductTab.getRowCount();
-				
-				for(int i = 0; i < c; i++) {
-					createProductTab.addRow(new Object[]{productProductTab.getValueAt(i, 0), productProductTab.getValueAt(i, 1), productProductTab.getValueAt(i, 2), productProductTab.getValueAt(i, 3)});
-				}
-				
-				for(int i = 0; i < c; i++) {
-					updateProductTab.addRow(new Object[]{productProductTab.getValueAt(i, 0), productProductTab.getValueAt(i, 1), productProductTab.getValueAt(i, 2), productProductTab.getValueAt(i, 3)});
-				}
-				
-				//createProductTab.setDataVector(productProductTab.getDataVector(), productProductTab.columnIdentifiers);
-				//updateProductTab.setDataVector(productProductTab.getDataVector(), productProductTab.columnIdentifiers);
+				createProductTab.setDataVector(productProductTab.getDataVector(), columnIdentifiers);
+				updateProductTab.setDataVector(productProductTab.getDataVector(), columnIdentifiers);
 				
 			}
 		});
@@ -1301,7 +1313,7 @@ public class OrderGUI extends JFrame {
 		GridBagLayout gbl_productReturnPanel = new GridBagLayout();
 		gbl_productReturnPanel.columnWidths = new int[]{0, 0, 0};
 		gbl_productReturnPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gbl_productReturnPanel.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
+		gbl_productReturnPanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
 		gbl_productReturnPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		productReturnPanel.setLayout(gbl_productReturnPanel);
 		
@@ -1363,12 +1375,11 @@ public class OrderGUI extends JFrame {
 		btnTilfjProdukt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String lineTotal = String.valueOf(productReturn.getPrice() * Integer.parseInt(productReturnAmount.getText()));
-				productProductTab.addRow(new Object[]{productReturnTitle.getText(), productReturnAmount.getText(), productReturnPrice.getText(), lineTotal});
+				String lineTotal = String.valueOf(productReturn.getPrice() * (productReturnSlider.getValue()));
+				productProductTab.addRow(new Object[]{productReturnTitle.getText(), productReturnSlider.getValue(), productReturnPrice.getText(), lineTotal});
 				
+				tmp.put(productReturn.getBarcode(), (productReturnSlider.getValue()));
 				
-				
-				tmp.put(productReturn.getBarcode(), Integer.parseInt(productReturnAmount.getText()));
 			}
 		});
 		
@@ -1390,29 +1401,37 @@ public class OrderGUI extends JFrame {
 		productReturnPanel.add(productReturnPrice, gbc_productReturnPrice);
 		productReturnPrice.setColumns(10);
 		
-		JLabel lblAntal = new JLabel("Antal");
+		JLabel lblAntal = new JLabel("Lagerbeholdning");
 		GridBagConstraints gbc_lblAntal = new GridBagConstraints();
 		gbc_lblAntal.anchor = GridBagConstraints.WEST;
 		gbc_lblAntal.insets = new Insets(0, 0, 5, 5);
 		gbc_lblAntal.gridx = 0;
 		gbc_lblAntal.gridy = 4;
-		productReturnPanel.add(lblAntal, gbc_lblAntal);
+		productReturnPanel.add(lblAntal, gbc_lblAntal);		
 		
-		productReturnAmount = new JTextField();
-		productReturnAmount.setText("1");
-		GridBagConstraints gbc_productReturnAmount = new GridBagConstraints();
-		gbc_productReturnAmount.insets = new Insets(0, 0, 5, 0);
-		gbc_productReturnAmount.fill = GridBagConstraints.HORIZONTAL;
-		gbc_productReturnAmount.gridx = 1;
-		gbc_productReturnAmount.gridy = 4;
-		productReturnPanel.add(productReturnAmount, gbc_productReturnAmount);
-		productReturnAmount.setColumns(10);
+		productReturnStock = new JTextField();
+		productReturnStock.setEditable(false);
+		GridBagConstraints gbc_productReturnStock = new GridBagConstraints();
+		gbc_productReturnStock.insets = new Insets(0, 0, 5, 0);
+		gbc_productReturnStock.fill = GridBagConstraints.HORIZONTAL;
+		gbc_productReturnStock.gridx = 1;
+		gbc_productReturnStock.gridy = 4;
+		productReturnPanel.add(productReturnStock, gbc_productReturnStock);
+		productReturnStock.setColumns(10);
 		GridBagConstraints gbc_btnTilfjProdukt = new GridBagConstraints();
-		gbc_btnTilfjProdukt.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnTilfjProdukt.gridwidth = 2;
+		gbc_btnTilfjProdukt.anchor = GridBagConstraints.WEST;
+		gbc_btnTilfjProdukt.insets = new Insets(0, 0, 0, 5);
 		gbc_btnTilfjProdukt.gridx = 0;
 		gbc_btnTilfjProdukt.gridy = 5;
 		productReturnPanel.add(btnTilfjProdukt, gbc_btnTilfjProdukt);
+		
+		productReturnSlider = new JSlider();
+		productReturnSlider.setSnapToTicks(true);
+		GridBagConstraints gbc_productReturnSlider = new GridBagConstraints();
+		gbc_productReturnSlider.fill = GridBagConstraints.HORIZONTAL;
+		gbc_productReturnSlider.gridx = 1;
+		gbc_productReturnSlider.gridy = 5;
+		productReturnPanel.add(productReturnSlider, gbc_productReturnSlider);
 		
 		JPanel productProductPanel = new JPanel();
 		productProductPanel.setBorder(new TitledBorder(null, "Produkter", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -1426,5 +1445,13 @@ public class OrderGUI extends JFrame {
 		productProductTable = new JTable();
 		scrollPane_2.setViewportView(productProductTable);
 		productProductTable.setModel(productProductTab);
+	}
+	
+	//Empty/reset table
+	private void emptyTable(DefaultTableModel table) {
+		int c = table.getRowCount();	
+		for(int i = c; 0 < i; i--) {
+			table.removeRow(i - 1);
+		}
 	}
 }
