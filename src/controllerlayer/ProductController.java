@@ -62,7 +62,7 @@ public class ProductController
         return product;
     }
 
-    public Item deleteItem(String serialNumber)
+    public Item deleteItem(Product product, String serialNumber)
     {
         Item item = product.deleteItem(serialNumber);
         return item;
