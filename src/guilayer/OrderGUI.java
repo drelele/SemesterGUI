@@ -821,6 +821,23 @@ public class OrderGUI extends JFrame {
 		personPanel.add(personBackBtn);
 		
 		JButton personCancelBtn = new JButton("Ryd");
+		personCancelBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				personEmployeeName.setText("");
+				personEmployeeAddress.setText("");
+				personEmployeeCity.setText("");
+				personEmployeeZip.setText("");
+				personEmployeePhone.setText("");
+				
+				personCustomerName.setText("");
+				personCustomerAddress.setText("");
+				personCustomerCity.setText("");
+				personCustomerZip.setText("");
+				personCustomerPhone.setText("");
+				
+			}
+		});
 		personCancelBtn.setBounds(481, 278, 89, 23);
 		personPanel.add(personCancelBtn);
 		
@@ -1295,6 +1312,12 @@ public class OrderGUI extends JFrame {
 		productPanel.add(productBackBtn);
 		
 		JButton productCancelBtn = new JButton("Ryd");
+		productCancelBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				emptyTable(productProductTab);
+				tmp = new HashMap<>();
+			}
+		});
 		productCancelBtn.setBounds(481, 278, 89, 23);
 		productPanel.add(productCancelBtn);
 		
@@ -1399,7 +1422,8 @@ public class OrderGUI extends JFrame {
 				productProductTab.addRow(new Object[]{productReturnTitle.getText(), productReturnSlider.getValue(), productReturnPrice.getText(), lineTotal});
 				
 				tmp.put(productReturn.getBarcode(), (productReturnSlider.getValue()));
-				
+				productReturnStock.setText(String.valueOf(productReturn.getAmount() - productReturnSlider.getValue()));
+				productReturnSlider.setMaximum(productReturn.getAmount() - productReturnSlider.getValue());
 			}
 		});
 		
@@ -1446,6 +1470,8 @@ public class OrderGUI extends JFrame {
 		productReturnPanel.add(btnTilfjProdukt, gbc_btnTilfjProdukt);
 		
 		productReturnSlider = new JSlider();
+		productReturnSlider.setPaintLabels(true);
+		productReturnSlider.setMinimum(1);
 		productReturnSlider.setSnapToTicks(true);
 		GridBagConstraints gbc_productReturnSlider = new GridBagConstraints();
 		gbc_productReturnSlider.fill = GridBagConstraints.HORIZONTAL;
