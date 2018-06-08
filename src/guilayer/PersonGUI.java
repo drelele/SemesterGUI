@@ -41,7 +41,7 @@ import modellayer.Person;
 public class PersonGUI extends JFrame {
 
 
-	private PersonController personCtrl;
+	private PersonController personCtrl; 
 
 	private Person returnPerson;
 
