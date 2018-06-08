@@ -824,17 +824,17 @@ public class OrderGUI extends JFrame {
 		personCancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				personEmployeeName.setText("");
-				personEmployeeAddress.setText("");
-				personEmployeeCity.setText("");
-				personEmployeeZip.setText("");
-				personEmployeePhone.setText("");
+				personEmployeeName.getText();
+				personEmployeeAddress.getText();
+				personEmployeeCity.getText();
+				personEmployeeZip.getText();
+				personEmployeePhone.getText();
 				
-				personCustomerName.setText("");
-				personCustomerAddress.setText("");
-				personCustomerCity.setText("");
-				personCustomerZip.setText("");
-				personCustomerPhone.setText("");
+				personCustomerName.getText();
+				personCustomerAddress.getText();
+				personCustomerCity.getText();
+				personCustomerZip.getText();
+				personCustomerPhone.getText();
 				
 			}
 		});
