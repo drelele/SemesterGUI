@@ -999,6 +999,8 @@ public class ProductGUI extends JFrame {
 		JButton btnFind3 = new JButton("Find");
 		btnFind3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String barcode = txtSearchBarcode3.getText();
+				getProduct(barcode,4);
 			}
 		});
 		GridBagConstraints gbc_btnFind3 = new GridBagConstraints();
@@ -1043,6 +1045,7 @@ public class ProductGUI extends JFrame {
 		btnEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				updateProduct();
 			}
 		});
 		GroupLayout gl_panel_12 = new GroupLayout(panel_12);
@@ -1359,6 +1362,12 @@ public class ProductGUI extends JFrame {
 		setProduct(product, 3);
 		showItems();
 	}
+	//UPDATE PRODUCT
+	private void updateProduct() 
+	{
+		
+	}
+	
 	
 	// **************
 	private void clearFields() 
