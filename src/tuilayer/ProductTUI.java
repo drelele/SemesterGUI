@@ -194,7 +194,7 @@ public class ProductTUI
                 }
                 
                 String serialCode = getSerialCode();
-                item = productController.deleteItem(serialCode);
+                item = productController.deleteItem(product,serialCode);
                 
                 lineBreak();
                 System.out.print("Slettet item: ");
