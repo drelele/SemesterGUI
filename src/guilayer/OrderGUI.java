@@ -170,6 +170,11 @@ public class OrderGUI extends JFrame {
 		createPanel.setLayout(null);
 		
 		JButton createBackBtn = new JButton("Tilbage");
+		createBackBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
 		createBackBtn.setBounds(10, 278, 89, 23);
 		createPanel.add(createBackBtn);
 		
@@ -409,6 +414,11 @@ public class OrderGUI extends JFrame {
 		updatePanel.setLayout(null);
 		
 		JButton updateBackBtn = new JButton("Tilbage");
+		updateBackBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
 		updateBackBtn.setBounds(10, 278, 89, 23);
 		updatePanel.add(updateBackBtn);
 		
@@ -802,10 +812,32 @@ public class OrderGUI extends JFrame {
 		panel_13.add(personSeachBtn, gbc_personSeachBtn);
 		
 		JButton personBackBtn = new JButton("Tilbage");
+		personBackBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		personBackBtn.setBounds(10, 278, 89, 23);
 		personPanel.add(personBackBtn);
 		
 		JButton personCancelBtn = new JButton("Ryd");
+		personCancelBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				personEmployeeName.getText();
+				personEmployeeAddress.getText();
+				personEmployeeCity.getText();
+				personEmployeeZip.getText();
+				personEmployeePhone.getText();
+				
+				personCustomerName.getText();
+				personCustomerAddress.getText();
+				personCustomerCity.getText();
+				personCustomerZip.getText();
+				personCustomerPhone.getText();
+				
+			}
+		});
 		personCancelBtn.setBounds(481, 278, 89, 23);
 		personPanel.add(personCancelBtn);
 		
@@ -1271,10 +1303,21 @@ public class OrderGUI extends JFrame {
 		panel_18.add(productSearchBtn, gbc_productSearchBtn);
 		
 		JButton productBackBtn = new JButton("Tilbage");
+		productBackBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		productBackBtn.setBounds(10, 278, 89, 23);
 		productPanel.add(productBackBtn);
 		
 		JButton productCancelBtn = new JButton("Ryd");
+		productCancelBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				emptyTable(productProductTab);
+				tmp = new HashMap<>();
+			}
+		});
 		productCancelBtn.setBounds(481, 278, 89, 23);
 		productPanel.add(productCancelBtn);
 		
@@ -1379,7 +1422,8 @@ public class OrderGUI extends JFrame {
 				productProductTab.addRow(new Object[]{productReturnTitle.getText(), productReturnSlider.getValue(), productReturnPrice.getText(), lineTotal});
 				
 				tmp.put(productReturn.getBarcode(), (productReturnSlider.getValue()));
-				
+				productReturnStock.setText(String.valueOf(productReturn.getAmount() - productReturnSlider.getValue()));
+				productReturnSlider.setMaximum(productReturn.getAmount() - productReturnSlider.getValue());
 			}
 		});
 		
@@ -1419,13 +1463,15 @@ public class OrderGUI extends JFrame {
 		productReturnPanel.add(productReturnStock, gbc_productReturnStock);
 		productReturnStock.setColumns(10);
 		GridBagConstraints gbc_btnTilfjProdukt = new GridBagConstraints();
-		gbc_btnTilfjProdukt.anchor = GridBagConstraints.WEST;
+		gbc_btnTilfjProdukt.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnTilfjProdukt.insets = new Insets(0, 0, 0, 5);
 		gbc_btnTilfjProdukt.gridx = 0;
 		gbc_btnTilfjProdukt.gridy = 5;
 		productReturnPanel.add(btnTilfjProdukt, gbc_btnTilfjProdukt);
 		
 		productReturnSlider = new JSlider();
+		productReturnSlider.setPaintLabels(true);
+		productReturnSlider.setMinimum(1);
 		productReturnSlider.setSnapToTicks(true);
 		GridBagConstraints gbc_productReturnSlider = new GridBagConstraints();
 		gbc_productReturnSlider.fill = GridBagConstraints.HORIZONTAL;
