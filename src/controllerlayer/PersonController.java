@@ -26,6 +26,11 @@ public class PersonController
     {
         return personContainer.getPerson(phone);
     }
+    
+    public Person getCustomer(String phone)
+    {
+        return personContainer.getCustomer(phone);
+    }
 
     /**
      * Creating a employee with given attributes if the phone does not
@@ -38,6 +43,7 @@ public class PersonController
      * @param String postalCode
      * @return employee
      */
+
 
     public Person createEmployee(String name, String phone, String address, String city, String postalCode)
     {
