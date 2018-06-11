@@ -15,6 +15,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -456,10 +458,21 @@ public class PersonGUI extends JFrame {
 			fieldCreate.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyReleased(KeyEvent e) {
-					if (fieldCreate.getText().length() == 0) {
-						btnConfirmPerson.setEnabled(false);
-					}else {
+					ArrayList<Integer> results = new ArrayList<>();
+					
+					for(JTextField fieldCreate : textFieldCreateAll) {
+
+						if (fieldCreate.getText().length() != 0) {
+							results.add(1);
+						}else {
+							results.add(0);
+						}
+					}
+
+					if(!results.contains(0)) {
 						btnConfirmPerson.setEnabled(true);
+					} else {
+						btnConfirmPerson.setEnabled(false);
 					}
 
 				}
