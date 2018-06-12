@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -145,7 +146,7 @@ public class OrderGUI extends JFrame {
 		columnIdentifiers.add("Pris");
         
 		setResizable(false);
-		setTitle("Salg - Vestbjerg Byggecenter");
+		setTitle("Ordrer - Vestbjerg Byggecenter");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 400);
 		
@@ -166,7 +167,7 @@ public class OrderGUI extends JFrame {
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 		
 		JPanel createPanel = new JPanel();
-		tabbedPane.addTab("Opret Salg", null, createPanel, null);
+		tabbedPane.addTab("Opret Ordre", null, createPanel, null);
 		createPanel.setLayout(null);
 		
 		JButton createBackBtn = new JButton("Tilbage");
@@ -178,14 +179,16 @@ public class OrderGUI extends JFrame {
 		createBackBtn.setBounds(10, 278, 89, 23);
 		createPanel.add(createBackBtn);
 		
-		JButton createConfirmBtn = new JButton("Opret Salg");
+		JButton createConfirmBtn = new JButton("Opret Ordre");
 		createConfirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				orderController.createOrder(createEmployeePhone.getText(), createCustomerPhone.getText(), barcodes);
-				
-				barcodes = new HashMap<String, Integer>();
+					orderController.createOrder(createEmployeePhone.getText(), createCustomerPhone.getText(), barcodes);
+					
+					barcodes = new HashMap<String, Integer>();
+					
+					JOptionPane.showMessageDialog(null, "Ordre Oprettet.");
 				
 			}
 		});
@@ -410,7 +413,7 @@ public class OrderGUI extends JFrame {
 		createProductTable.setModel(createProductTab);
 		
 		JPanel updatePanel = new JPanel();
-		tabbedPane.addTab("Find Salg", null, updatePanel, null);
+		tabbedPane.addTab("Find Ordre", null, updatePanel, null);
 		updatePanel.setLayout(null);
 		
 		JButton updateBackBtn = new JButton("Tilbage");
@@ -426,7 +429,7 @@ public class OrderGUI extends JFrame {
 		updateCancelBtn.setBounds(481, 278, 89, 23);
 		updatePanel.add(updateCancelBtn);
 		
-		JButton updateConfirmBtn = new JButton("\u00C6ndre Salg");
+		JButton updateConfirmBtn = new JButton("\u00C6ndre Ordre");
 		updateConfirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -440,6 +443,8 @@ public class OrderGUI extends JFrame {
 				for(int i = 0; i < c; i++) {
 					Integer amount = Integer.valueOf(updateProductTab.getValueAt(i, 1).toString());
 					orderController.updatePartOrder(orderReturn, i, amount);
+					
+					JOptionPane.showMessageDialog(null, "Ordre opdateret.");
 				}				
 				
 			}
@@ -824,24 +829,24 @@ public class OrderGUI extends JFrame {
 		personCancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				personEmployeeName.getText();
-				personEmployeeAddress.getText();
-				personEmployeeCity.getText();
-				personEmployeeZip.getText();
-				personEmployeePhone.getText();
+				personEmployeeName.setText("");
+				personEmployeeAddress.setText("");
+				personEmployeeCity.setText("");
+				personEmployeeZip.setText("");
+				personEmployeePhone.setText("");
 				
-				personCustomerName.getText();
-				personCustomerAddress.getText();
-				personCustomerCity.getText();
-				personCustomerZip.getText();
-				personCustomerPhone.getText();
+				personCustomerName.setText("");
+				personCustomerAddress.setText("");
+				personCustomerCity.setText("");
+				personCustomerZip.setText("");
+				personCustomerPhone.setText("");
 				
 			}
 		});
 		personCancelBtn.setBounds(481, 278, 89, 23);
 		personPanel.add(personCancelBtn);
 		
-		JButton personConfirmBtn = new JButton("Tilf\u00F8j til Salg");
+		JButton personConfirmBtn = new JButton("Tilf\u00F8j til Ordre");
 		personConfirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -895,6 +900,8 @@ public class OrderGUI extends JFrame {
 				updateCustomerCity.setText(personCustomerCity.getText());
 				updateCustomerZip.setText(personCustomerZip.getText());
 				updateCustomerPhone.setText(personCustomerPhone.getText());
+				
+				JOptionPane.showMessageDialog(null, "Personer tilføjet til ordre.");
 				
 			}
 		});
@@ -1321,7 +1328,7 @@ public class OrderGUI extends JFrame {
 		productCancelBtn.setBounds(481, 278, 89, 23);
 		productPanel.add(productCancelBtn);
 		
-		JButton productConfirmBtn = new JButton("Tilf\u00F8j til Salg");
+		JButton productConfirmBtn = new JButton("Tilf\u00F8j til Ordre");
 		productConfirmBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1343,6 +1350,8 @@ public class OrderGUI extends JFrame {
 				
 				createProductTab.setDataVector(productProductTab.getDataVector(), columnIdentifiers);
 				updateProductTab.setDataVector(productProductTab.getDataVector(), columnIdentifiers);
+				
+				JOptionPane.showMessageDialog(null, "Produkter tilføjet til ordre.");
 				
 			}
 		});

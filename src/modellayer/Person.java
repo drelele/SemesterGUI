@@ -11,6 +11,7 @@ public class Person
     private String address;
     private String city;
     private String postalCode;
+    private Customer customerNumb;
     private boolean active;
 
     public Person(String name, String phone, String address, String city, String postalCode)
