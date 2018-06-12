@@ -17,7 +17,7 @@ public class PersonController
      * Konstruktør for objekter af klassen CustomerController
      */
     public PersonController()
-    {
+    { 
         this.personContainer = PersonContainer.getInstance();
 
          personContainer.addPerson(new Employee("John", "1", "1", "1", "1"));

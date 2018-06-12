@@ -55,7 +55,7 @@ public class PersonGUI extends JFrame {
 	private JTextField textFieldPostalCode;
 	private JTextField textFieldPhone;
 	private JTextField textFieldAddress;
-	private JTextField textFieldName;
+	private JTextField textFieldName; 
 	private JTextField textFieldCreateName;
 	private JTextField textFieldCreatePhone;
 	private JTextField textFieldCreateAddress;

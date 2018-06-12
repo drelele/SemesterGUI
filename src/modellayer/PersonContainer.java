@@ -14,7 +14,7 @@ public class PersonContainer
 
 	public PersonContainer()
 	{
-		persons = new ArrayList();
+		persons = new ArrayList(); 
 	}
  
 	public static PersonContainer getInstance()
