@@ -3,6 +3,7 @@ package guilayer;
 
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -306,19 +307,10 @@ public class PersonGUI extends JFrame {
 				btnLuk_1.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
-						textFieldCreateName.setText("");
-						textFieldCreatePhone.setText("");
-						textFieldCreateAddress.setText("");
-						textFieldCreateCity.setText("");
-						textFieldCreatePostalCode.setText("");
+						emptyFields(panel_1);
+						emptyFields(panel_2);
 						chckbxKundenummer.setSelected(false);
 						chckbxMedarbejderNummer.setSelected(false);
-
-						textFieldName.setText("");
-						textFieldPhone.setText("");
-						textFieldAddress.setText("");
-						textFieldCity.setText("");
-						textFieldPostalCode.setText("");
 						btnGroup.clearSelection();
 						personCreated.setVisible(false);
 						btnCreate.setEnabled(false);
@@ -500,27 +492,17 @@ public class PersonGUI extends JFrame {
 		cancelCreate.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				textFieldName.setText("");
-				textFieldPhone.setText("");
-				textFieldAddress.setText("");
-				textFieldCity.setText("");
-				textFieldPostalCode.setText("");
-
-				textFieldCreateName.setText("");
-				textFieldCreatePhone.setText("");
-				textFieldCreateAddress.setText("");
-				textFieldCreateCity.setText("");
-				textFieldCreatePostalCode.setText("");
+				emptyFields(panel_1);
+				emptyFields(panel_2);
+				btnGroup.clearSelection();
+				chckbxKundenummer.setSelected(false);
+				chckbxMedarbejderNummer.setSelected(false);
 				btnConfirmPerson.setEnabled(false);
 				btnCreate.setEnabled(false);
 
 			}
 		});
-		cancelCreate.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+
 		cancelCreate.setBounds(471, 333, 89, 23);
 		panelCreatePerson.add(cancelCreate);
 
@@ -529,12 +511,14 @@ public class PersonGUI extends JFrame {
 		/*
 		 * Edit Person Tab
 		 */
-
+		JPanel panel_9 = new JPanel();
+		JPanel panel_8 = new JPanel();
 		JPanel panelEditPerson = new JPanel();
 		panelEditPerson.setBorder(null);
 		tabbedPane.addTab("\u00C6ndre person", null, panelEditPerson, null);
 		panelEditPerson.setLayout(null);
 
+		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(Color.DARK_GRAY);
 		panel_3.setBounds(0, 0, 669, 71);
@@ -594,20 +578,10 @@ public class PersonGUI extends JFrame {
 		button_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				textFieldReturnName.setText("");
-				textFieldReturnAddress.setText("");
-				textFieldReturnCity.setText("");
-				textFieldReturnPostalCode.setText("");
-				textFieldNumberID.setText("");
+				emptyFields(panel_8);
+				emptyFields(panel_9);
 				checkBoxEmployeeNumb.setSelected(false);
 				checkBoxCustomerNumb.setSelected(false);
-
-
-				textFieldConfirmName.setText("");
-				textFieldConfirmPhone.setText("");
-				textFieldConfirmAddress.setText("");
-				textFieldConfirmCity.setText("");
-				textFieldConfirmPostalCode.setText("");
 				button_ConfirmAll.setEnabled(false);
 				btnDeletePerson.setEnabled(false);
 				btnBekrft.setEnabled(false);
@@ -652,17 +626,9 @@ public class PersonGUI extends JFrame {
 				btnLuk.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
-						textFieldReturnName.setText("");
-						textFieldReturnAddress.setText("");
-						textFieldReturnCity.setText("");
-						textFieldReturnPostalCode.setText("");
 
-						textFieldConfirmName.setText("");
-						textFieldConfirmPhone.setText("");
-						textFieldConfirmAddress.setText("");
-						textFieldConfirmCity.setText("");
-						textFieldConfirmPostalCode.setText("");
-						textFieldNumberID.setText("");
+						emptyFields(panel_8);
+						emptyFields(panel_9);
 						checkBoxEmployeeNumb.setSelected(false);
 						checkBoxCustomerNumb.setSelected(false);
 						personUpdated.setVisible(false);
@@ -682,7 +648,7 @@ public class PersonGUI extends JFrame {
 
 
 
-		JPanel panel_8 = new JPanel();
+
 		panel_8.setBorder(null);
 		panel_8.setLayout(null);
 		panel_8.setBounds(0, 76, 324, 253);
@@ -735,10 +701,6 @@ public class PersonGUI extends JFrame {
 					button_ConfirmAll.setEnabled(false);
 				}
 			}
-			private Person getPerson(String phone) {
-				return personCtrl.getPerson(phone);
-
-			}
 		});
 
 		btnBekrft.setBounds(225, 219, 89, 23);
@@ -756,7 +718,6 @@ public class PersonGUI extends JFrame {
 		button_4.setBounds(0, 333, 89, 23);
 		panelEditPerson.add(button_4);
 
-		JPanel panel_9 = new JPanel();
 		panel_9.setLayout(null);
 		panel_9.setBounds(334, 76, 335, 253);
 		panelEditPerson.add(panel_9);
@@ -900,16 +861,11 @@ public class PersonGUI extends JFrame {
 				btnLuk.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
-						textFieldReturnName.setText("");
-						textFieldReturnAddress.setText("");
-						textFieldReturnCity.setText("");
-						textFieldReturnPostalCode.setText("");
-
-						textFieldConfirmName.setText("");
-						textFieldConfirmPhone.setText("");
-						textFieldConfirmAddress.setText("");
-						textFieldConfirmCity.setText("");
-						textFieldConfirmPostalCode.setText("");
+						emptyFields(panel_8);
+						emptyFields(panel_9);
+						
+						checkBoxEmployeeNumb.setSelected(false);
+						checkBoxCustomerNumb.setSelected(false);
 						button_ConfirmAll.setEnabled(false);
 						btnDeletePerson.setEnabled(false);
 						personDeleted.setVisible(false);
@@ -974,12 +930,8 @@ public class PersonGUI extends JFrame {
 					textFieldReturnCity.setText(returnPerson.getCity());
 					textFieldReturnPostalCode.setText(returnPerson.getPostalCode());
 
-					textFieldConfirmName.setText("");
-					textFieldConfirmPhone.setText("");
-					textFieldConfirmAddress.setText("");
-					textFieldConfirmCity.setText("");
-					textFieldConfirmPostalCode.setText("");
-					textFieldNumberID.setText("");
+					emptyFields(panel_9);
+					
 					checkBoxEmployeeNumb.setSelected(false);
 					checkBoxCustomerNumb.setSelected(false);
 
@@ -1046,4 +998,14 @@ public class PersonGUI extends JFrame {
 
 
 	}
+
+    private void emptyFields(JPanel panel) {
+        Component[] components = panel.getComponents();
+        for(Component component : components) {
+            if(component instanceof JTextField) {
+                JTextField textField = (JTextField) component;
+                textField.setText("");
+            }
+        }
+    }
 }
