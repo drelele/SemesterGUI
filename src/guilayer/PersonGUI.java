@@ -49,7 +49,7 @@ public class PersonGUI extends JFrame {
 	private PersonController personCtrl; 
 
 	private Person returnPerson;
-
+ 
 	private JPanel contentPane;
 	private JTextField textFieldCity;
 	private JTextField textFieldPostalCode;
