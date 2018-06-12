@@ -48,18 +48,15 @@ public class ProductController
         return productContainer.getProduct(barcode);
     }
 
-    public Product updateProduct(Product product, int number, double intVal, String stringVal)
+    public Product updateProduct(Product product,String title, String description, double price)
     {
-        if(product != null){
-            this.product.updateProduct(product, number, intVal, stringVal);
-        }
+    	product.updateProduct(product, title, description, price);
         return product;
     }
 
-    public Product deleteProduct(Product product)
+    public void deleteProduct(Product product)
     {
         productContainer.deleteProduct(product);
-        return product;
     }
 
     public Item deleteItem(Product product, String serialNumber)
