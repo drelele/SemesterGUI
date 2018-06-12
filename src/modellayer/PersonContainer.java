@@ -10,7 +10,6 @@ import java.util.ArrayList;
 public class PersonContainer 
 {
 	private ArrayList<Person> persons;
-	private ArrayList<Customer> customers;
 	private static PersonContainer instance;
 
 	public PersonContainer()
@@ -49,22 +48,17 @@ public class PersonContainer
 		return person;
 	}
 	
-	public Customer getCustomer(String phone)
-	{
-		int index = 0;
-		boolean exit = false;
-		Customer person = null;
-		while(!exit && index < customers.size()){
-			Customer currentPerson = customers.get(index);
-			if(phone != null && phone.equalsIgnoreCase(currentPerson.getPhone())){
-				person = customers.get(index);
-				exit = true;
-			} 
-			index++;
-
+	public ArrayList<Person> getAllPersons() {
+		
+		ArrayList<Person> foundPersons = new ArrayList<>();
+		
+		for (Person person : persons) {
+			foundPersons.add(person);
 		}
-		return person;
+		
+		return foundPersons;
 	}
+	
 
 	public void addPerson(Person person)
 	{

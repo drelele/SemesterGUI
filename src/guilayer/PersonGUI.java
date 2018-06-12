@@ -75,6 +75,7 @@ public class PersonGUI extends JFrame {
 
 
 
+
 	/**
 	 * Launch the application.
 	 */
@@ -99,6 +100,10 @@ public class PersonGUI extends JFrame {
 		setTitle("Person");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 471);
+
+		personCtrl = new PersonController();
+
+		getAllPersons();
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -237,48 +242,9 @@ public class PersonGUI extends JFrame {
 		 */
 
 		JButton btnCreate = new JButton("Bekr\u00E6ft");
-		btnCreate.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		JButton btnConfirmPerson = new JButton("Bekr\u00E6ft");
-		btnConfirmPerson.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		});
 		btnCreate.addMouseListener(new MouseAdapter() {
 
-			private void errorString() {
-
-				JPanel errorPanel = new JPanel();
-				errorPanel.setBounds(237, 140, 205, 115);
-				panelCreatePerson.add(errorPanel);
-				errorPanel.setBackground(Color.DARK_GRAY);
-				errorPanel.setForeground(Color.DARK_GRAY);
-				errorPanel.setLayout(null);
-
-				JButton buttonAccept = new JButton("Accepter");
-				buttonAccept.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						errorPanel.setVisible(false);
-					}
-				});
-
-				buttonAccept.setBounds(56, 81, 89, 23);
-				errorPanel.add(buttonAccept);
-
-				JTextPane txtpnDuSkalSkrive = new JTextPane();
-				txtpnDuSkalSkrive.setEditable(false);
-				txtpnDuSkalSkrive.setForeground(Color.WHITE);
-				txtpnDuSkalSkrive.setBackground(Color.DARK_GRAY);
-				txtpnDuSkalSkrive.setText("Nummeret er i brug");
-				txtpnDuSkalSkrive.setBounds(45, 11, 125, 47);
-				errorPanel.add(txtpnDuSkalSkrive);
-			}
 
 			private void printCreated() {
 
@@ -296,14 +262,6 @@ public class PersonGUI extends JFrame {
 				personCreated.add(lblPersonCreated);
 
 				JButton btnLuk_1 = new JButton("Luk ");
-				btnLuk_1.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-					}
-				});
-
-
-
 				btnLuk_1.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
@@ -316,8 +274,6 @@ public class PersonGUI extends JFrame {
 						btnCreate.setEnabled(false);
 						btnConfirmPerson.setEnabled(false);
 
-
-
 					}
 				});
 
@@ -325,7 +281,7 @@ public class PersonGUI extends JFrame {
 				personCreated.add(btnLuk_1);
 
 			}
-			PersonController personCtrl = new PersonController();
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String name = textFieldCreateName.getText();
@@ -341,9 +297,8 @@ public class PersonGUI extends JFrame {
 					personCtrl.createEmployee(name, phone, address, city, postalCode);
 					printCreated();
 				} else {
-					errorString();
+					errorString(panelCreatePerson, "Nummeret er i brug"); 
 				}
-
 
 			}
 
@@ -351,9 +306,6 @@ public class PersonGUI extends JFrame {
 		btnCreate.setEnabled(false);
 		btnCreate.setBounds(570, 333, 89, 23);
 		panelCreatePerson.add(btnCreate);
-
-
-
 
 		btnConfirmPerson.setEnabled(false);
 		btnConfirmPerson.addMouseListener(new MouseAdapter() {
@@ -392,56 +344,26 @@ public class PersonGUI extends JFrame {
 		 */
 
 		textFieldName = new JTextField();
-		textFieldName.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-			}
-		});
 		textFieldName.setColumns(10);
 		textFieldName.setBounds(93, 0, 221, 20);
 		panel_1.add(textFieldName);
 
 		textFieldPhone = new JTextField();
-		textFieldPhone.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-			}
-		});
 		textFieldPhone.setColumns(10);
 		textFieldPhone.setBounds(93, 25, 221, 20);
 		panel_1.add(textFieldPhone);
 
 		textFieldAddress = new JTextField();
-		textFieldAddress.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-			}
-		});
 		textFieldAddress.setBounds(93, 50, 221, 20);
 		textFieldAddress.setColumns(10);
 		panel_1.add(textFieldAddress);
 
 		textFieldCity = new JTextField();
-		textFieldCity.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-			}
-		});
 		textFieldCity.setBounds(93, 75, 221, 20);
 		textFieldCity.setColumns(10);
 		panel_1.add(textFieldCity);
 
 		textFieldPostalCode = new JTextField();
-		textFieldPostalCode.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-			}
-		});
 		textFieldPostalCode.setBounds(93, 100, 221, 20);
 		textFieldPostalCode.setColumns(10);
 		panel_1.add(textFieldPostalCode);
@@ -506,8 +428,6 @@ public class PersonGUI extends JFrame {
 		cancelCreate.setBounds(471, 333, 89, 23);
 		panelCreatePerson.add(cancelCreate);
 
-
-
 		/*
 		 * Edit Person Tab
 		 */
@@ -518,7 +438,7 @@ public class PersonGUI extends JFrame {
 		tabbedPane.addTab("\u00C6ndre person", null, panelEditPerson, null);
 		panelEditPerson.setLayout(null);
 
-		
+
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(Color.DARK_GRAY);
 		panel_3.setBounds(0, 0, 669, 71);
@@ -570,84 +490,6 @@ public class PersonGUI extends JFrame {
 		JButton btnDeletePerson = new JButton("Slet person");
 		JButton btnBekrft = new JButton("Bekr\u00E6ft");
 		JButton button_1 = new JButton("Annuller");
-		button_1.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		button_1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				emptyFields(panel_8);
-				emptyFields(panel_9);
-				checkBoxEmployeeNumb.setSelected(false);
-				checkBoxCustomerNumb.setSelected(false);
-				button_ConfirmAll.setEnabled(false);
-				btnDeletePerson.setEnabled(false);
-				btnBekrft.setEnabled(false);
-
-			}
-		});
-		button_1.setBounds(471, 333, 89, 23);
-		panelEditPerson.add(button_1);
-
-		button_ConfirmAll.setEnabled(false);
-		button_ConfirmAll.addActionListener(new ActionListener() {
-
-			PersonController personCtrl = new PersonController();
-			@Override
-			public void actionPerformed(ActionEvent e) { 
-
-				String newName = textFieldConfirmName.getText();
-				String newAddress = textFieldConfirmAddress.getText();
-				String newCity = textFieldConfirmCity.getText();
-				String newPostalCode = textFieldConfirmPostalCode.getText();
-
-				personCtrl.updatePerson(returnPerson, newName, returnPerson.getPhone(), newAddress, newCity, newPostalCode);
-
-				JPanel personUpdated = new JPanel();
-				personUpdated.setBounds(237, 140, 205, 115);
-				panelEditPerson.add(personUpdated);
-				personUpdated.setBackground(Color.DARK_GRAY);
-				personUpdated.setForeground(Color.DARK_GRAY);
-				personUpdated.setLayout(null);
-
-
-				JLabel lblPersonenBlevRedigeret = new JLabel("Personen blev opdateret");
-				lblPersonenBlevRedigeret.setForeground(Color.WHITE);
-				lblPersonenBlevRedigeret.setBackground(Color.WHITE);
-				lblPersonenBlevRedigeret.setBounds(38, 29, 137, 29);
-				personUpdated.add(lblPersonenBlevRedigeret);
-
-
-
-				JButton btnLuk = new JButton("Luk ");
-
-				btnLuk.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
-
-						emptyFields(panel_8);
-						emptyFields(panel_9);
-						checkBoxEmployeeNumb.setSelected(false);
-						checkBoxCustomerNumb.setSelected(false);
-						personUpdated.setVisible(false);
-						button_ConfirmAll.setEnabled(false);
-
-
-
-					}
-				});
-
-				btnLuk.setBounds(59, 69, 89, 23);
-				personUpdated.add(btnLuk);
-
-
-			}
-		});
-
-
-
 
 		panel_8.setBorder(null);
 		panel_8.setLayout(null);
@@ -800,6 +642,7 @@ public class PersonGUI extends JFrame {
 		textFieldConfirmPostalCode.setBounds(109, 100, 216, 20);
 		panel_9.add(textFieldConfirmPostalCode);
 
+
 		JLabel label_10 = new JLabel("Navn");
 		label_10.setBounds(10, 3, 48, 14);
 		panel_9.add(label_10);
@@ -837,8 +680,78 @@ public class PersonGUI extends JFrame {
 		checkBoxCustomerNumb.setBounds(109, 127, 91, 14);
 		panel_9.add(checkBoxCustomerNumb);
 
+		button_ConfirmAll.setEnabled(false);
+		button_ConfirmAll.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) { 
+
+				String newName = textFieldConfirmName.getText();
+				String newAddress = textFieldConfirmAddress.getText();
+				String newCity = textFieldConfirmCity.getText();
+				String newPostalCode = textFieldConfirmPostalCode.getText();
+
+				personCtrl.updatePerson(returnPerson, newName, returnPerson.getPhone(), newAddress, newCity, newPostalCode);
+
+				JPanel personUpdated = new JPanel();
+				personUpdated.setBounds(237, 140, 205, 115);
+				panelEditPerson.add(personUpdated);
+				personUpdated.setBackground(Color.DARK_GRAY);
+				personUpdated.setForeground(Color.DARK_GRAY);
+				personUpdated.setLayout(null);
+
+
+				JLabel lblPersonenBlevRedigeret = new JLabel("Personen blev opdateret");
+				lblPersonenBlevRedigeret.setForeground(Color.WHITE);
+				lblPersonenBlevRedigeret.setBackground(Color.WHITE);
+				lblPersonenBlevRedigeret.setBounds(38, 29, 137, 29);
+				personUpdated.add(lblPersonenBlevRedigeret);
+
+
+				JButton btnLuk = new JButton("Luk ");
+
+				btnLuk.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+
+						emptyFields(panel_8);
+						emptyFields(panel_9);
+						disableAllFields();
+
+						checkBoxEmployeeNumb.setSelected(false);
+						checkBoxCustomerNumb.setSelected(false);
+						personUpdated.setVisible(false);
+						button_ConfirmAll.setEnabled(false);
+
+					}
+				});
+
+				btnLuk.setBounds(59, 69, 89, 23);
+				personUpdated.add(btnLuk);
+
+
+			}
+		});
+
+		button_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				emptyFields(panel_8);
+				emptyFields(panel_9);
+				disableAllFields();
+				checkBoxEmployeeNumb.setSelected(false);
+				checkBoxCustomerNumb.setSelected(false);
+				button_ConfirmAll.setEnabled(false);
+				btnDeletePerson.setEnabled(false);
+				btnBekrft.setEnabled(false);
+
+			}
+		});
+		button_1.setBounds(471, 333, 89, 23);
+		panelEditPerson.add(button_1);
+
 		btnDeletePerson.addActionListener(new ActionListener() {
-			PersonController personCtrl = new PersonController();
+
 			@Override
 			public void actionPerformed(ActionEvent e) {								
 				personCtrl.deletePerson(returnPerson);
@@ -863,7 +776,7 @@ public class PersonGUI extends JFrame {
 					public void mouseClicked(MouseEvent arg0) {
 						emptyFields(panel_8);
 						emptyFields(panel_9);
-						
+						disableAllFields();
 						checkBoxEmployeeNumb.setSelected(false);
 						checkBoxCustomerNumb.setSelected(false);
 						button_ConfirmAll.setEnabled(false);
@@ -914,15 +827,9 @@ public class PersonGUI extends JFrame {
 		});
 
 		button_3.addActionListener(new ActionListener() {
-
-			PersonController personCtrl = new PersonController();
 			@Override
-
 			public void actionPerformed(ActionEvent e) {
-
-
 				changes();
-
 				try {	
 					returnPerson = getPerson(textFieldfindPerson.getText());
 					textFieldReturnName.setText(returnPerson.getName());
@@ -931,20 +838,18 @@ public class PersonGUI extends JFrame {
 					textFieldReturnPostalCode.setText(returnPerson.getPostalCode());
 
 					emptyFields(panel_9);
-					
+
 					checkBoxEmployeeNumb.setSelected(false);
 					checkBoxCustomerNumb.setSelected(false);
 
 					btnBekrft.setEnabled(false);
 					button_ConfirmAll.setEnabled(false);;
 				} catch (NullPointerException ee) {
-					errorString();
+					errorString(panelEditPerson, "Person findes ikke");
+					emptyFields(panel_8);
+					emptyFields(panel_9);
+					disableAllFields();
 				}
-			}
-
-			private Person getPerson(String phone) {
-				return personCtrl.getPerson(phone);
-
 			}
 
 			private void changes() {
@@ -958,37 +863,8 @@ public class PersonGUI extends JFrame {
 
 				}
 
-			}
-			private void errorString() {
+			} 
 
-				JPanel errorPanel = new JPanel();
-				errorPanel.setBounds(237, 140, 205, 115);
-				panelEditPerson.add(errorPanel);
-				errorPanel.setBackground(Color.DARK_GRAY);
-				errorPanel.setForeground(Color.DARK_GRAY);
-				errorPanel.setLayout(null);
-
-				JButton buttonAccept = new JButton("Accepter");
-				buttonAccept.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						errorPanel.setVisible(false);
-					}
-				});
-
-				buttonAccept.setBounds(56, 81, 89, 23);
-				errorPanel.add(buttonAccept);
-
-				JTextPane txtpnDuSkalSkrive = new JTextPane();
-				txtpnDuSkalSkrive.setEditable(false);
-				txtpnDuSkalSkrive.setForeground(Color.WHITE);
-				txtpnDuSkalSkrive.setBackground(Color.DARK_GRAY);
-				txtpnDuSkalSkrive.setText("Personen findes ikke");
-				txtpnDuSkalSkrive.setBounds(45, 11, 125, 47);
-				errorPanel.add(txtpnDuSkalSkrive);
-
-
-			}
 		});
 
 		GridBagConstraints gbc_button_3 = new GridBagConstraints();
@@ -996,16 +872,75 @@ public class PersonGUI extends JFrame {
 		gbc_button_3.gridy = 0;
 		panel_11.add(button_3, gbc_button_3);
 
+	}
+
+	private void errorString(JPanel panel, String textPane) {
+
+		JPanel errorPanel = new JPanel();
+		errorPanel.setBounds(237, 140, 205, 115);
+		panel.add(errorPanel);
+		errorPanel.setBackground(Color.DARK_GRAY);
+		errorPanel.setForeground(Color.DARK_GRAY);
+		errorPanel.setLayout(null);
+
+		JButton buttonAccept = new JButton("Accepter");
+		buttonAccept.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				errorPanel.setVisible(false);
+			}
+		});
+
+		buttonAccept.setBounds(56, 81, 89, 23);
+		errorPanel.add(buttonAccept);
+
+		JTextPane txtpnDuSkalSkrive = new JTextPane();
+		txtpnDuSkalSkrive.setEditable(false);
+		txtpnDuSkalSkrive.setForeground(Color.WHITE);
+		txtpnDuSkalSkrive.setBackground(Color.DARK_GRAY);
+		txtpnDuSkalSkrive.setText(textPane);
+		txtpnDuSkalSkrive.setBounds(45, 11, 125, 47);
+		errorPanel.add(txtpnDuSkalSkrive);
 
 	}
 
-    private void emptyFields(JPanel panel) {
-        Component[] components = panel.getComponents();
-        for(Component component : components) {
-            if(component instanceof JTextField) {
-                JTextField textField = (JTextField) component;
-                textField.setText("");
-            }
-        }
-    }
+	/*
+	 * Prints all persons and customerNumber and employeeNumber
+	 */
+	
+	private void getAllPersons(){
+		ArrayList<Person> persons = personCtrl.getAllPersons();
+		
+		for (Person person : persons){
+			if (person instanceof Customer) {			
+				Customer customer = (Customer) person;
+				System.out.println(person.getName().toString() + "Kundenummer" + String.valueOf(customer.getCustomerNumber()));	
+			} else if (person instanceof Employee) {
+				Employee employee = (Employee) person;
+				System.out.println(person.getName().toString() + " Medarbejdernummer: " + String.valueOf(employee.getEmployeeNumber()));	
+			}
+		}
+	}
+
+	private Person getPerson(String phone) {
+		return personCtrl.getPerson(phone);
+
+	}
+
+	private void disableAllFields() {
+		JTextField[] textFieldReturnAll = {textFieldReturnName, textFieldReturnAddress, textFieldReturnCity, textFieldReturnPostalCode};
+		for (JTextField textfields : textFieldReturnAll) {
+			textfields.setEditable(false);
+		}
+	}
+
+	private void emptyFields(JPanel panel) {
+		Component[] components = panel.getComponents();
+		for(Component component : components) {
+			if(component instanceof JTextField) {
+				JTextField textField = (JTextField) component;
+				textField.setText("");
+			}
+		}
+	}
 }
