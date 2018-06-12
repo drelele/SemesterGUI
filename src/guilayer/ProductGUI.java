@@ -92,6 +92,9 @@ public class ProductGUI extends JFrame {
 	private JTextArea txtAreaDescription3;
 	private JButton btnItemCreate;
 	private JButton btnDeleteItem;
+	private JTextArea txtAreaDescription4;
+	private JTextArea txtAreaDescription5;
+	private JButton btnDelete;
 
 	/**
 	 * Launch the application.
@@ -1026,6 +1029,7 @@ public class ProductGUI extends JFrame {
 		JScrollPane scrShowDescription3 = new JScrollPane();
 		
 		txtShowBarcode4 = new JTextField();
+		txtShowBarcode4.setEditable(false);
 		txtShowBarcode4.setColumns(10);
 		
 		txtShowTitle4 = new JTextField();
@@ -1033,9 +1037,11 @@ public class ProductGUI extends JFrame {
 		txtShowTitle4.setColumns(10);
 		
 		txtShowAmount4 = new JTextField();
+		txtShowAmount4.setEditable(false);
 		txtShowAmount4.setColumns(10);
 		
 		txtShowStock4 = new JTextField();
+		txtShowStock4.setEditable(false);
 		txtShowStock4.setColumns(10);
 		
 		txtShowPrice4 = new JTextField();
@@ -1114,7 +1120,7 @@ public class ProductGUI extends JFrame {
 					.addContainerGap())
 		);
 		
-		JTextArea txtAreaDescription4 = new JTextArea();
+		txtAreaDescription4 = new JTextArea();
 		txtAreaDescription4.setText("");
 		scrShowDescription3.setViewportView(txtAreaDescription4);
 		panel_12.setLayout(gl_panel_12);
@@ -1184,6 +1190,12 @@ public class ProductGUI extends JFrame {
 		pnlSearch4.add(txtSearchBarcode4, gbc_txtSearchBarcode4);
 		
 		JButton btnFind4 = new JButton("Find");
+		btnFind4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String barcode = txtSearchBarcode4.getText();
+				getProduct(barcode, 5);
+			}
+		});
 		GridBagConstraints gbc_btnFind4 = new GridBagConstraints();
 		gbc_btnFind4.gridx = 2;
 		gbc_btnFind4.gridy = 0;
@@ -1222,7 +1234,14 @@ public class ProductGUI extends JFrame {
 		txtShowPrice5 = new JTextField();
 		txtShowPrice5.setColumns(10);
 		
-		JButton btnDelete = new JButton("Slet");
+		btnDelete = new JButton("Slet");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {		
+				String barcode = txtSearchBarcode4.getText();
+				deleteProduct(barcode);			
+			}
+		});
+		btnDelete.setEnabled(false);
 		GroupLayout gl_panel_15 = new GroupLayout(panel_15);
 		gl_panel_15.setHorizontalGroup(
 			gl_panel_15.createParallelGroup(Alignment.LEADING)
@@ -1289,7 +1308,7 @@ public class ProductGUI extends JFrame {
 					.addContainerGap())
 		);
 		
-		JTextArea txtAreaDescription5 = new JTextArea();
+		txtAreaDescription5 = new JTextArea();
 		txtAreaDescription5.setText("");
 		srcShowDescription4.setViewportView(txtAreaDescription5);
 		panel_15.setLayout(gl_panel_15);
@@ -1362,16 +1381,34 @@ public class ProductGUI extends JFrame {
 		setProduct(product, 3);
 		showItems();
 	}
+	
 	//UPDATE PRODUCT
 	private void updateProduct() 
 	{
+		String title = txtShowTitle4.getText();
+		String description = txtAreaDescription4.getText();
+		double price = Double.parseDouble(txtShowPrice4.getText());
 		
+		product = productController.updateProduct(product, title, description, price);
+		setProduct(product, 4);
 	}
 	
+	//DELETE PRODUCT
+	private void deleteProduct(String barcode) 
+	{
+		productController.deleteProduct(product);
+		clearFields();
+	}
 	
 	// **************
 	private void clearFields() 
 	{
+		txtShowBarcode5.setText(null);
+		txtShowTitle5.setText(null);
+		txtAreaDescription5.setText(null);
+		txtShowPrice5.setText(null);
+		txtShowAmount5.setText(null);
+		txtShowStock5.setText(null);
 		txtCtrName.setText(null);
 		txtDescription.setText(null);
 		txtCtrPrice.setText(null);
@@ -1416,6 +1453,24 @@ public class ProductGUI extends JFrame {
 				txtShowAmount3.setText(String.valueOf(product.getAmount()));
 				txtShowStock3.setText(String.valueOf(product.getStock()));
 				btnDeleteItem.setEnabled(true);
+				break;
+			case 4:
+				txtShowBarcode4.setText(product.getBarcode());
+				txtShowTitle4.setText(product.getTitle());
+				txtAreaDescription4.setText(product.getDescription());
+				txtShowPrice4.setText(String.valueOf(product.getPrice()));
+				txtShowAmount4.setText(String.valueOf(product.getAmount()));
+				txtShowStock4.setText(String.valueOf(product.getStock()));
+				btnDeleteItem.setEnabled(true);
+				break;
+			case 5:
+				txtShowBarcode5.setText(product.getBarcode());
+				txtShowTitle5.setText(product.getTitle());
+				txtAreaDescription5.setText(product.getDescription());
+				txtShowPrice5.setText(String.valueOf(product.getPrice()));
+				txtShowAmount5.setText(String.valueOf(product.getAmount()));
+				txtShowStock5.setText(String.valueOf(product.getStock()));
+				btnDelete.setEnabled(true);
 				break;
 			default:
 				break;

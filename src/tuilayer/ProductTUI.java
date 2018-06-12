@@ -138,7 +138,7 @@ public class ProductTUI
                     break;
                 }
      
-                productController.updateProduct(product, number, intVal, stringVal);
+                //productController.updateProduct(product, number, intVal, stringVal);
               
                 System.out.print("Vil du ændre mere. Ja eller nej: ");
                 decision = scanner.next();
@@ -156,7 +156,7 @@ public class ProductTUI
         product = productController.getProduct(barcode);
 
         if(product != null){
-            product = productController.deleteProduct(product);
+            productController.deleteProduct(product);
             System.out.println("Slettet item:");
         }
         displayProduct(product);

@@ -1,4 +1,4 @@
-package modellayer;
+	package modellayer;
 import java.util.ArrayList;
 /**
  * Lav en beskrivelse af klassen Product her.
@@ -150,20 +150,13 @@ public class Product
         return selectedItems;
     }
 
-    public Product updateProduct(Product product, int number, double intVal, String stringVal)
+    public Product updateProduct(Product product, String title, String description, double price)
     {        
-        switch(number){
-            case 1:
-            product.setTitle(stringVal);
-            break;
-            case 2:
-            product.setDescription(stringVal);
-            break;
-            case 3:
-            product.setPrice(intVal);
-            default:
-            break;
-        }
+    	if(product != null) {
+    		product.setTitle(title);
+    		product.setDescription(description);
+    		product.setPrice(price);
+    	}
         return product;
     }
 
