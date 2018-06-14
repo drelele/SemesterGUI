@@ -47,10 +47,8 @@ public class ProductContainer
         return product; 
     }
        
-    public Product deleteProduct(Product product)
+    public void deleteProduct(Product product)
     {
-        Product tmpProduct = product;
         products.remove(product);
-        return product;
     }
 }

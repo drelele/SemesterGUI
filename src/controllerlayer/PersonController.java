@@ -1,4 +1,6 @@
 package controllerlayer;
+import java.util.ArrayList;
+
 import modellayer.*;
 
 /**
@@ -7,7 +9,7 @@ import modellayer.*;
  * @author (dit navn her)
  * @version (versions nummer eller dato her)
  */
-public class PersonController
+public class PersonController 
 {
     private PersonContainer personContainer;
 
@@ -15,7 +17,7 @@ public class PersonController
      * Konstruktør for objekter af klassen CustomerController
      */
     public PersonController()
-    {
+    { 
         this.personContainer = PersonContainer.getInstance();
 
          personContainer.addPerson(new Employee("John", "1", "1", "1", "1"));
@@ -26,7 +28,7 @@ public class PersonController
     {
         return personContainer.getPerson(phone);
     }
-
+    
     /**
      * Creating a employee with given attributes if the phone does not
      * exists. And adds it to the personContainer
@@ -38,6 +40,11 @@ public class PersonController
      * @param String postalCode
      * @return employee
      */
+
+    public ArrayList<Person> getAllPersons()
+    {
+    	return personContainer.getAllPersons();
+    }
 
     public Person createEmployee(String name, String phone, String address, String city, String postalCode)
     {
