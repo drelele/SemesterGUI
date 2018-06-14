@@ -14,10 +14,22 @@ import javax.swing.JSeparator;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+
+import controllerlayer.OrderController;
+import modellayer.Order;
+
+import java.awt.BorderLayout;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 public class MainMenuGUI extends JFrame {
 
 	private JPanel contentPane;
+	private JTable mainOrderTable;
+	private OrderController orderController = new OrderController();
 
 	/**
 	 * Launch the application.
@@ -44,21 +56,24 @@ public class MainMenuGUI extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		contentPane.setLayout(new BorderLayout(0, 0));
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		contentPane.add(tabbedPane, BorderLayout.CENTER);
+		
+		JPanel panel = new JPanel();
+		tabbedPane.addTab("Menu", null, panel, null);
+		panel.setLayout(null);
 		
 		JLabel lblVestbjergByggecenterStyringssystem = new JLabel("Vestbjerg Byggecenter Styringssystem");
-		lblVestbjergByggecenterStyringssystem.setBounds(5, 5, 674, 25);
+		lblVestbjergByggecenterStyringssystem.setBounds(10, 11, 394, 25);
+		panel.add(lblVestbjergByggecenterStyringssystem);
 		lblVestbjergByggecenterStyringssystem.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
-		contentPane.add(lblVestbjergByggecenterStyringssystem);
-		
-		JSeparator separator = new JSeparator();
-		separator.setBounds(5, 41, 669, 9);
-		contentPane.add(separator);
 		
 		JPanel headPanel = new JPanel();
+		headPanel.setBounds(39, 84, 590, 155);
+		panel.add(headPanel);
 		headPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Dine muligheder", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		headPanel.setBounds(33, 80, 587, 211);
-		contentPane.add(headPanel);
 		headPanel.setLayout(null);
 		
 		JButton btnProdukter = new JButton("Produkter");
@@ -99,5 +114,37 @@ public class MainMenuGUI extends JFrame {
 		btnSalg.setFont(new Font("Tahoma", Font.BOLD, 15));
 		btnSalg.setBounds(400, 67, 162, 73);
 		headPanel.add(btnSalg);
+		
+		JSeparator separator = new JSeparator();
+		separator.setBounds(10, 47, 649, 2);
+		panel.add(separator);
+		
+		JPanel panel_1 = new JPanel();
+		tabbedPane.addTab("New tab", null, panel_1, null);
+		
+		JPanel panel_2 = new JPanel();
+		tabbedPane.addTab("New tab", null, panel_2, null);
+		
+		JPanel panel_3 = new JPanel();
+		tabbedPane.addTab("Salg", null, panel_3, null);
+		panel_3.setLayout(new BorderLayout(0, 0));
+		
+		JScrollPane scrollPane = new JScrollPane();
+		panel_3.add(scrollPane, BorderLayout.CENTER);
+		
+		String[] orderColumns = {"Ordrenr.", "Medarbejder", "Kunde", "Total"};
+		DefaultTableModel mainOrderTab = new DefaultTableModel();
+		
+		for (String column: orderColumns) {
+			mainOrderTab.addColumn(column);
+		}
+		
+		mainOrderTable = new JTable();
+		scrollPane.setViewportView(mainOrderTable);
+		mainOrderTable.setModel(mainOrderTab); //JN was here!
+		
+		for(Order order : orderController.getOrders()) {
+			mainOrderTab.addRow(new Object[]{order.getOrderNumber(), order.getEmployee().getName(), order.getCustomer().getName(), order.getTotal()});
+		}
 	}
 }
