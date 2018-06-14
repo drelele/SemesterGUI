@@ -1554,14 +1554,19 @@ public class ProductGUI extends JFrame {
 	{
 		for(Component component : pnlFoundProduct.getComponents()) {
 			//JOptionPane.showMessageDialog(null, component.getClass());
-		    if(component instanceof JTextField)
-		    {
+		    if(component instanceof JTextField){
 		        JTextField textField = (JTextField) component;
 		        textField.setText(null);
 		    }else if(component instanceof JScrollPane) {
 		    	JScrollPane scrollPane = (JScrollPane) component;
-		    	scrollPane.remove(txtAreaDescription1);
-		    	scrollPane.repaint();
+		    	Component[] components = scrollPane.getViewport().getComponents();
+		    	for(Component comp : components) {
+		    		if(comp instanceof JTextArea) {
+		    			JTextArea textArea = (JTextArea) comp;
+		    			textArea.setText(null);
+		    		}
+		    	}
+		    	
 		    }
 		}
 	}
