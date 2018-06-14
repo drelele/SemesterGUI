@@ -18,8 +18,10 @@ import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -32,6 +34,10 @@ import modellayer.Product;
 import modellayer.Item;
 
 import javax.swing.JList;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ProductGUI extends JFrame {
 
@@ -79,14 +85,6 @@ public class ProductGUI extends JFrame {
 	private JTextField txtCtrName;
 	private JTextArea txtAreaDescription1;
 	private JTextArea txtAreaDescription2;
-	
-	private ProductController productController;
-	private Product product;
-	private String name;
-	private String description;
-	private double price;
-	private Item item;
-	private ArrayList<Item> items;
 	private DefaultListModel defaultListModel;
 	private JList lstItem;
 	private JTextArea txtAreaDescription3;
@@ -95,6 +93,20 @@ public class ProductGUI extends JFrame {
 	private JTextArea txtAreaDescription4;
 	private JTextArea txtAreaDescription5;
 	private JButton btnDelete;
+	private JLabel lblCtrPrice;
+	private JButton btnCtrCreate;
+	private JPanel pnlFoundProduct;
+	
+	private ProductController productController;
+	private Product product;
+	private String name;
+	private String description;
+	private double price;
+	private Item item;
+	private ArrayList<Item> items;
+
+
+
 
 	/**
 	 * Launch the application.
@@ -239,6 +251,13 @@ public class ProductGUI extends JFrame {
 		pnlCtrProduct.setLayout(gl_pnlCtrProduct);
 		
 		JButton btnBack = new JButton("Tilbage");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				MainMenuGUI mainMenuGUI = new MainMenuGUI();
+				mainMenuGUI.setVisible(true);
+				dispose();
+			}
+		});
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -268,14 +287,36 @@ public class ProductGUI extends JFrame {
 		
 		JLabel lblCtrDescription = new JLabel("Beskrivelse:");
 		
-		JLabel lblCtrPrice = new JLabel("Pris:");
+		lblCtrPrice = new JLabel("Pris:");
 		
 		txtCtrName = new JTextField();
+		txtCtrName.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				if(!txtCtrName.getText().trim().isEmpty()) {
+					inputValidation(true);
+				}else {
+					inputValidation(false);
+				}
+			}
+		});
+
 		txtCtrName.setColumns(10);
 		
 		JScrollPane scrCtrDescription = new JScrollPane();
 		
 		txtCtrPrice = new JTextField();
+		txtCtrPrice.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(!txtCtrPrice.getText().trim().isEmpty()) {
+					inputValidation(true);
+				}else {
+					inputValidation(false);
+				}
+			}
+		});
+
 		txtCtrPrice.setColumns(10);
 		
 		JButton btnCtrCancel = new JButton("Cancel");
@@ -285,14 +326,20 @@ public class ProductGUI extends JFrame {
 			}
 		});
 		
-		JButton btnCtrCreate = new JButton("Opret");
+		btnCtrCreate = new JButton("Opret");
+		btnCtrCreate.setEnabled(false);
 		btnCtrCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				name = txtCtrName.getText();
-				description = txtDescription.getText();
-				price = Double.parseDouble(txtCtrPrice.getText());
 				
+				if(!txtCtrName.getText().trim().isEmpty()){
+					btnCtrCreate.setEnabled(true);
+				}
+				/*name = txtCtrName.getText();
+				description = txtDescription.getText();
+				price = Double.parseDouble(txtCtrPrice.getText());*/
+			
 				createProduct(name, description, price);
+				
 			}
 		});
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
@@ -340,6 +387,17 @@ public class ProductGUI extends JFrame {
 		);
 		
 		txtDescription = new JTextArea();
+		txtDescription.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(!txtDescription.getText().trim().isEmpty()) {
+					inputValidation(true);
+				}else {
+					inputValidation(false);
+				}
+			}
+		});
+
 		scrCtrDescription.setViewportView(txtDescription);
 		panel_1.setLayout(gl_panel_1);
 		panel.setLayout(gl_panel);
@@ -392,7 +450,7 @@ public class ProductGUI extends JFrame {
 		gbc_btnFind.gridy = 0;
 		pnlSearch.add(btnFind, gbc_btnFind);
 		
-		JPanel pnlFoundProduct = new JPanel();
+		pnlFoundProduct = new JPanel();
 		pnlFoundProduct.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Produkt fundet", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		
 		JLabel lblFoundBarcode = new JLabel("Stregkode:");
@@ -488,6 +546,13 @@ public class ProductGUI extends JFrame {
 		pnlFoundProduct.setLayout(gl_pnlFoundProduct);
 		
 		JButton btnBack1 = new JButton("Tilbage");
+		btnBack1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				MainMenuGUI mainMenuGUI = new MainMenuGUI();
+				mainMenuGUI.setVisible(true);
+				dispose();
+			}
+		});
 		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
 		gl_panel_3.setHorizontalGroup(
 			gl_panel_3.createParallelGroup(Alignment.LEADING)
@@ -1345,12 +1410,14 @@ public class ProductGUI extends JFrame {
 		product = productController.createProduct(name, description, price);
 		clearFields();
 		setProduct(product,0);
+		
 	}
 		
 	// FIND PRODUCT
 	private void getProduct(String barcode, int number) 
 	{
 		product = productController.getProduct(barcode);
+
 		setProduct(product,number);
 	}
 	
@@ -1400,7 +1467,9 @@ public class ProductGUI extends JFrame {
 		clearFields();
 	}
 	
-	// **************
+
+		
+	// ************** // 
 	private void clearFields() 
 	{
 		txtShowBarcode5.setText(null);
@@ -1475,6 +1544,34 @@ public class ProductGUI extends JFrame {
 			default:
 				break;
 			}
+		}else {
+			test();
+		}
+	}
+	
+	// TEST
+	private void test() 
+	{
+		for(Component component : pnlFoundProduct.getComponents()) {
+			//JOptionPane.showMessageDialog(null, component.getClass());
+		    if(component instanceof JTextField)
+		    {
+		        JTextField textField = (JTextField) component;
+		        textField.setText(null);
+		    }else if(component instanceof JScrollPane) {
+		    	JScrollPane scrollPane = (JScrollPane) component;
+		    	scrollPane.remove(txtAreaDescription1);
+		    	scrollPane.repaint();
+		    }
+		}
+	}
+	
+	// VALIDATION
+	private void inputValidation(boolean btnEnable) {
+		if(!txtCtrName.getText().trim().isEmpty() && !txtDescription.getText().trim().isEmpty() && !txtCtrPrice.getText().trim().isEmpty()){
+			btnCtrCreate.setEnabled(true);
+		}else {
+			btnCtrCreate.setEnabled(false);
 		}
 	}
 }
