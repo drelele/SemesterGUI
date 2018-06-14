@@ -772,6 +772,13 @@ public class ProductGUI extends JFrame {
 		pnlCtrProduct1.setLayout(gl_pnlCtrProduct1);
 		
 		JButton btnBack2 = new JButton("Tilbage");
+		btnBack2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				MainMenuGUI mainMenuGUI = new MainMenuGUI();
+				mainMenuGUI.setVisible(true);
+				dispose();
+			}
+		});
 		GroupLayout gl_panel_5 = new GroupLayout(panel_5);
 		gl_panel_5.setHorizontalGroup(
 			gl_panel_5.createParallelGroup(Alignment.LEADING)
@@ -999,6 +1006,13 @@ public class ProductGUI extends JFrame {
 		pnlShowProduct2.setLayout(gl_pnlShowProduct2);
 		
 		JButton btnBack3 = new JButton("Tilbage");
+		btnBack3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainMenuGUI mainMenuGUI = new MainMenuGUI();
+				mainMenuGUI.setVisible(true);
+				dispose();
+			}
+		});
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
 		gl_panel_2.setHorizontalGroup(
 			gl_panel_2.createParallelGroup(Alignment.LEADING)
@@ -1191,6 +1205,13 @@ public class ProductGUI extends JFrame {
 		panel_12.setLayout(gl_panel_12);
 		
 		JButton btnBack4 = new JButton("Tilbage");
+		btnBack4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainMenuGUI mainMenuGUI = new MainMenuGUI();
+				mainMenuGUI.setVisible(true);
+				dispose();
+			}
+		});
 		GroupLayout gl_panel_9 = new GroupLayout(panel_9);
 		gl_panel_9.setHorizontalGroup(
 			gl_panel_9.createParallelGroup(Alignment.LEADING)
@@ -1379,6 +1400,13 @@ public class ProductGUI extends JFrame {
 		panel_15.setLayout(gl_panel_15);
 		
 		JButton btnBack5 = new JButton("Tilbage");
+		btnBack5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainMenuGUI mainMenuGUI = new MainMenuGUI();
+				mainMenuGUI.setVisible(true);
+				dispose();
+			}
+		});
 		GroupLayout gl_panel_13 = new GroupLayout(panel_13);
 		gl_panel_13.setHorizontalGroup(
 			gl_panel_13.createParallelGroup(Alignment.LEADING)
@@ -1553,15 +1581,12 @@ public class ProductGUI extends JFrame {
 	private void test() 
 	{
 		for(Component component : pnlFoundProduct.getComponents()) {
-			//JOptionPane.showMessageDialog(null, component.getClass());
 		    if(component instanceof JTextField)
 		    {
 		        JTextField textField = (JTextField) component;
 		        textField.setText(null);
 		    }else if(component instanceof JScrollPane) {
-		    	JScrollPane scrollPane = (JScrollPane) component;
-		    	scrollPane.remove(txtAreaDescription1);
-		    	scrollPane.repaint();
+		    	
 		    }
 		}
 	}
