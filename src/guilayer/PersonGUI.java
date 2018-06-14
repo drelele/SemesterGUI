@@ -18,6 +18,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -72,6 +73,16 @@ public class PersonGUI extends JFrame {
 	private JTextField textFieldConfirmCity;
 	private JTextField textFieldConfirmPostalCode;
 	private JTextField textFieldNumberID;
+
+	private Component button_ConfirmAll;
+
+	private AbstractButton checkBoxCustomerNumb;
+
+	private AbstractButton checkBoxEmployeeNumb;
+
+	private Component btnBekrft;
+
+	private Component btnDeletePerson;
 
 
 
@@ -774,12 +785,14 @@ public class PersonGUI extends JFrame {
 				btnLuk.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
+						
 						emptyFields(panel_8);
 						emptyFields(panel_9);
 						disableAllFields();
 						checkBoxEmployeeNumb.setSelected(false);
 						checkBoxCustomerNumb.setSelected(false);
 						button_ConfirmAll.setEnabled(false);
+						btnBekrft.setEnabled(false);
 						btnDeletePerson.setEnabled(false);
 						personDeleted.setVisible(false);
 
@@ -843,7 +856,8 @@ public class PersonGUI extends JFrame {
 					checkBoxCustomerNumb.setSelected(false);
 
 					btnBekrft.setEnabled(false);
-					button_ConfirmAll.setEnabled(false);;
+					button_ConfirmAll.setEnabled(false);
+					
 				} catch (NullPointerException ee) {
 					errorString(panelEditPerson, "Person findes ikke");
 					emptyFields(panel_8);
@@ -860,9 +874,7 @@ public class PersonGUI extends JFrame {
 					} else {
 						textfields.setEditable(true);
 					}
-
 				}
-
 			} 
 
 		});
@@ -910,11 +922,11 @@ public class PersonGUI extends JFrame {
 	
 	private void getAllPersons(){
 		ArrayList<Person> persons = personCtrl.getAllPersons();
-		
 		for (Person person : persons){
 			if (person instanceof Customer) {			
 				Customer customer = (Customer) person;
-				System.out.println(person.getName().toString() + "Kundenummer" + String.valueOf(customer.getCustomerNumber()));	
+				//****************!!!!!!!!!!!!!! change PRINT Method !!!!!!!!!!!!*********
+				System.out.println(person.getName().toString() + " Kundenummer: " + String.valueOf(customer.getCustomerNumber()));	
 			} else if (person instanceof Employee) {
 				Employee employee = (Employee) person;
 				System.out.println(person.getName().toString() + " Medarbejdernummer: " + String.valueOf(employee.getEmployeeNumber()));	
@@ -924,7 +936,6 @@ public class PersonGUI extends JFrame {
 
 	private Person getPerson(String phone) {
 		return personCtrl.getPerson(phone);
-
 	}
 
 	private void disableAllFields() {
@@ -943,4 +954,5 @@ public class PersonGUI extends JFrame {
 			}
 		}
 	}
+	
 }
