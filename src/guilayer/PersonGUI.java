@@ -620,7 +620,7 @@ public class PersonGUI extends JFrame {
 			}
 		});
 		textFieldReturnPostalCode.setColumns(10);
-		textFieldReturnPostalCode.setBounds(93, 75, 221, 20);
+		textFieldReturnPostalCode.setBounds(93, 75, 221, 20); 
 		panel_8.add(textFieldReturnPostalCode);
 
 		textFieldConfirmName = new JTextField();
