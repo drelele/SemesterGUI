@@ -1587,6 +1587,15 @@ public class ProductGUI extends JFrame {
 		        textField.setText(null);
 		    }else if(component instanceof JScrollPane) {
 		    	
+		    	JScrollPane scrollPane = (JScrollPane) component;
+		    	Component[] components = scrollPane.getViewport().getComponents();
+		    	for(Component comp : components) {
+		    		if(comp instanceof JTextArea) {
+		    			JTextArea textArea = (JTextArea) comp;
+		    			textArea.setText(null);
+		    		}
+		    	}
+		    	
 		    }
 		}
 	}
