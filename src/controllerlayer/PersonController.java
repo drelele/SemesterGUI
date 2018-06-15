@@ -20,8 +20,8 @@ public class PersonController
     { 
         this.personContainer = PersonContainer.getInstance();
 
-         personContainer.addPerson(new Employee("John", "1", "1", "1", "1"));
-         personContainer.addPerson(new Customer("Lukas", "2", "1", "1", "1"));
+         createEmployee("John", "1", "1", "1", "1");
+         createCustomer("Lukas", "2", "1", "1", "1");
     }
 
     public Person getPerson(String phone)

@@ -28,6 +28,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class MainMenuGUI extends JFrame {
 
@@ -37,6 +40,7 @@ public class MainMenuGUI extends JFrame {
 	private OrderController orderController = new OrderController();
 	private PersonController personController = new PersonController();
 	private JTable mainPersonTable;
+	private DefaultTableModel mainOrderTab;
 
 	/**
 	 * Launch the application.
@@ -60,6 +64,15 @@ public class MainMenuGUI extends JFrame {
 	public MainMenuGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 496);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnNewMenu = new JMenu("New menu");
+		menuBar.add(mnNewMenu);
+		
+		JMenuItem mntmNewMenuItem = new JMenuItem("New menu item");
+		mnNewMenu.add(mntmNewMenuItem);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -174,24 +187,52 @@ public class MainMenuGUI extends JFrame {
 				mainPersonTab.addRow(new Object[]{employee.getName(), employee.getPhone(), "", employee.getEmployeeNumber()});
 			}
 		}
-		JScrollPane scrollPane = new JScrollPane();
-		panel_3.add(scrollPane, BorderLayout.CENTER);
-
+		
+		//JN START
+		
 		String[] orderColumns = {"Ordrenr.", "Medarbejder", "Kunde", "Total"};
-		DefaultTableModel mainOrderTab = new DefaultTableModel();
-
+		mainOrderTab = new DefaultTableModel();
+		
 		for (String column: orderColumns) {
 			mainOrderTab.addColumn(column);
 		}
+		
+		JButton mainOrderUpdateBtn = new JButton("Opdater");
+		mainOrderUpdateBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				updateOrders();
+			}
+		});
+		
+		panel_3.add(mainOrderUpdateBtn, BorderLayout.NORTH);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		panel_3.add(scrollPane, BorderLayout.CENTER);
+
 
 		mainOrderTable = new JTable();
 		scrollPane.setViewportView(mainOrderTable);
-		mainOrderTable.setModel(mainOrderTab); //JN was here!
+		mainOrderTable.setModel(mainOrderTab);
+		
+		updateOrders();
+		
+		//JN END
 
+	}
+	
+	private void updateOrders() {
+		emptyTable(mainOrderTab);
 		for(Order order : orderController.getOrders()) {
 			mainOrderTab.addRow(new Object[]{order.getOrderNumber(), order.getEmployee().getName(), order.getCustomer().getName(), order.getTotal()});
 		}
-
+	}
+	
+	//Empty/reset table
+	private void emptyTable(DefaultTableModel table) {
+		int c = table.getRowCount();	
+		for(int i = c; 0 < i; i--) {
+			table.removeRow(i - 1);
+		}
 	}
 	
 }
