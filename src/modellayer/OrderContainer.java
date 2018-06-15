@@ -51,5 +51,9 @@ public class OrderContainer
     public void deleteOrder(Order order){
         orders.remove(order);
     }
+    
+    public ArrayList<Order> getOrders() {
+    	return orders;
+    }
 
 }

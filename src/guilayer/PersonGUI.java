@@ -114,8 +114,6 @@ public class PersonGUI extends JFrame {
 
 		personCtrl = new PersonController();
 
-		getAllPersons();
-
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
@@ -920,19 +918,8 @@ public class PersonGUI extends JFrame {
 	 * Prints all persons and customerNumber and employeeNumber
 	 */
 	
-	private void getAllPersons(){
-		ArrayList<Person> persons = personCtrl.getAllPersons();
-		for (Person person : persons){
-			if (person instanceof Customer) {			
-				Customer customer = (Customer) person;
-				//****************!!!!!!!!!!!!!! change PRINT Method !!!!!!!!!!!!*********
-				System.out.println(person.getName().toString() + " Kundenummer: " + String.valueOf(customer.getCustomerNumber()));	
-			} else if (person instanceof Employee) {
-				Employee employee = (Employee) person;
-				System.out.println(person.getName().toString() + " Medarbejdernummer: " + String.valueOf(employee.getEmployeeNumber()));	
-			}
-		}
-	}
+	
+	
 
 	private Person getPerson(String phone) {
 		return personCtrl.getPerson(phone);

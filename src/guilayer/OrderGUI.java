@@ -33,6 +33,7 @@ import javax.swing.JSlider;
 import controllerlayer.OrderController;
 import modellayer.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 import java.awt.Font;
@@ -118,6 +119,7 @@ public class OrderGUI extends JFrame {
 	private JTabbedPane tabbedPane;
 	private JButton personConfirmBtn;
 	private JButton personCancelBtn;
+	private ArrayList<Integer> remove;
 
 
 	/**
@@ -1457,6 +1459,7 @@ public class OrderGUI extends JFrame {
 	//UpdateTab ConfirmBtn
 	private void updateConfirm(){
 		int c = updateProductTab.getRowCount();
+		boolean removal = false;
 
 		orderController.updateOrder(orderReturn, updateEmployeePhone.getText(), updateCustomerPhone.getText(), barcodes);
 
@@ -1464,7 +1467,21 @@ public class OrderGUI extends JFrame {
 
 		for(int i = 0; i < c; i++) {
 			Integer amount = Integer.valueOf(updateProductTab.getValueAt(i, 1).toString());
-			orderController.updatePartOrder(orderReturn, i, amount);
+			if(amount != 0) {
+				orderController.updatePartOrder(orderReturn, i, amount);
+			}
+			else {
+				remove = new ArrayList<>();
+				remove.add(i);
+				removal = true;
+			}
+			
+		}
+		
+		if(removal) {
+			for(int i = 0; i < remove.size(); i++) {
+				orderController.remove(orderReturn.getPartOrders(), i);
+			}
 		}
 
 		JOptionPane.showMessageDialog(null, "Ordre opdateret.");

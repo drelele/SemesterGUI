@@ -113,17 +113,31 @@ public class OrderController
         PartOrder partOrder = partOrders.get(index);
         String title = partOrder.getProduct().getTitle();
         String result = "";
+        
+//        markedForRemoval = new ArrayList<>();
 
         if(amount != 0){
             partOrder.setAmount(amount);
-            result = title + " mængde ændret til " + amount + "x";
-        } else {
-            partOrders.remove(index);
-            result = title + " slettet fra salget.";  
-        }
-
+//            result = title + " mængde ændret til " + amount + "x";
+        } 
+//        else {      
+//            markedForRemoval.add((Integer) index);
+//            
+////            result = title + " slettet fra salget.";  
+//        }
+        
         return result;
     }
+    
+    public void remove(ArrayList<PartOrder> partOrders, int index) {
+    	partOrders.remove((int) index);
+    }
+    
+//    public void remove(ArrayList<PartOrder> partOrders){
+//    	for(int i = 0; i < markedForRemoval.size(); i++) {
+//    		partOrders.remove((int) markedForRemoval.get(i));
+//    	}
+//    }
 
     /**
      * Empty and delete Order from orderContainer.
@@ -146,5 +160,9 @@ public class OrderController
 	
 	public Product getProduct(String barcode) {
 		return productController.getProduct(barcode);
+	}
+	
+	public ArrayList<Order> getOrders(){
+		return orderContainer.getOrders();
 	}
 }
