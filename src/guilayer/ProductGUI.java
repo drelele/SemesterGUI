@@ -27,6 +27,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.awt.event.ActionEvent;
 
 import controllerlayer.ProductController;
@@ -38,6 +39,11 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import javax.swing.UIManager;
 
 public class ProductGUI extends JFrame {
 
@@ -92,7 +98,7 @@ public class ProductGUI extends JFrame {
 	private JButton btnDeleteItem;
 	private JTextArea txtAreaDescription4;
 	private JTextArea txtAreaDescription5;
-	private JButton btnDelete;
+	private JButton btnDeleteProdukt;
 	private JLabel lblCtrPrice;
 	private JButton btnCtrCreate;
 	private JPanel pnlFoundProduct;
@@ -104,6 +110,14 @@ public class ProductGUI extends JFrame {
 	private double price;
 	private Item item;
 	private ArrayList<Item> items;
+	private JPanel pnlCreateProduct;
+	private JPanel pnlFoundProduct1;
+	private JPanel pnlCtrItem;
+	private JPanel pnlShowProduct2;
+	private JPanel pnlDeleteItem;
+	private JPanel pnlFoundProduct2;
+	private JPanel pnlCtrProduct;
+	private JPanel pnlFoundProduct3;
 
 
 
@@ -155,10 +169,10 @@ public class ProductGUI extends JFrame {
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Opret produkt", null, panel, null);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new TitledBorder(null, "Opret produkt", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		pnlCreateProduct = new JPanel();
+		pnlCreateProduct.setBorder(new TitledBorder(null, "Opret produkt", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
-		JPanel pnlCtrProduct = new JPanel();
+		pnlCtrProduct = new JPanel();
 		pnlCtrProduct.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Produkt oprettet", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		
 		JLabel lblShowBarcode = new JLabel("Stregkode:");
@@ -174,22 +188,32 @@ public class ProductGUI extends JFrame {
 		JLabel lblShowStock = new JLabel("Stock:");
 		
 		txtShowBarcode = new JTextField();
+		txtShowBarcode.setName("barcode");
+		txtShowBarcode.setEditable(false);
 		txtShowBarcode.setToolTipText("");
 		txtShowBarcode.setColumns(10);
 		
 		txtShowTitle = new JTextField();
+		txtShowTitle.setName("title");
+		txtShowTitle.setEditable(false);
 		txtShowTitle.setText("");
 		txtShowTitle.setColumns(10);
 		
 		JScrollPane scrShowDescription = new JScrollPane();
 		
 		txtShowPrice = new JTextField();
+		txtShowPrice.setName("price");
+		txtShowPrice.setEditable(false);
 		txtShowPrice.setColumns(10);
 		
 		txtShowAmount = new JTextField();
+		txtShowAmount.setName("amount");
+		txtShowAmount.setEditable(false);
 		txtShowAmount.setColumns(10);
 		
 		txtShowStock = new JTextField();
+		txtShowStock.setName("stock");
+		txtShowStock.setEditable(false);
 		txtShowStock.setColumns(10);
 		GroupLayout gl_pnlCtrProduct = new GroupLayout(pnlCtrProduct);
 		gl_pnlCtrProduct.setHorizontalGroup(
@@ -247,6 +271,9 @@ public class ProductGUI extends JFrame {
 		);
 		
 		txtAreaDescription = new JTextArea();
+		txtAreaDescription.setBackground(UIManager.getColor("Button.background"));
+		txtAreaDescription.setName("description");
+		txtAreaDescription.setEditable(false);
 		scrShowDescription.setViewportView(txtAreaDescription);
 		pnlCtrProduct.setLayout(gl_pnlCtrProduct);
 		
@@ -265,7 +292,7 @@ public class ProductGUI extends JFrame {
 					.addContainerGap()
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
+							.addComponent(pnlCreateProduct, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
 							.addComponent(pnlCtrProduct, GroupLayout.PREFERRED_SIZE, 312, GroupLayout.PREFERRED_SIZE))
 						.addComponent(btnBack))
@@ -277,7 +304,7 @@ public class ProductGUI extends JFrame {
 					.addContainerGap()
 					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
 						.addComponent(pnlCtrProduct, GroupLayout.PREFERRED_SIZE, 273, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel_1, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 197, GroupLayout.PREFERRED_SIZE))
+						.addComponent(pnlCreateProduct, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 197, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 154, Short.MAX_VALUE)
 					.addComponent(btnBack, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
@@ -322,65 +349,60 @@ public class ProductGUI extends JFrame {
 		JButton btnCtrCancel = new JButton("Cancel");
 		btnCtrCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				clearFields();
+				clearFields(pnlCreateProduct);
 			}
 		});
 		
 		btnCtrCreate = new JButton("Opret");
 		btnCtrCreate.setEnabled(false);
 		btnCtrCreate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				if(!txtCtrName.getText().trim().isEmpty()){
-					btnCtrCreate.setEnabled(true);
-				}
-				/*name = txtCtrName.getText();
+			public void actionPerformed(ActionEvent arg0) {		
+				name = txtCtrName.getText();
 				description = txtDescription.getText();
-				price = Double.parseDouble(txtCtrPrice.getText());*/
-			
+				price = Double.parseDouble(txtCtrPrice.getText());
+		
 				createProduct(name, description, price);
-				
 			}
 		});
-		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
-		gl_panel_1.setHorizontalGroup(
-			gl_panel_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_1.createSequentialGroup()
+		GroupLayout gl_pnlCreateProduct = new GroupLayout(pnlCreateProduct);
+		gl_pnlCreateProduct.setHorizontalGroup(
+			gl_pnlCreateProduct.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlCreateProduct.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel_1.createSequentialGroup()
-							.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
+					.addGroup(gl_pnlCreateProduct.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_pnlCreateProduct.createSequentialGroup()
+							.addGroup(gl_pnlCreateProduct.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblCtrName)
 								.addComponent(lblCtrDescription)
 								.addComponent(lblCtrPrice))
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
+							.addGroup(gl_pnlCreateProduct.createParallelGroup(Alignment.TRAILING)
 								.addComponent(txtCtrName)
 								.addComponent(scrCtrDescription, GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
 								.addComponent(txtCtrPrice)))
-						.addGroup(gl_panel_1.createSequentialGroup()
+						.addGroup(gl_pnlCreateProduct.createSequentialGroup()
 							.addComponent(btnCtrCreate)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(btnCtrCancel)))
 					.addGap(8))
 		);
-		gl_panel_1.setVerticalGroup(
-			gl_panel_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_1.createSequentialGroup()
+		gl_pnlCreateProduct.setVerticalGroup(
+			gl_pnlCreateProduct.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlCreateProduct.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlCreateProduct.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblCtrName)
 						.addComponent(txtCtrName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_pnlCreateProduct.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblCtrDescription)
 						.addComponent(scrCtrDescription, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE))
 					.addGap(9)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlCreateProduct.createParallelGroup(Alignment.BASELINE)
 						.addComponent(txtCtrPrice, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblCtrPrice))
 					.addPreferredGap(ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlCreateProduct.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnCtrCancel)
 						.addComponent(btnCtrCreate))
 					.addContainerGap())
@@ -399,7 +421,7 @@ public class ProductGUI extends JFrame {
 		});
 
 		scrCtrDescription.setViewportView(txtDescription);
-		panel_1.setLayout(gl_panel_1);
+		pnlCreateProduct.setLayout(gl_pnlCreateProduct);
 		panel.setLayout(gl_panel);
 		
 		JPanel panel_3 = new JPanel();
@@ -442,7 +464,7 @@ public class ProductGUI extends JFrame {
 		btnFind.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String barcode = txtSearchBarcode.getText();
-				getProduct(barcode, 1);
+				getProduct(barcode,pnlFoundProduct);
 			}
 		});
 		GridBagConstraints gbc_btnFind = new GridBagConstraints();
@@ -466,21 +488,32 @@ public class ProductGUI extends JFrame {
 		JLabel lblFoundAmount = new JLabel("Antal:");
 		
 		txtShowPrice1 = new JTextField();
+		txtShowPrice1.setEditable(false);
+		txtShowPrice1.setName("price");
 		txtShowPrice1.setColumns(10);
 		
 		txtShowBarcode1 = new JTextField();
+		txtShowBarcode1.setEditable(false);
+		txtShowBarcode1.setName("barcode");
 		txtShowBarcode1.setColumns(10);
 		
 		txtShowTitle1 = new JTextField();
+		txtShowTitle1.setEditable(false);
+		txtShowTitle1.setName("title");
 		txtShowTitle1.setText("");
 		txtShowTitle1.setColumns(10);
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setName("");
 		
 		txtShowAmount1 = new JTextField();
+		txtShowAmount1.setEditable(false);
+		txtShowAmount1.setName("amount");
 		txtShowAmount1.setColumns(10);
 		
 		txtShowStock1 = new JTextField();
+		txtShowStock1.setEditable(false);
+		txtShowStock1.setName("stock");
 		txtShowStock1.setColumns(10);
 		GroupLayout gl_pnlFoundProduct = new GroupLayout(pnlFoundProduct);
 		gl_pnlFoundProduct.setHorizontalGroup(
@@ -542,6 +575,9 @@ public class ProductGUI extends JFrame {
 		);
 		
 		txtAreaDescription1 = new JTextArea();
+		txtAreaDescription1.setBackground(UIManager.getColor("Button.background"));
+		txtAreaDescription1.setEditable(false);
+		txtAreaDescription1.setName("description");
 		scrollPane.setViewportView(txtAreaDescription1);
 		pnlFoundProduct.setLayout(gl_pnlFoundProduct);
 		
@@ -618,7 +654,8 @@ public class ProductGUI extends JFrame {
 		btnFind1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String barcode = txtSearchBarcode1.getText();
-				getProduct(barcode,2);
+				getProduct(barcode,pnlFoundProduct1);
+				btnEnable(product,btnItemCreate);
 			}
 		});
 		GridBagConstraints gbc_btnFind1 = new GridBagConstraints();
@@ -626,8 +663,8 @@ public class ProductGUI extends JFrame {
 		gbc_btnFind1.gridy = 0;
 		pnlSearch1.add(btnFind1, gbc_btnFind1);
 		
-		JPanel panel_7 = new JPanel();
-		panel_7.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Opret item", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnlCtrItem = new JPanel();
+		pnlCtrItem.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Opret item", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		
 		JLabel lblCtrItemName = new JLabel("Indtast antal item(s):");
 		
@@ -646,42 +683,42 @@ public class ProductGUI extends JFrame {
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				clearFields();
+				clearFields(pnlCtrItem);
 			}
 		});
-		GroupLayout gl_panel_7 = new GroupLayout(panel_7);
-		gl_panel_7.setHorizontalGroup(
-			gl_panel_7.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_7.createSequentialGroup()
+		GroupLayout gl_pnlCtrItem = new GroupLayout(pnlCtrItem);
+		gl_pnlCtrItem.setHorizontalGroup(
+			gl_pnlCtrItem.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlCtrItem.createSequentialGroup()
 					.addGap(38)
-					.addGroup(gl_panel_7.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel_7.createSequentialGroup()
+					.addGroup(gl_pnlCtrItem.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_pnlCtrItem.createSequentialGroup()
 							.addComponent(lblCtrItemName)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(txtItem, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))
-						.addGroup(gl_panel_7.createSequentialGroup()
+						.addGroup(gl_pnlCtrItem.createSequentialGroup()
 							.addComponent(btnItemCreate)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(btnCancel)))
 					.addGap(8))
 		);
-		gl_panel_7.setVerticalGroup(
-			gl_panel_7.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_7.createSequentialGroup()
+		gl_pnlCtrItem.setVerticalGroup(
+			gl_pnlCtrItem.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlCtrItem.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_7.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlCtrItem.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblCtrItemName)
 						.addComponent(txtItem, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-					.addGroup(gl_panel_7.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlCtrItem.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnCancel)
 						.addComponent(btnItemCreate))
 					.addContainerGap())
 		);
-		panel_7.setLayout(gl_panel_7);
+		pnlCtrItem.setLayout(gl_pnlCtrItem);
 		
-		JPanel pnlCtrProduct1 = new JPanel();
-		pnlCtrProduct1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Produkt oprettet", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnlFoundProduct1 = new JPanel();
+		pnlFoundProduct1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Produkt oprettet", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		
 		JLabel lblShowBarcode1 = new JLabel("Stregkode:");
 		
@@ -696,39 +733,49 @@ public class ProductGUI extends JFrame {
 		JLabel lblShowAmount1 = new JLabel("Antal:");
 		
 		txtShowPrice2 = new JTextField();
+		txtShowPrice2.setEditable(false);
+		txtShowPrice2.setName("price");
 		txtShowPrice2.setColumns(10);
 		
 		txtShowBarcode2 = new JTextField();
+		txtShowBarcode2.setEditable(false);
+		txtShowBarcode2.setName("barcode");
 		txtShowBarcode2.setColumns(10);
 		
 		txtShowTitle2 = new JTextField();
+		txtShowTitle2.setEditable(false);
+		txtShowTitle2.setName("title");
 		txtShowTitle2.setText("");
 		txtShowTitle2.setColumns(10);
 		
 		JScrollPane scrShowDescription1 = new JScrollPane();
 		
 		txtShowAmount2 = new JTextField();
+		txtShowAmount2.setEditable(false);
+		txtShowAmount2.setName("amount");
 		txtShowAmount2.setColumns(10);
 		
 		txtShowStock2 = new JTextField();
+		txtShowStock2.setEditable(false);
+		txtShowStock2.setName("stock");
 		txtShowStock2.setColumns(10);
-		GroupLayout gl_pnlCtrProduct1 = new GroupLayout(pnlCtrProduct1);
-		gl_pnlCtrProduct1.setHorizontalGroup(
-			gl_pnlCtrProduct1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_pnlCtrProduct1.createSequentialGroup()
+		GroupLayout gl_pnlFoundProduct1 = new GroupLayout(pnlFoundProduct1);
+		gl_pnlFoundProduct1.setHorizontalGroup(
+			gl_pnlFoundProduct1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlFoundProduct1.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_pnlCtrProduct1.createParallelGroup(Alignment.TRAILING)
+					.addGroup(gl_pnlFoundProduct1.createParallelGroup(Alignment.TRAILING)
 						.addComponent(lblShowBarcode1)
 						.addComponent(label_1)
 						.addComponent(lblShowTitle1)
 						.addComponent(lblShowPrice1)
-						.addGroup(gl_pnlCtrProduct1.createSequentialGroup()
-							.addGroup(gl_pnlCtrProduct1.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_pnlFoundProduct1.createSequentialGroup()
+							.addGroup(gl_pnlFoundProduct1.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblShowStock1)
 								.addComponent(lblShowAmount1))
 							.addGap(2)))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_pnlCtrProduct1.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_pnlFoundProduct1.createParallelGroup(Alignment.LEADING)
 						.addComponent(txtShowPrice2, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
 						.addComponent(txtShowBarcode2, GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
 						.addComponent(txtShowTitle2, GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
@@ -737,39 +784,42 @@ public class ProductGUI extends JFrame {
 						.addComponent(txtShowStock2, GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE))
 					.addGap(8))
 		);
-		gl_pnlCtrProduct1.setVerticalGroup(
-			gl_pnlCtrProduct1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_pnlCtrProduct1.createSequentialGroup()
+		gl_pnlFoundProduct1.setVerticalGroup(
+			gl_pnlFoundProduct1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlFoundProduct1.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_pnlCtrProduct1.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlFoundProduct1.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblShowBarcode1)
 						.addComponent(txtShowBarcode2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_pnlCtrProduct1.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlFoundProduct1.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblShowTitle1)
 						.addComponent(txtShowTitle2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(10)
-					.addGroup(gl_pnlCtrProduct1.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_pnlFoundProduct1.createParallelGroup(Alignment.LEADING)
 						.addComponent(label_1)
 						.addComponent(scrShowDescription1, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_pnlCtrProduct1.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlFoundProduct1.createParallelGroup(Alignment.BASELINE)
 						.addComponent(txtShowPrice2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblShowPrice1))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_pnlCtrProduct1.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlFoundProduct1.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblShowAmount1)
 						.addComponent(txtShowAmount2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_pnlCtrProduct1.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlFoundProduct1.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblShowStock1)
 						.addComponent(txtShowStock2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap(31, Short.MAX_VALUE))
 		);
 		
 		txtAreaDescription2 = new JTextArea();
+		txtAreaDescription2.setBackground(UIManager.getColor("Button.background"));
+		txtAreaDescription2.setEditable(false);
+		txtAreaDescription2.setName("description");
 		scrShowDescription1.setViewportView(txtAreaDescription2);
-		pnlCtrProduct1.setLayout(gl_pnlCtrProduct1);
+		pnlFoundProduct1.setLayout(gl_pnlFoundProduct1);
 		
 		JButton btnBack2 = new JButton("Tilbage");
 		btnBack2.addActionListener(new ActionListener() {
@@ -785,9 +835,9 @@ public class ProductGUI extends JFrame {
 				.addComponent(panel_6, GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE)
 				.addGroup(gl_panel_5.createSequentialGroup()
 					.addGap(10)
-					.addComponent(panel_7, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
+					.addComponent(pnlCtrItem, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
 					.addGap(66)
-					.addComponent(pnlCtrProduct1, GroupLayout.PREFERRED_SIZE, 312, GroupLayout.PREFERRED_SIZE)
+					.addComponent(pnlFoundProduct1, GroupLayout.PREFERRED_SIZE, 312, GroupLayout.PREFERRED_SIZE)
 					.addGap(18))
 				.addGroup(gl_panel_5.createSequentialGroup()
 					.addContainerGap()
@@ -800,8 +850,8 @@ public class ProductGUI extends JFrame {
 					.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel_5.createParallelGroup(Alignment.BASELINE)
-						.addComponent(panel_7, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
-						.addComponent(pnlCtrProduct1, GroupLayout.PREFERRED_SIZE, 273, GroupLayout.PREFERRED_SIZE))
+						.addComponent(pnlCtrItem, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
+						.addComponent(pnlFoundProduct1, GroupLayout.PREFERRED_SIZE, 273, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
 					.addComponent(btnBack2)
 					.addContainerGap())
@@ -848,9 +898,8 @@ public class ProductGUI extends JFrame {
 		btnFind2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String barcode = txtSearchBarcode2.getText();
-				getProduct(barcode,3);
-				
-				showItems();
+				getProduct(barcode,pnlShowProduct2);
+				btnEnable(product,btnDeleteItem);
 			}
 		});
 		GridBagConstraints gbc_btnFind2 = new GridBagConstraints();
@@ -858,12 +907,23 @@ public class ProductGUI extends JFrame {
 		gbc_btnFind2.gridy = 0;
 		pnlSearch3.add(btnFind2, gbc_btnFind2);
 		
-		JPanel panel_10 = new JPanel();
-		panel_10.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Slet item", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnlDeleteItem = new JPanel();
+		pnlDeleteItem.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Slet item", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		btnDeleteItem = new JButton("Slet");
+		btnDeleteItem.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				if(btnDeleteItem.isEnabled() && product != null) {
+					showItems();
+				}else {
+					clearFields(pnlDeleteItem);
+				}
+			}
+		});
+
+		btnDeleteItem.setName("btnDelete");
 		btnDeleteItem.setEnabled(false);
 		btnDeleteItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {				
 				String serialNumber = txtSerialCode.getText();
 				deleteItem(serialNumber);
 			}
@@ -877,13 +937,13 @@ public class ProductGUI extends JFrame {
 		txtSerialCode.setColumns(10);
 		
 		JScrollPane scrItem = new JScrollPane();
-		GroupLayout gl_panel_10 = new GroupLayout(panel_10);
-		gl_panel_10.setHorizontalGroup(
-			gl_panel_10.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_10.createSequentialGroup()
+		GroupLayout gl_pnlDeleteItem = new GroupLayout(pnlDeleteItem);
+		gl_pnlDeleteItem.setHorizontalGroup(
+			gl_pnlDeleteItem.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlDeleteItem.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_10.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_10.createSequentialGroup()
+					.addGroup(gl_pnlDeleteItem.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_pnlDeleteItem.createSequentialGroup()
 							.addComponent(txtSerialCode, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(btnDeleteItem))
@@ -892,9 +952,9 @@ public class ProductGUI extends JFrame {
 						.addComponent(scrItem, GroupLayout.PREFERRED_SIZE, 175, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap(64, Short.MAX_VALUE))
 		);
-		gl_panel_10.setVerticalGroup(
-			gl_panel_10.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_panel_10.createSequentialGroup()
+		gl_pnlDeleteItem.setVerticalGroup(
+			gl_pnlDeleteItem.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_pnlDeleteItem.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(scrItem, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
@@ -902,7 +962,7 @@ public class ProductGUI extends JFrame {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lblDeleteText1)
 					.addGap(11)
-					.addGroup(gl_panel_10.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlDeleteItem.createParallelGroup(Alignment.BASELINE)
 						.addComponent(txtSerialCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnDeleteItem))
 					.addContainerGap())
@@ -910,9 +970,9 @@ public class ProductGUI extends JFrame {
 		
 		lstItem = new JList();
 		scrItem.setViewportView(lstItem);
-		panel_10.setLayout(gl_panel_10);
+		pnlDeleteItem.setLayout(gl_pnlDeleteItem);
 		
-		JPanel pnlShowProduct2 = new JPanel();
+		pnlShowProduct2 = new JPanel();
 		pnlShowProduct2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Produkt oprettet", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		
 		JLabel lblShowBarcode2 = new JLabel("Stregkode:");
@@ -928,21 +988,31 @@ public class ProductGUI extends JFrame {
 		JLabel lblShowAmount2 = new JLabel("Antal:");
 		
 		txtShowPrice3 = new JTextField();
+		txtShowPrice3.setEditable(false);
+		txtShowPrice3.setName("price");
 		txtShowPrice3.setColumns(10);
 		
 		txtShowBarcode3 = new JTextField();
+		txtShowBarcode3.setEditable(false);
+		txtShowBarcode3.setName("barcode");
 		txtShowBarcode3.setColumns(10);
 		
 		txtShowTitle3 = new JTextField();
+		txtShowTitle3.setEditable(false);
+		txtShowTitle3.setName("title");
 		txtShowTitle3.setText("");
 		txtShowTitle3.setColumns(10);
 		
 		JScrollPane scrShowDescription2 = new JScrollPane();
 		
 		txtShowAmount3 = new JTextField();
+		txtShowAmount3.setEditable(false);
+		txtShowAmount3.setName("amount");
 		txtShowAmount3.setColumns(10);
 		
 		txtShowStock3 = new JTextField();
+		txtShowStock3.setEditable(false);
+		txtShowStock3.setName("stock");
 		txtShowStock3.setColumns(10);
 		GroupLayout gl_pnlShowProduct2 = new GroupLayout(pnlShowProduct2);
 		gl_pnlShowProduct2.setHorizontalGroup(
@@ -1002,6 +1072,9 @@ public class ProductGUI extends JFrame {
 		);
 		
 		txtAreaDescription3 = new JTextArea();
+		txtAreaDescription3.setBackground(UIManager.getColor("Button.background"));
+		txtAreaDescription3.setEditable(false);
+		txtAreaDescription3.setName("description");
 		scrShowDescription2.setViewportView(txtAreaDescription3);
 		pnlShowProduct2.setLayout(gl_pnlShowProduct2);
 		
@@ -1019,7 +1092,7 @@ public class ProductGUI extends JFrame {
 				.addComponent(panel_8, GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE)
 				.addGroup(gl_panel_2.createSequentialGroup()
 					.addGap(10)
-					.addComponent(panel_10, GroupLayout.PREFERRED_SIZE, 264, GroupLayout.PREFERRED_SIZE)
+					.addComponent(pnlDeleteItem, GroupLayout.PREFERRED_SIZE, 264, GroupLayout.PREFERRED_SIZE)
 					.addGap(63)
 					.addComponent(pnlShowProduct2, GroupLayout.PREFERRED_SIZE, 312, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
@@ -1034,7 +1107,7 @@ public class ProductGUI extends JFrame {
 					.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel_10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(pnlDeleteItem, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(pnlShowProduct2, GroupLayout.PREFERRED_SIZE, 273, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
 					.addComponent(btnBack3)
@@ -1082,7 +1155,7 @@ public class ProductGUI extends JFrame {
 		btnFind3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String barcode = txtSearchBarcode3.getText();
-				getProduct(barcode,4);
+				getProduct(barcode,pnlFoundProduct2);
 			}
 		});
 		GridBagConstraints gbc_btnFind3 = new GridBagConstraints();
@@ -1090,8 +1163,8 @@ public class ProductGUI extends JFrame {
 		gbc_btnFind3.gridy = 0;
 		pnlSearch2.add(btnFind3, gbc_btnFind3);
 		
-		JPanel panel_12 = new JPanel();
-		panel_12.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Produkt fundet", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnlFoundProduct2 = new JPanel();
+		pnlFoundProduct2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Produkt fundet", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		
 		JLabel lblShowBarcode3 = new JLabel("Stregkode:");
 		
@@ -1108,22 +1181,27 @@ public class ProductGUI extends JFrame {
 		JScrollPane scrShowDescription3 = new JScrollPane();
 		
 		txtShowBarcode4 = new JTextField();
+		txtShowBarcode4.setName("barcode");
 		txtShowBarcode4.setEditable(false);
 		txtShowBarcode4.setColumns(10);
 		
 		txtShowTitle4 = new JTextField();
+		txtShowTitle4.setName("title");
 		txtShowTitle4.setText("");
 		txtShowTitle4.setColumns(10);
 		
 		txtShowAmount4 = new JTextField();
+		txtShowAmount4.setName("amount");
 		txtShowAmount4.setEditable(false);
 		txtShowAmount4.setColumns(10);
 		
 		txtShowStock4 = new JTextField();
+		txtShowStock4.setName("stock");
 		txtShowStock4.setEditable(false);
 		txtShowStock4.setColumns(10);
 		
 		txtShowPrice4 = new JTextField();
+		txtShowPrice4.setName("price");
 		txtShowPrice4.setColumns(10);
 		
 		JButton btnEdit = new JButton("\u00C6ndre");
@@ -1133,65 +1211,65 @@ public class ProductGUI extends JFrame {
 				updateProduct();
 			}
 		});
-		GroupLayout gl_panel_12 = new GroupLayout(panel_12);
-		gl_panel_12.setHorizontalGroup(
-			gl_panel_12.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_12.createSequentialGroup()
+		GroupLayout gl_pnlFoundProduct2 = new GroupLayout(pnlFoundProduct2);
+		gl_pnlFoundProduct2.setHorizontalGroup(
+			gl_pnlFoundProduct2.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlFoundProduct2.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_12.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_12.createSequentialGroup()
-							.addGroup(gl_panel_12.createParallelGroup(Alignment.TRAILING)
+					.addGroup(gl_pnlFoundProduct2.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_pnlFoundProduct2.createSequentialGroup()
+							.addGroup(gl_pnlFoundProduct2.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblShowBarcode3)
 								.addComponent(lblShowDescription3)
 								.addComponent(lblShowTitle3)
 								.addComponent(lblShowPrice3)
-								.addGroup(gl_panel_12.createSequentialGroup()
-									.addGroup(gl_panel_12.createParallelGroup(Alignment.TRAILING)
+								.addGroup(gl_pnlFoundProduct2.createSequentialGroup()
+									.addGroup(gl_pnlFoundProduct2.createParallelGroup(Alignment.TRAILING)
 										.addComponent(lblShowStock3)
 										.addComponent(lblShowAmount3))
 									.addGap(2)))
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panel_12.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel_12.createSequentialGroup()
-									.addGroup(gl_panel_12.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_pnlFoundProduct2.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_pnlFoundProduct2.createSequentialGroup()
+									.addGroup(gl_pnlFoundProduct2.createParallelGroup(Alignment.LEADING)
 										.addComponent(scrShowDescription3, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
 										.addComponent(txtShowBarcode4, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
 										.addComponent(txtShowTitle4, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
 										.addComponent(txtShowAmount4, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
 										.addComponent(txtShowStock4, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE))
 									.addGap(8))
-								.addGroup(gl_panel_12.createSequentialGroup()
+								.addGroup(gl_pnlFoundProduct2.createSequentialGroup()
 									.addComponent(txtShowPrice4, GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
 									.addGap(10))))
-						.addGroup(Alignment.TRAILING, gl_panel_12.createSequentialGroup()
+						.addGroup(Alignment.TRAILING, gl_pnlFoundProduct2.createSequentialGroup()
 							.addComponent(btnEdit)
 							.addContainerGap())))
 		);
-		gl_panel_12.setVerticalGroup(
-			gl_panel_12.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_12.createSequentialGroup()
+		gl_pnlFoundProduct2.setVerticalGroup(
+			gl_pnlFoundProduct2.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlFoundProduct2.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_12.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlFoundProduct2.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblShowBarcode3)
 						.addComponent(txtShowBarcode4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel_12.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlFoundProduct2.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblShowTitle3)
 						.addComponent(txtShowTitle4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(10)
-					.addGroup(gl_panel_12.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_pnlFoundProduct2.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblShowDescription3)
 						.addComponent(scrShowDescription3, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel_12.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_pnlFoundProduct2.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblShowPrice3)
 						.addComponent(txtShowPrice4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(13)
-					.addGroup(gl_panel_12.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlFoundProduct2.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblShowAmount3)
 						.addComponent(txtShowAmount4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel_12.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlFoundProduct2.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblShowStock3)
 						.addComponent(txtShowStock4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
@@ -1200,9 +1278,10 @@ public class ProductGUI extends JFrame {
 		);
 		
 		txtAreaDescription4 = new JTextArea();
+		txtAreaDescription4.setName("description");
 		txtAreaDescription4.setText("");
 		scrShowDescription3.setViewportView(txtAreaDescription4);
-		panel_12.setLayout(gl_panel_12);
+		pnlFoundProduct2.setLayout(gl_pnlFoundProduct2);
 		
 		JButton btnBack4 = new JButton("Tilbage");
 		btnBack4.addActionListener(new ActionListener() {
@@ -1220,7 +1299,7 @@ public class ProductGUI extends JFrame {
 					.addContainerGap()
 					.addComponent(btnBack4)
 					.addGap(87)
-					.addComponent(panel_12, GroupLayout.PREFERRED_SIZE, 331, GroupLayout.PREFERRED_SIZE)
+					.addComponent(pnlFoundProduct2, GroupLayout.PREFERRED_SIZE, 331, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(164, Short.MAX_VALUE))
 		);
 		gl_panel_9.setVerticalGroup(
@@ -1234,7 +1313,7 @@ public class ProductGUI extends JFrame {
 							.addContainerGap())
 						.addGroup(gl_panel_9.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(panel_12, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(pnlFoundProduct2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addContainerGap())))
 		);
 		panel_9.setLayout(gl_panel_9);
@@ -1279,7 +1358,8 @@ public class ProductGUI extends JFrame {
 		btnFind4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String barcode = txtSearchBarcode4.getText();
-				getProduct(barcode, 5);
+				getProduct(barcode, pnlFoundProduct3);
+				btnEnable(product, btnDeleteProdukt);
 			}
 		});
 		GridBagConstraints gbc_btnFind4 = new GridBagConstraints();
@@ -1287,8 +1367,8 @@ public class ProductGUI extends JFrame {
 		gbc_btnFind4.gridy = 0;
 		pnlSearch4.add(btnFind4, gbc_btnFind4);
 		
-		JPanel panel_15 = new JPanel();
-		panel_15.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Produkt fundet", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnlFoundProduct3 = new JPanel();
+		pnlFoundProduct3.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Produkt fundet", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		
 		JLabel lblShowBarcode4 = new JLabel("Stregkode:");
 		
@@ -1305,99 +1385,112 @@ public class ProductGUI extends JFrame {
 		JScrollPane srcShowDescription4 = new JScrollPane();
 		
 		txtShowBarcode5 = new JTextField();
+		txtShowBarcode5.setEditable(false);
+		txtShowBarcode5.setName("barcode");
 		txtShowBarcode5.setColumns(10);
 		
 		txtShowTitle5 = new JTextField();
+		txtShowTitle5.setEditable(false);
+		txtShowTitle5.setName("title");
 		txtShowTitle5.setText("");
 		txtShowTitle5.setColumns(10);
 		
 		txtShowAmount5 = new JTextField();
+		txtShowAmount5.setEditable(false);
+		txtShowAmount5.setName("amount");
 		txtShowAmount5.setColumns(10);
 		
 		txtShowStock5 = new JTextField();
+		txtShowStock5.setEditable(false);
+		txtShowStock5.setName("stock");
 		txtShowStock5.setColumns(10);
 		
 		txtShowPrice5 = new JTextField();
+		txtShowPrice5.setEditable(false);
+		txtShowPrice5.setName("price");
 		txtShowPrice5.setColumns(10);
 		
-		btnDelete = new JButton("Slet");
-		btnDelete.addActionListener(new ActionListener() {
+		btnDeleteProdukt = new JButton("Slet");
+		btnDeleteProdukt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {		
 				String barcode = txtSearchBarcode4.getText();
 				deleteProduct(barcode);			
 			}
 		});
-		btnDelete.setEnabled(false);
-		GroupLayout gl_panel_15 = new GroupLayout(panel_15);
-		gl_panel_15.setHorizontalGroup(
-			gl_panel_15.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_15.createSequentialGroup()
+		btnDeleteProdukt.setEnabled(false);
+		GroupLayout gl_pnlFoundProduct3 = new GroupLayout(pnlFoundProduct3);
+		gl_pnlFoundProduct3.setHorizontalGroup(
+			gl_pnlFoundProduct3.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlFoundProduct3.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_15.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_15.createSequentialGroup()
-							.addGroup(gl_panel_15.createParallelGroup(Alignment.TRAILING)
+					.addGroup(gl_pnlFoundProduct3.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_pnlFoundProduct3.createSequentialGroup()
+							.addGroup(gl_pnlFoundProduct3.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblShowBarcode4)
 								.addComponent(lblShowDescription4)
 								.addComponent(lblShowTitle4)
 								.addComponent(lblShowPrice4)
-								.addGroup(gl_panel_15.createSequentialGroup()
-									.addGroup(gl_panel_15.createParallelGroup(Alignment.TRAILING)
+								.addGroup(gl_pnlFoundProduct3.createSequentialGroup()
+									.addGroup(gl_pnlFoundProduct3.createParallelGroup(Alignment.TRAILING)
 										.addComponent(lblShowStock4)
 										.addComponent(lblShowAmount4))
 									.addGap(2)))
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panel_15.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel_15.createSequentialGroup()
-									.addGroup(gl_panel_15.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_pnlFoundProduct3.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_pnlFoundProduct3.createSequentialGroup()
+									.addGroup(gl_pnlFoundProduct3.createParallelGroup(Alignment.LEADING)
 										.addComponent(srcShowDescription4, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
 										.addComponent(txtShowBarcode5, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
 										.addComponent(txtShowTitle5, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
 										.addComponent(txtShowAmount5, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
 										.addComponent(txtShowStock5, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE))
 									.addGap(8))
-								.addGroup(gl_panel_15.createSequentialGroup()
+								.addGroup(gl_pnlFoundProduct3.createSequentialGroup()
 									.addComponent(txtShowPrice5, GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
 									.addGap(10))))
-						.addGroup(Alignment.TRAILING, gl_panel_15.createSequentialGroup()
-							.addComponent(btnDelete)
+						.addGroup(Alignment.TRAILING, gl_pnlFoundProduct3.createSequentialGroup()
+							.addComponent(btnDeleteProdukt)
 							.addContainerGap())))
 		);
-		gl_panel_15.setVerticalGroup(
-			gl_panel_15.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_15.createSequentialGroup()
+		gl_pnlFoundProduct3.setVerticalGroup(
+			gl_pnlFoundProduct3.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlFoundProduct3.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_15.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlFoundProduct3.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblShowBarcode4)
 						.addComponent(txtShowBarcode5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel_15.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlFoundProduct3.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblShowTitle4)
 						.addComponent(txtShowTitle5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(10)
-					.addGroup(gl_panel_15.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_pnlFoundProduct3.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblShowDescription4)
 						.addComponent(srcShowDescription4, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel_15.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_pnlFoundProduct3.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblShowPrice4)
 						.addComponent(txtShowPrice5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(13)
-					.addGroup(gl_panel_15.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlFoundProduct3.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblShowAmount4)
 						.addComponent(txtShowAmount5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel_15.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_pnlFoundProduct3.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblShowStock4)
 						.addComponent(txtShowStock5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-					.addComponent(btnDelete)
+					.addComponent(btnDeleteProdukt)
 					.addContainerGap())
 		);
 		
 		txtAreaDescription5 = new JTextArea();
+		txtAreaDescription5.setBackground(UIManager.getColor("Button.background"));
+		txtAreaDescription5.setEditable(false);
+		txtAreaDescription5.setName("description");
 		txtAreaDescription5.setText("");
 		srcShowDescription4.setViewportView(txtAreaDescription5);
-		panel_15.setLayout(gl_panel_15);
+		pnlFoundProduct3.setLayout(gl_pnlFoundProduct3);
 		
 		JButton btnBack5 = new JButton("Tilbage");
 		btnBack5.addActionListener(new ActionListener() {
@@ -1415,7 +1508,7 @@ public class ProductGUI extends JFrame {
 					.addContainerGap()
 					.addComponent(btnBack5)
 					.addGap(87)
-					.addComponent(panel_15, GroupLayout.PREFERRED_SIZE, 331, GroupLayout.PREFERRED_SIZE)
+					.addComponent(pnlFoundProduct3, GroupLayout.PREFERRED_SIZE, 331, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(164, Short.MAX_VALUE))
 		);
 		gl_panel_13.setVerticalGroup(
@@ -1425,7 +1518,7 @@ public class ProductGUI extends JFrame {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel_13.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnBack5, Alignment.TRAILING)
-						.addComponent(panel_15, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
+						.addComponent(pnlFoundProduct3, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		panel_13.setLayout(gl_panel_13);
@@ -1436,45 +1529,53 @@ public class ProductGUI extends JFrame {
 	private void createProduct(String name, String description, double price) 
 	{
 		product = productController.createProduct(name, description, price);
-		clearFields();
-		setProduct(product,0);
-		
+		if(product != null) {
+			setProduct(product,pnlCtrProduct);
+			clearFields(pnlCreateProduct);
+			confirmMessage("Produkt oprettet.");
+		}
 	}
 		
 	// FIND PRODUCT
-	private void getProduct(String barcode, int number) 
+	private void getProduct(String barcode, JPanel jPanel) 
 	{
 		product = productController.getProduct(barcode);
-
-		setProduct(product,number);
+		if(product != null) {
+			setProduct(product,jPanel);
+		}else {
+			clearFields(jPanel);
+		}
 	}
+
 	
 	// CREATE ITEM
 	public void addItem(int amount) 
 	{
 		productController.addItem(this.product, amount);
-		clearFields();
-		setProduct(product, 2);
+		setProduct(product, pnlFoundProduct1);
+		confirmMessage("Tilføjet " + amount + " item(s) til produktet.");
+		clearFields(pnlCtrItem);
 	}
 	
 	//DELETE ITEM
+	private void deleteItem(String serialNumber) 
+	{
+		productController.deleteItem(product,serialNumber);
+		setProduct(product,pnlShowProduct2);
+		txtSerialCode.setText(null);
+		showItems();
+		confirmMessage("Du har slettet item med serienummeret: " + serialNumber);
+	}
+	
+	// SHOW ITEMS
 	private void showItems() 
 	{
 		defaultListModel = new DefaultListModel();
 		items = this.product.getAllItems();
-		this.product.getAllItems();
 		for(Item item: items) {
 			defaultListModel.addElement(item.getSerialCode());
 		}
 		lstItem.setModel(defaultListModel);
-		clearFields();
-	}
-	
-	private void deleteItem(String serialNumber) 
-	{
-		productController.deleteItem(product,serialNumber);
-		setProduct(product, 3);
-		showItems();
 	}
 	
 	//UPDATE PRODUCT
@@ -1485,106 +1586,47 @@ public class ProductGUI extends JFrame {
 		double price = Double.parseDouble(txtShowPrice4.getText());
 		
 		product = productController.updateProduct(product, title, description, price);
-		setProduct(product, 4);
+		if(product != null) {
+			setProduct(product, pnlFoundProduct2);
+			confirmMessage("Produkt ændret.");
+		}
 	}
 	
 	//DELETE PRODUCT
 	private void deleteProduct(String barcode) 
 	{
 		productController.deleteProduct(product);
-		clearFields();
+		confirmMessage("Produktet er slettet.");
+		clearFields(pnlFoundProduct3);
 	}
-	
 
-		
-	// ************** // 
-	private void clearFields() 
+	// FIND PRODUCT
+	private void setProduct(Product product, JPanel jPanel) 
 	{
-		txtShowBarcode5.setText(null);
-		txtShowTitle5.setText(null);
-		txtAreaDescription5.setText(null);
-		txtShowPrice5.setText(null);
-		txtShowAmount5.setText(null);
-		txtShowStock5.setText(null);
-		txtCtrName.setText(null);
-		txtDescription.setText(null);
-		txtCtrPrice.setText(null);
-		txtItem.setText(null);
-		txtSerialCode.setText(null);
-	}
-	
-	private void setProduct(Product product, int number) 
-	{
-		if(product != null) {
-			switch(number) {
-			case 0:
-				txtShowBarcode.setText(product.getBarcode());
-				txtShowTitle.setText(product.getTitle());
-				txtAreaDescription.setText(product.getDescription());
-				txtShowPrice.setText(String.valueOf(product.getPrice()));
-				txtShowAmount.setText(String.valueOf(product.getAmount()));
-				txtShowStock.setText(String.valueOf(product.getStock()));
-				break;
-			case 1:
-				txtShowBarcode1.setText(product.getBarcode());
-				txtShowTitle1.setText(product.getTitle());
-				txtAreaDescription1.setText(product.getDescription());
-				txtShowPrice1.setText(String.valueOf(product.getPrice()));
-				txtShowAmount1.setText(String.valueOf(product.getAmount()));
-				txtShowStock1.setText(String.valueOf(product.getStock()));
-				break;
-			case 2:
-				txtShowBarcode2.setText(product.getBarcode());
-				txtShowTitle2.setText(product.getTitle());
-				txtAreaDescription2.setText(product.getDescription());
-				txtShowPrice2.setText(String.valueOf(product.getPrice()));
-				txtShowAmount2.setText(String.valueOf(product.getAmount()));
-				txtShowStock2.setText(String.valueOf(product.getStock()));
-				btnItemCreate.setEnabled(true);
-				break;
-			case 3:
-				txtShowBarcode3.setText(product.getBarcode());
-				txtShowTitle3.setText(product.getTitle());
-				txtAreaDescription3.setText(product.getDescription());
-				txtShowPrice3.setText(String.valueOf(product.getPrice()));
-				txtShowAmount3.setText(String.valueOf(product.getAmount()));
-				txtShowStock3.setText(String.valueOf(product.getStock()));
-				btnDeleteItem.setEnabled(true);
-				break;
-			case 4:
-				txtShowBarcode4.setText(product.getBarcode());
-				txtShowTitle4.setText(product.getTitle());
-				txtAreaDescription4.setText(product.getDescription());
-				txtShowPrice4.setText(String.valueOf(product.getPrice()));
-				txtShowAmount4.setText(String.valueOf(product.getAmount()));
-				txtShowStock4.setText(String.valueOf(product.getStock()));
-				btnDeleteItem.setEnabled(true);
-				break;
-			case 5:
-				txtShowBarcode5.setText(product.getBarcode());
-				txtShowTitle5.setText(product.getTitle());
-				txtAreaDescription5.setText(product.getDescription());
-				txtShowPrice5.setText(String.valueOf(product.getPrice()));
-				txtShowAmount5.setText(String.valueOf(product.getAmount()));
-				txtShowStock5.setText(String.valueOf(product.getStock()));
-				btnDelete.setEnabled(true);
-				break;
-			default:
-				break;
-			}
-		}else {
-			test();
-		}
-	}
-	
-	// TEST
-	private void test() 
-	{
-		for(Component component : pnlFoundProduct.getComponents()) {
+		for(Component component : jPanel.getComponents()) {
+			
 		    if(component instanceof JTextField)
 		    {
 		        JTextField textField = (JTextField) component;
-		        textField.setText(null);
+		        switch (textField.getName()){
+		        case "barcode":
+		        	textField.setText(product.getBarcode());
+		        	break;
+		        case "title":
+		        	textField.setText(product.getTitle());
+		        	break;
+		        case "price":
+		        	textField.setText(String.valueOf(product.getPrice()));
+		        	break;
+		        case "amount":
+		        	textField.setText(String.valueOf(product.getAmount()));
+		        	break;
+		        case "stock":
+		        	textField.setText(String.valueOf(product.getStock()));
+		        	break;
+	        	default:
+	        		break;
+		        }		       
 		    }else if(component instanceof JScrollPane) {
 		    	
 		    	JScrollPane scrollPane = (JScrollPane) component;
@@ -1592,14 +1634,46 @@ public class ProductGUI extends JFrame {
 		    	for(Component comp : components) {
 		    		if(comp instanceof JTextArea) {
 		    			JTextArea textArea = (JTextArea) comp;
-		    			textArea.setText(null);
+		    			textArea.setText(product.getDescription());
 		    		}
 		    	}
-		    	
 		    }
 		}
 	}
 	
+	private void clearFields(JPanel jPanel) 
+	{
+		product = null;
+		for(Component component : jPanel.getComponents()) {
+		    if(component instanceof JTextField){
+		        JTextField textField = (JTextField) component;
+		        textField.setText(null);
+		    }else if(component instanceof JScrollPane) {
+		    	JScrollPane scrollPane = (JScrollPane) component;
+		    	Component[] components = scrollPane.getViewport().getComponents();
+		    	for(Component comp : components) {
+		    		if(comp instanceof JTextArea) {
+		    			JTextArea textArea = (JTextArea) comp;
+		    			textArea.setText(null);
+		    		}else if(comp instanceof JList) {
+		    	    	DefaultListModel emptyListModel = new DefaultListModel();
+		    	    	lstItem.setModel(emptyListModel);
+		    	    }
+		    	}
+		    }
+		}
+	}
+	
+	// BUTTON ENABLE 
+	private void btnEnable(Product product, JButton jButton) 
+	{
+		if(product != null) {
+			jButton.setEnabled(true);
+		}else {
+			jButton.setEnabled(false);
+		}
+	}
+
 	// VALIDATION
 	private void inputValidation(boolean btnEnable) {
 		if(!txtCtrName.getText().trim().isEmpty() && !txtDescription.getText().trim().isEmpty() && !txtCtrPrice.getText().trim().isEmpty()){
@@ -1607,5 +1681,11 @@ public class ProductGUI extends JFrame {
 		}else {
 			btnCtrCreate.setEnabled(false);
 		}
+	}
+	
+	// CONFIRM MESSAGE
+	private void confirmMessage(String message) 
+	{
+		JOptionPane.showMessageDialog(null, message);
 	}
 }
