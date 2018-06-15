@@ -141,7 +141,7 @@ public class MainMenuGUI extends JFrame {
 		panel_1.add(scrollPane1, BorderLayout.CENTER);
 
 		// Person 
-		String[] personColumns = {"Navn.", "Telefon", "Medarbejdernummer", "Kundenummer", };
+		String[] personColumns = {"Navn.", "Telefon", "Kundenummer", "Medarbejdernummer", };
 		DefaultTableModel mainPersonTab = new DefaultTableModel();
 		
 		for (String column1: personColumns) {
