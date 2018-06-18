@@ -166,7 +166,6 @@ public class MainMenuGUI extends JFrame {
 		scrollPane1.setViewportView(mainPersonTable);
 		mainPersonTable.setModel(mainPersonTab); //SH was here!
 
-		//Not working! 
 		JButton btnOpdater = new JButton("Opdater");
 		btnOpdater.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				
