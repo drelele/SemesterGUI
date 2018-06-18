@@ -1677,7 +1677,6 @@ public class OrderGUI extends JFrame {
 		//emptyTable(productProductTab);
 		emptyFields(productReturnPanel);
 		productSearchInputField.setText("");
-		
 	}
 	
 	//ProductTab Get Product
@@ -1689,7 +1688,6 @@ public class OrderGUI extends JFrame {
 	private void productSearch() {
 		
 		try {
-			
 			productReturn = getProduct(productSearchInputField.getText());
 
 			String[] productReturnFields = {productReturn.getBarcode(), productReturn.getTitle(), productReturn.getDescription(), String.valueOf(productReturn.getPrice()), String.valueOf(productReturn.getAmount())};
