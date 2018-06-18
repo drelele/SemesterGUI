@@ -285,8 +285,6 @@ public class ProductGUI extends JFrame {
 		JButton btnBack = new JButton("Tilbage");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MainMenuGUI mainMenuGUI = new MainMenuGUI();
-				mainMenuGUI.setVisible(true);
 				dispose();
 			}
 		});
@@ -590,8 +588,6 @@ public class ProductGUI extends JFrame {
 		JButton btnBack1 = new JButton("Tilbage");
 		btnBack1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MainMenuGUI mainMenuGUI = new MainMenuGUI();
-				mainMenuGUI.setVisible(true);
 				dispose();
 			}
 		});
@@ -831,8 +827,6 @@ public class ProductGUI extends JFrame {
 		JButton btnBack2 = new JButton("Tilbage");
 		btnBack2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MainMenuGUI mainMenuGUI = new MainMenuGUI();
-				mainMenuGUI.setVisible(true);
 				dispose();
 			}
 		});
@@ -1089,8 +1083,6 @@ public class ProductGUI extends JFrame {
 		JButton btnBack3 = new JButton("Tilbage");
 		btnBack3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MainMenuGUI mainMenuGUI = new MainMenuGUI();
-				mainMenuGUI.setVisible(true);
 				dispose();
 			}
 		});
@@ -1295,8 +1287,6 @@ public class ProductGUI extends JFrame {
 		JButton btnBack4 = new JButton("Tilbage");
 		btnBack4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MainMenuGUI mainMenuGUI = new MainMenuGUI();
-				mainMenuGUI.setVisible(true);
 				dispose();
 			}
 		});
@@ -1505,8 +1495,6 @@ public class ProductGUI extends JFrame {
 		JButton btnBack5 = new JButton("Tilbage");
 		btnBack5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MainMenuGUI mainMenuGUI = new MainMenuGUI();
-				mainMenuGUI.setVisible(true);
 				dispose();
 			}
 		});

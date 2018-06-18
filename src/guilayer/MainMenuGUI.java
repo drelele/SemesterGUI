@@ -24,6 +24,7 @@ import modellayer.Customer;
 import modellayer.Employee;
 import modellayer.Order;
 import modellayer.Person;
+import modellayer.Product;
 
 import java.awt.BorderLayout;
 import javax.swing.JTabbedPane;
@@ -47,9 +48,12 @@ public class MainMenuGUI extends JFrame {
 
 	private JTable mainPersonTable;
 	private DefaultTableModel mainOrderTab;
-
-	private JTable tblProduct;
-	private JScrollPane scrProduct;
+	private DefaultTableModel mainPersonTab;
+	private DefaultTableModel mainProductTab;
+	private JPanel panel_3;
+	private JButton mainProductUpdateBtn;
+	private JScrollPane scrollPane2;
+	private JTable mainProductTable;
 
 	/**
 	 * Launch the application.
@@ -73,13 +77,13 @@ public class MainMenuGUI extends JFrame {
 	public MainMenuGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 496);
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
+
 		JMenu mnNewMenu = new JMenu("New menu");
 		menuBar.add(mnNewMenu);
-		
+
 		JMenuItem mntmNewMenuItem = new JMenuItem("New menu item");
 		mnNewMenu.add(mntmNewMenuItem);
 		contentPane = new JPanel();
@@ -155,53 +159,98 @@ public class MainMenuGUI extends JFrame {
 		JPanel panel_2 = new JPanel();
 		tabbedPane.addTab("Produkter", null, panel_2, null);
 		panel_2.setLayout(new BorderLayout(0, 0));
-		
-		JButton btnProduct = new JButton("Opdater");
-		btnProduct.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				updateProducts();
-			}
-		});
-		panel_2.add(btnProduct, BorderLayout.NORTH);
-		
-		scrProduct = new JScrollPane();
-		panel_2.add(scrProduct, BorderLayout.CENTER);
-		
-		tblProduct = new JTable();
-		scrProduct.setViewportView(tblProduct);
 
-		JPanel panel_3 = new JPanel();
+		panel_3 = new JPanel();
 		tabbedPane.addTab("Salg", null, panel_3, null);
 		panel_3.setLayout(new BorderLayout(0, 0));
 
 		JScrollPane scrollPane1 = new JScrollPane();
 		panel_1.add(scrollPane1, BorderLayout.CENTER);
 
-		// Person 
-		String[] personColumns = {"Navn.", "Telefon", "Kundenummer", "Medarbejdernummer"};
-		DefaultTableModel mainPersonTab = new DefaultTableModel();
-		
+		// Person 		
+		String[] personColumns = {"Navn.", "Telefon", "Kundenummer", "Medarbejdernummer", };
+		mainPersonTab = new DefaultTableModel();
+
 		for (String column1: personColumns) {
 			mainPersonTab.addColumn(column1);
 		}
-		
+
 		mainPersonTable = new JTable();
 		scrollPane1.setViewportView(mainPersonTable);
-		mainPersonTable.setModel(mainPersonTab); //SH was here!
-		
-		//Not working! 
+		mainPersonTable.setModel(mainPersonTab); //SH was here! 
+
 		JButton btnOpdater = new JButton("Opdater");
 		btnOpdater.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				
-				getContentPane().add(tabbedPane);
-				getContentPane().repaint();
-				getContentPane().revalidate();
+				updatePersons();
 			}
 		});
-		
-		panel_1.add(btnOpdater, BorderLayout.NORTH);
-		
 
+		updatePersons();
+		panel_1.add(btnOpdater, BorderLayout.NORTH);
+		// END PERSON
+		
+		// PRODUCT
+		String[] productColumns = {"Stregkode","Titel","Description","Price","Amount","Stock"};
+		mainProductTab = new DefaultTableModel();
+
+		for (String column: productColumns) {
+			mainProductTab.addColumn(column);
+		}
+
+		mainProductUpdateBtn = new JButton("Opdater");
+		mainProductUpdateBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				updateProducts();
+			}
+		});
+
+		panel_2.add(mainProductUpdateBtn, BorderLayout.NORTH);
+
+		scrollPane2 = new JScrollPane();
+		panel_2.add(scrollPane2, BorderLayout.CENTER);
+
+		mainProductTable = new JTable();
+		scrollPane2.setViewportView(mainProductTable);
+		mainProductTable.setModel(mainProductTab);
+
+		updateProducts();
+		// END PRODUCT
+		
+		//JN START
+
+		String[] orderColumns = {"Ordrenr.", "Medarbejder", "Kunde", "Total"};
+		mainOrderTab = new DefaultTableModel();
+
+		for (String column: orderColumns) {
+			mainOrderTab.addColumn(column);
+		}
+
+		JButton mainOrderUpdateBtn = new JButton("Opdater");
+		mainOrderUpdateBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				updateOrders();
+			}
+		});
+
+		panel_3.add(mainOrderUpdateBtn, BorderLayout.NORTH);
+
+		JScrollPane scrollPane = new JScrollPane();
+		panel_3.add(scrollPane, BorderLayout.CENTER);
+
+
+		mainOrderTable = new JTable();
+		scrollPane.setViewportView(mainOrderTable);
+		mainOrderTable.setModel(mainOrderTab);
+
+		updateOrders();
+
+		//JN END
+
+	}
+
+	private void updatePersons() {
+		emptyTable(mainPersonTab);
 		for(Person person : personController.getAllPersons()) {
 			if (person instanceof Customer) {			
 				Customer customer = (Customer) person;
@@ -211,41 +260,8 @@ public class MainMenuGUI extends JFrame {
 				mainPersonTab.addRow(new Object[]{employee.getName(), employee.getPhone(), "", employee.getEmployeeNumber()});
 			}
 		}
-		
-		//JN START
-		
-		String[] orderColumns = {"Ordrenr.", "Medarbejder", "Kunde", "Total"};
-		mainOrderTab = new DefaultTableModel();
-		
-		for (String column: orderColumns) {
-			mainOrderTab.addColumn(column);
-		}
-		
-		JButton mainOrderUpdateBtn = new JButton("Opdater");
-		mainOrderUpdateBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				updateOrders();
-			}
-		});
-		
-		panel_3.add(mainOrderUpdateBtn, BorderLayout.NORTH);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		panel_3.add(scrollPane, BorderLayout.CENTER);
-
-
-		mainOrderTable = new JTable();
-		scrollPane.setViewportView(mainOrderTable);
-		mainOrderTable.setModel(mainOrderTab);
-		
-		updateOrders();
-		
-		//JN END
-		
-		// PRODUCT
-		createTable();
 	}
-	
+
 	private void updateOrders() {
 		emptyTable(mainOrderTab);
 		for(Order order : orderController.getOrders()) {
@@ -255,17 +271,11 @@ public class MainMenuGUI extends JFrame {
 	
 	// OPDATE PRODUCT
 	private void updateProducts() {
-		
-	}
-	
-	private void createTable() {
-		
-		String[] columns = {"Stregkode","Titel","Description","Price","Amount","Stock"};
-		
-		String[][] data = {
-			{"1","Sko","Gode sko","100","2","True"},
-		};
-		
+		emptyTable(mainProductTab);
+		for(Product product : productController.getProducts()) {
+			mainProductTab.addRow(new Object[]{product.getBarcode(), product.getTitle(), product.getDescription(), product.getPrice(), product.getAmount(), product.getStock()});
+			
+		}
 	}
 	
 	//Empty/reset table
@@ -275,5 +285,5 @@ public class MainMenuGUI extends JFrame {
 			table.removeRow(i - 1);
 		}
 	}
-	
+
 }
