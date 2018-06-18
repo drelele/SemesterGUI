@@ -177,7 +177,7 @@ public class MainMenuGUI extends JFrame {
 		updatePersons();
 		panel_1.add(btnOpdater, BorderLayout.NORTH);
 
-
+ 
 
 		//JN START
 
