@@ -118,6 +118,11 @@ public class ProductGUI extends JFrame {
 	private JPanel pnlFoundProduct2;
 	private JPanel pnlCtrProduct;
 	private JPanel pnlFoundProduct3;
+	private JPanel pnlSearch;
+	private JPanel pnlSearch1;
+	private JPanel pnlSearch3;
+	private JPanel pnlSearch2;
+	private JPanel pnlSearch4;
 
 
 
@@ -431,7 +436,7 @@ public class ProductGUI extends JFrame {
 		panel_4.setLayout(null);
 		panel_4.setBackground(Color.DARK_GRAY);
 		
-		JPanel pnlSearch = new JPanel();
+		pnlSearch = new JPanel();
 		pnlSearch.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Find produkt", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 255, 255)));
 		pnlSearch.setBackground(Color.DARK_GRAY);
 		pnlSearch.setBounds(164, 11, 331, 49);
@@ -465,6 +470,7 @@ public class ProductGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String barcode = txtSearchBarcode.getText();
 				getProduct(barcode,pnlFoundProduct);
+				clearFields(pnlSearch);
 			}
 		});
 		GridBagConstraints gbc_btnFind = new GridBagConstraints();
@@ -621,7 +627,7 @@ public class ProductGUI extends JFrame {
 		panel_6.setLayout(null);
 		panel_6.setBackground(Color.DARK_GRAY);
 		
-		JPanel pnlSearch1 = new JPanel();
+		pnlSearch1 = new JPanel();
 		pnlSearch1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Find produkt", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 255, 255)));
 		pnlSearch1.setBackground(Color.DARK_GRAY);
 		pnlSearch1.setBounds(164, 11, 331, 49);
@@ -656,6 +662,7 @@ public class ProductGUI extends JFrame {
 				String barcode = txtSearchBarcode1.getText();
 				getProduct(barcode,pnlFoundProduct1);
 				btnEnable(product,btnItemCreate);
+				clearFields(pnlSearch1);
 			}
 		});
 		GridBagConstraints gbc_btnFind1 = new GridBagConstraints();
@@ -865,7 +872,7 @@ public class ProductGUI extends JFrame {
 		panel_8.setLayout(null);
 		panel_8.setBackground(Color.DARK_GRAY);
 		
-		JPanel pnlSearch3 = new JPanel();
+		pnlSearch3 = new JPanel();
 		pnlSearch3.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Find produkt", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 255, 255)));
 		pnlSearch3.setBackground(Color.DARK_GRAY);
 		pnlSearch3.setBounds(164, 11, 331, 49);
@@ -900,6 +907,7 @@ public class ProductGUI extends JFrame {
 				String barcode = txtSearchBarcode2.getText();
 				getProduct(barcode,pnlShowProduct2);
 				btnEnable(product,btnDeleteItem);
+				clearFields(pnlSearch3);
 			}
 		});
 		GridBagConstraints gbc_btnFind2 = new GridBagConstraints();
@@ -1122,7 +1130,7 @@ public class ProductGUI extends JFrame {
 		panel_11.setLayout(null);
 		panel_11.setBackground(Color.DARK_GRAY);
 		
-		JPanel pnlSearch2 = new JPanel();
+		pnlSearch2 = new JPanel();
 		pnlSearch2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Find produkt", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 255, 255)));
 		pnlSearch2.setBackground(Color.DARK_GRAY);
 		pnlSearch2.setBounds(164, 11, 331, 49);
@@ -1156,6 +1164,7 @@ public class ProductGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String barcode = txtSearchBarcode3.getText();
 				getProduct(barcode,pnlFoundProduct2);
+				clearFields(pnlSearch2);
 			}
 		});
 		GridBagConstraints gbc_btnFind3 = new GridBagConstraints();
@@ -1325,7 +1334,7 @@ public class ProductGUI extends JFrame {
 		panel_14.setLayout(null);
 		panel_14.setBackground(Color.DARK_GRAY);
 		
-		JPanel pnlSearch4 = new JPanel();
+		pnlSearch4 = new JPanel();
 		pnlSearch4.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Find produkt", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 255, 255)));
 		pnlSearch4.setBackground(Color.DARK_GRAY);
 		pnlSearch4.setBounds(164, 11, 331, 49);
@@ -1360,6 +1369,7 @@ public class ProductGUI extends JFrame {
 				String barcode = txtSearchBarcode4.getText();
 				getProduct(barcode, pnlFoundProduct3);
 				btnEnable(product, btnDeleteProdukt);
+				clearFields(pnlSearch4);
 			}
 		});
 		GridBagConstraints gbc_btnFind4 = new GridBagConstraints();
@@ -1544,6 +1554,7 @@ public class ProductGUI extends JFrame {
 			setProduct(product,jPanel);
 		}else {
 			clearFields(jPanel);
+			confirmMessage("Ingen produkt fundet.");
 		}
 	}
 
@@ -1560,11 +1571,16 @@ public class ProductGUI extends JFrame {
 	//DELETE ITEM
 	private void deleteItem(String serialNumber) 
 	{
-		productController.deleteItem(product,serialNumber);
+		item = productController.deleteItem(product,serialNumber);
 		setProduct(product,pnlShowProduct2);
 		txtSerialCode.setText(null);
-		showItems();
-		confirmMessage("Du har slettet item med serienummeret: " + serialNumber);
+		if(item != null) {
+			showItems();
+			confirmMessage("Du har slettet item med serienummeret: " + serialNumber);
+		}else {
+			confirmMessage("Ingen item fundet.");
+		}
+
 	}
 	
 	// SHOW ITEMS
@@ -1643,7 +1659,6 @@ public class ProductGUI extends JFrame {
 	
 	private void clearFields(JPanel jPanel) 
 	{
-		product = null;
 		for(Component component : jPanel.getComponents()) {
 		    if(component instanceof JTextField){
 		        JTextField textField = (JTextField) component;
