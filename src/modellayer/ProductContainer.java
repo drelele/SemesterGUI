@@ -51,4 +51,9 @@ public class ProductContainer
     {
         products.remove(product);
     }
+    
+    public ArrayList getProducts() 
+    {
+    	return products; 
+    }
 }

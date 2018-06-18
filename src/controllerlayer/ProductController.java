@@ -1,4 +1,6 @@
 package controllerlayer;
+import java.util.ArrayList;
+
 import modellayer.*;
 
 /**
@@ -59,6 +61,11 @@ public class ProductController
         productContainer.deleteProduct(product);
     }
 
+    public ArrayList getProducts() 
+    {
+    	return productContainer.getProducts();
+    }
+    
     public Item deleteItem(Product product, String serialNumber)
     {
         Item item = product.deleteItem(serialNumber);

@@ -1,6 +1,7 @@
 package guilayer;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -18,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 
 import controllerlayer.OrderController;
 import controllerlayer.PersonController;
+import controllerlayer.ProductController;
 import modellayer.Customer;
 import modellayer.Employee;
 import modellayer.Order;
@@ -31,6 +33,8 @@ import javax.swing.JTable;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class MainMenuGUI extends JFrame {
 
@@ -39,8 +43,13 @@ public class MainMenuGUI extends JFrame {
 	private JTable mainOrderTable;
 	private OrderController orderController = new OrderController();
 	private PersonController personController = new PersonController();
+	private ProductController productController = new ProductController();
+
 	private JTable mainPersonTable;
 	private DefaultTableModel mainOrderTab;
+
+	private JTable tblProduct;
+	private JScrollPane scrProduct;
 
 	/**
 	 * Launch the application.
@@ -145,6 +154,21 @@ public class MainMenuGUI extends JFrame {
 
 		JPanel panel_2 = new JPanel();
 		tabbedPane.addTab("Produkter", null, panel_2, null);
+		panel_2.setLayout(new BorderLayout(0, 0));
+		
+		JButton btnProduct = new JButton("Opdater");
+		btnProduct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				updateProducts();
+			}
+		});
+		panel_2.add(btnProduct, BorderLayout.NORTH);
+		
+		scrProduct = new JScrollPane();
+		panel_2.add(scrProduct, BorderLayout.CENTER);
+		
+		tblProduct = new JTable();
+		scrProduct.setViewportView(tblProduct);
 
 		JPanel panel_3 = new JPanel();
 		tabbedPane.addTab("Salg", null, panel_3, null);
@@ -154,7 +178,7 @@ public class MainMenuGUI extends JFrame {
 		panel_1.add(scrollPane1, BorderLayout.CENTER);
 
 		// Person 
-		String[] personColumns = {"Navn.", "Telefon", "Kundenummer", "Medarbejdernummer", };
+		String[] personColumns = {"Navn.", "Telefon", "Kundenummer", "Medarbejdernummer"};
 		DefaultTableModel mainPersonTab = new DefaultTableModel();
 		
 		for (String column1: personColumns) {
@@ -217,7 +241,9 @@ public class MainMenuGUI extends JFrame {
 		updateOrders();
 		
 		//JN END
-
+		
+		// PRODUCT
+		createTable();
 	}
 	
 	private void updateOrders() {
@@ -225,6 +251,21 @@ public class MainMenuGUI extends JFrame {
 		for(Order order : orderController.getOrders()) {
 			mainOrderTab.addRow(new Object[]{order.getOrderNumber(), order.getEmployee().getName(), order.getCustomer().getName(), order.getTotal()});
 		}
+	}
+	
+	// OPDATE PRODUCT
+	private void updateProducts() {
+		
+	}
+	
+	private void createTable() {
+		
+		String[] columns = {"Stregkode","Titel","Description","Price","Amount","Stock"};
+		
+		String[][] data = {
+			{"1","Sko","Gode sko","100","2","True"},
+		};
+		
 	}
 	
 	//Empty/reset table
