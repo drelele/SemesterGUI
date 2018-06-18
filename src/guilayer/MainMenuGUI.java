@@ -41,6 +41,7 @@ public class MainMenuGUI extends JFrame {
 	private PersonController personController = new PersonController();
 	private JTable mainPersonTable;
 	private DefaultTableModel mainOrderTab;
+	private DefaultTableModel mainPersonTab;
 
 	/**
 	 * Launch the application.
@@ -64,13 +65,13 @@ public class MainMenuGUI extends JFrame {
 	public MainMenuGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 496);
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
+
 		JMenu mnNewMenu = new JMenu("New menu");
 		menuBar.add(mnNewMenu);
-		
+
 		JMenuItem mntmNewMenuItem = new JMenuItem("New menu item");
 		mnNewMenu.add(mntmNewMenuItem);
 		contentPane = new JPanel();
@@ -155,29 +156,63 @@ public class MainMenuGUI extends JFrame {
 
 		// Person 
 		String[] personColumns = {"Navn.", "Telefon", "Kundenummer", "Medarbejdernummer", };
-		DefaultTableModel mainPersonTab = new DefaultTableModel();
-		
+		mainPersonTab = new DefaultTableModel();
+
 		for (String column1: personColumns) {
 			mainPersonTab.addColumn(column1);
 		}
-		
+
 		mainPersonTable = new JTable();
 		scrollPane1.setViewportView(mainPersonTable);
 		mainPersonTable.setModel(mainPersonTab); //SH was here!
-		
+
 		//Not working! 
 		JButton btnOpdater = new JButton("Opdater");
 		btnOpdater.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				
-				getContentPane().add(tabbedPane);
-				getContentPane().repaint();
-				getContentPane().revalidate();
+				updatePersons();
 			}
 		});
-		
-		panel_1.add(btnOpdater, BorderLayout.NORTH);
-		
 
+		updatePersons();
+		panel_1.add(btnOpdater, BorderLayout.NORTH);
+
+
+
+		//JN START
+
+		String[] orderColumns = {"Ordrenr.", "Medarbejder", "Kunde", "Total"};
+		mainOrderTab = new DefaultTableModel();
+
+		for (String column: orderColumns) {
+			mainOrderTab.addColumn(column);
+		}
+
+		JButton mainOrderUpdateBtn = new JButton("Opdater");
+		mainOrderUpdateBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				updateOrders();
+			}
+		});
+
+		panel_3.add(mainOrderUpdateBtn, BorderLayout.NORTH);
+
+		JScrollPane scrollPane = new JScrollPane();
+		panel_3.add(scrollPane, BorderLayout.CENTER);
+
+
+		mainOrderTable = new JTable();
+		scrollPane.setViewportView(mainOrderTable);
+		mainOrderTable.setModel(mainOrderTab);
+
+		updateOrders();
+
+		//JN END
+
+	}
+
+	private void updatePersons() {
+		emptyTable(mainPersonTab);
 		for(Person person : personController.getAllPersons()) {
 			if (person instanceof Customer) {			
 				Customer customer = (Customer) person;
@@ -187,46 +222,15 @@ public class MainMenuGUI extends JFrame {
 				mainPersonTab.addRow(new Object[]{employee.getName(), employee.getPhone(), "", employee.getEmployeeNumber()});
 			}
 		}
-		
-		//JN START
-		
-		String[] orderColumns = {"Ordrenr.", "Medarbejder", "Kunde", "Total"};
-		mainOrderTab = new DefaultTableModel();
-		
-		for (String column: orderColumns) {
-			mainOrderTab.addColumn(column);
-		}
-		
-		JButton mainOrderUpdateBtn = new JButton("Opdater");
-		mainOrderUpdateBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				updateOrders();
-			}
-		});
-		
-		panel_3.add(mainOrderUpdateBtn, BorderLayout.NORTH);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		panel_3.add(scrollPane, BorderLayout.CENTER);
-
-
-		mainOrderTable = new JTable();
-		scrollPane.setViewportView(mainOrderTable);
-		mainOrderTable.setModel(mainOrderTab);
-		
-		updateOrders();
-		
-		//JN END
-
 	}
-	
+
 	private void updateOrders() {
 		emptyTable(mainOrderTab);
 		for(Order order : orderController.getOrders()) {
 			mainOrderTab.addRow(new Object[]{order.getOrderNumber(), order.getEmployee().getName(), order.getCustomer().getName(), order.getTotal()});
 		}
 	}
-	
+
 	//Empty/reset table
 	private void emptyTable(DefaultTableModel table) {
 		int c = table.getRowCount();	
@@ -234,5 +238,5 @@ public class MainMenuGUI extends JFrame {
 			table.removeRow(i - 1);
 		}
 	}
-	
+
 }
